@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Database, LayoutGrid, Menu, Search, Sparkles, Target, X } from "lucide-react";
+import { ChevronDown, LayoutGrid, Menu, Search, Sparkles, Target, X } from "lucide-react";
 import { Logo, useUI } from "./ui";
 
 const PRODUCTS = [
   { icon: Sparkles, title: "Agent de prospection", text: "Il trouve vos clients, leur écrit depuis vos comptes et pose vos rendez-vous", href: "/" },
   { icon: Target, title: "Explorateur de cibles", text: "Décrivez votre client idéal et voyez combien d'entreprises lui ressemblent", href: "/tools/explorer/" },
-  { icon: Database, title: "Annuaire d'entreprises", text: "Les entreprises d'Afrique de l'Ouest, même celles qui n'ont pas de site. Bientôt", href: "/b2b-database/" },
   { icon: Search, title: "Simulateur de budget", text: "Choisissez un montant et voyez ce que vous obtenez", href: "/#pricing" },
 ];
 

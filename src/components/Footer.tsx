@@ -19,22 +19,10 @@ export function Footer() {
       </footer>
     );
   }
-  const regions = FOOTER.regions;
-  const col = (items: ReadonlyArray<readonly [string, string]>) => (
-    <ul className="space-y-2">
-      {items.map(([name, slug]) => (
-        <li key={slug}>
-          <Link prefetch={false} href={`/b2b-database/locations/${slug}/`} className={link}>
-            Entreprises {name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
   return (
     <footer className="border-t border-border text-base text-muted-foreground">
       <div className="container mx-auto max-w-[1200px] px-4 pb-4 pt-6 md:pb-6 md:pt-12 lg:pb-10 lg:pt-20">
-        <div className="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:max-w-[560px]">
           <div>
             <h4 className="mb-4 font-semibold text-muted-foreground">Produits</h4>
             <ul className="space-y-2">
@@ -51,14 +39,6 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
-            <h4 className="mb-4 font-semibold text-muted-foreground">Annuaire par pays</h4>
-            {col(regions.slice(0, 5))}
-          </div>
-          <div>
-            <h4 className="invisible mb-4 hidden font-semibold text-muted-foreground lg:block">Annuaire par pays</h4>
-            {col(regions.slice(5))}
           </div>
           <div>
             <h4 className="mb-4 font-semibold text-muted-foreground">Ressources</h4>

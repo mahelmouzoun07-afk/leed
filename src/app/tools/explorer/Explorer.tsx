@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Download, Search } from "lucide-react";
-import { INDUSTRIES } from "@/components/Catalog";
+import { INDUSTRIES } from "@/components/industries";
 import { useUI } from "@/components/ui";
 
 const COUNTRIES = ["United States", "United Kingdom", "Germany", "France", "Spain", "Canada", "Australia", "India", "Brazil", "Benin"];

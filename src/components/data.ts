@@ -61,24 +61,12 @@ export const CAMPAIGNS = [
 ] as const;
 
 export const FOOTER = {
+  // Les pages « annuaire par pays » reviendront au chantier 5, avec de vrais chiffres.
   products: [
     { label: "Agent de prospection", href: "/" },
     { label: "Explorateur de cibles", href: "/tools/explorer/" },
-    { label: "Annuaire d'entreprises", badge: "bientôt", href: "/b2b-database/" },
+    { label: "Tarifs", href: "/pricing/" },
   ] as ReadonlyArray<{ label: string; href: string; badge?: string }>,
-  // [libellé affiché, identifiant de page] — les pages par pays viendront avec l'annuaire.
-  regions: [
-    ["au Bénin", "benin"],
-    ["au Sénégal", "senegal"],
-    ["en Côte d'Ivoire", "cote-d-ivoire"],
-    ["au Togo", "togo"],
-    ["au Burkina Faso", "burkina-faso"],
-    ["au Mali", "mali"],
-    ["au Niger", "niger"],
-    ["en Guinée", "guinee"],
-    ["au Ghana", "ghana"],
-    ["au Nigeria", "nigeria"],
-  ] as const,
   resources: [
     { label: "À propos", href: "/about/" },
     { label: "Tarifs", href: "/pricing/" },
