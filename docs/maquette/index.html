@@ -1,0 +1,500 @@
+<title>Maquette Koko</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Sora:wght@400;500;600&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : une colonne étroite pour le parcours (téléphone d'abord), un tableau de bord avec barre du bas sur téléphone et barre latérale sur grand écran. */
+:root{
+  /* Koko : la nuit (prune) et la lumière derrière la porte (mangue). */
+  --craie:#FBFAFC;--carte:#FFFFFF;--encre:#1A1022;--doux:#6F6579;--trait:rgba(26,16,34,.10);--puce:rgba(26,16,34,.05);
+  --indigo:#5B2A86;--indigo-doux:#F1E9F9;--safran:#FFB627;--sur-safran:#1A1022;--baobab:#1E8E5A;--baobab-doux:#E3F4EB;
+  --alerte:#B4410E;--alerte-doux:#FCECE2;--flou:#DCD6E2;
+  --nuit:#1A0E26;--nuit2:#32184C;--sur-nuit:#F7F1FC;--sur-nuit-doux:#BBA9CC;
+  --wa:#1FA855;--ml:#D2493C;--ig:#B93A86;--fb:#1B6FE0;--li:#0A5FB4;
+  --ombre:0 0 .5px rgba(26,16,34,.18),0 4px 14px rgba(60,20,90,.07),0 1px 3px rgba(26,16,34,.05);
+  --marque:"Unbounded","Sora",system-ui,sans-serif;--titre:"Sora","Trebuchet MS",system-ui,sans-serif;--texte:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:18px;--lp:var(--indigo);--ld:var(--safran);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --craie:#140C1B;--carte:#20152B;--encre:#F4EEF9;--doux:#A99BB8;--trait:rgba(255,255,255,.11);--puce:rgba(255,255,255,.06);
+  --indigo:#CDA9F5;--indigo-doux:#2F1C42;--baobab:#56C892;--baobab-doux:#16301F;--alerte:#F3A074;--alerte-doux:#3A2114;--flou:#3D3049;
+  --ombre:0 0 .5px rgba(255,255,255,.2),0 4px 14px rgba(0,0,0,.45);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --craie:#140C1B;--carte:#20152B;--encre:#F4EEF9;--doux:#A99BB8;--trait:rgba(255,255,255,.11);--puce:rgba(255,255,255,.06);
+  --indigo:#CDA9F5;--indigo-doux:#2F1C42;--baobab:#56C892;--baobab-doux:#16301F;--alerte:#F3A074;--alerte-doux:#3A2114;--flou:#3D3049;
+  --ombre:0 0 .5px rgba(255,255,255,.2),0 4px 14px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--craie);color:var(--encre);font-family:var(--texte);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--craie)}
+h1,h2,h3{font-family:var(--titre);font-weight:600;line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.03em}
+h1{font-size:clamp(2rem,8.5vw,3.4rem)}h2{font-size:clamp(1.5rem,6vw,2.2rem)}h3{font-size:1.15rem;line-height:1.25}
+p{margin:0}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;border-radius:6px}
+.acc{color:var(--indigo)}.doux{color:var(--doux)}.petit{font-size:.875rem}.mini{font-size:.78rem}.num{font-variant-numeric:tabular-nums}
+.gras{font-weight:600}.c{text-align:center}
+.g{display:flex;flex-direction:column;gap:12px}.g6{gap:6px}.g20{gap:20px}.g32{gap:32px}
+.l{display:flex;align-items:center;gap:10px;min-width:0}.l>.x{flex:1;min-width:0}.wrap{flex-wrap:wrap}
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px;margin:0 auto;width:100%;max-width:560px}
+.page.large{max-width:1040px}
+.carte{background:var(--carte);border-radius:var(--r);box-shadow:var(--ombre);padding:16px;min-width:0}
+.carte.plat{box-shadow:none;border:1px solid var(--trait)}
+.bloc{background:var(--puce);border-radius:12px;padding:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:13px 20px;font-weight:600;min-height:48px;text-align:center;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn.p{background:var(--safran);color:var(--sur-safran)}.btn.n{background:var(--encre);color:var(--craie)}
+.btn.s{background:var(--puce);color:var(--encre)}.btn.b{border:1px solid var(--trait);background:var(--carte)}
+.btn.xs{min-height:38px;padding:8px 14px;font-size:.9rem;border-radius:10px}.btn.plein{width:100%}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:5px 12px;font-size:.82rem;font-weight:500;background:var(--puce);white-space:nowrap}
+.pill.i{background:var(--indigo-doux);color:var(--indigo)}.pill.v{background:var(--baobab-doux);color:var(--baobab)}
+.pill.o{background:var(--alerte-doux);color:var(--alerte)}.pill.sf{background:var(--safran);color:var(--sur-safran)}
+.champ{width:100%;border:1px solid var(--trait);background:var(--carte);border-radius:12px;padding:13px 14px;min-height:48px}
+.champ:focus{outline:2px solid var(--indigo);outline-offset:0;border-color:transparent}
+label.et{font-size:.85rem;font-weight:500;color:var(--doux);display:flex;flex-direction:column;gap:6px}
+.sep{height:1px;background:var(--trait);border:0;margin:0}
+.rang{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--trait);align-items:center;min-width:0}
+.rang:first-child{border-top:0}
+.ch{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;color:#fff;font-size:.62rem;font-weight:700;flex:none;letter-spacing:.02em}
+.wa{background:var(--wa)}.ml{background:var(--ml)}.ig{background:var(--ig)}.fb{background:var(--fb)}.li{background:var(--li)}
+.flou{display:inline-block;height:.8em;border-radius:5px;background:var(--flou);filter:blur(2.5px);vertical-align:middle}
+.barre{height:8px;border-radius:99px;background:var(--puce);overflow:hidden}.barre>i{display:block;height:100%;border-radius:99px;background:var(--indigo)}
+.barre.v>i{background:var(--baobab)}.barre.sf>i{background:var(--safran)}
+.pt{width:8px;height:8px;border-radius:50%;background:var(--baobab);flex:none}.pt.off{background:var(--flou)}.pt.o{background:var(--alerte)}
+.tete{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--craie) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--trait)}
+.tete>div{display:flex;align-items:center;gap:10px;max-width:1040px;margin:0 auto;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.tete .btn.xs{padding:8px 11px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--marque);font-weight:600;font-size:1.12rem;letter-spacing:-.04em}
+.etapes{display:flex;gap:4px;flex:1}.etapes i{height:4px;flex:1;border-radius:9px;background:var(--puce)}.etapes i.ok{background:var(--indigo)}
+.grille{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.grille2{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:720px){.grille2{grid-template-columns:1fr 1fr}}
+.stat{background:var(--puce);border-radius:12px;padding:12px}.stat b{font-family:var(--titre);font-size:1.7rem;font-weight:500;display:block;line-height:1.1}
+.chip{border:1px solid var(--trait);background:var(--carte);border-radius:99px;padding:8px 14px;font-size:.9rem;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--indigo);color:var(--craie);border-color:var(--indigo)}
+.bulle{max-width:84%;padding:9px 13px;border-radius:16px;font-size:.95rem}
+.bulle.r{background:var(--puce);align-self:flex-start;border-bottom-left-radius:4px}
+.bulle.e{background:var(--indigo-doux);align-self:flex-end;border-bottom-right-radius:4px}
+input[type=range]{width:100%;accent-color:var(--safran);height:32px}
+.tog{width:46px;height:28px;border-radius:99px;background:var(--flou);position:relative;flex:none}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--carte);transition:left .15s}
+.tog[aria-checked="true"]{background:var(--baobab)}.tog[aria-checked="true"]::after{left:21px}
+details{border-top:1px solid var(--trait);padding:14px 0}details summary{font-weight:500;cursor:pointer}details p{margin-top:8px;color:var(--doux)}
+/* tableau de bord */
+.app{display:block}
+.cote{display:none}
+.bas{position:fixed;inset:auto 0 0;z-index:25;background:var(--carte);border-top:1px solid var(--trait);display:flex;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.bas a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.68rem;color:var(--doux);padding:6px 2px;border-radius:10px;position:relative}
+.bas a.on{color:var(--indigo);font-weight:600}.bas svg,.cote svg{width:22px;height:22px}
+.bad{background:var(--safran);color:var(--sur-safran);border-radius:99px;font-size:.68rem;font-weight:700;padding:0 6px;min-width:18px;text-align:center}
+.bas .bad{position:absolute;top:0;left:54%}
+.app .page{padding-bottom:110px;max-width:760px}
+@media(min-width:960px){
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100%}
+  .cote{display:flex;flex-direction:column;gap:4px;padding:18px 12px;border-right:1px solid var(--trait);position:sticky;top:0;height:100vh}
+  .cote a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;color:var(--doux);font-size:.95rem}
+  .cote a.on{background:var(--puce);color:var(--encre);font-weight:600}.cote a .bad{margin-left:auto}
+  .bas{display:none}.app .tete .plus{display:none}.app .page{padding-bottom:48px}
+}
+.voile{position:fixed;inset:0;z-index:40;background:rgba(10,9,8,.55);display:grid;place-items:end center;padding:0}
+.voile>.carte{width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+@media(min-width:600px){.voile{place-items:center}.voile>.carte{border-radius:20px;padding:24px}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--encre);color:var(--craie);padding:10px 16px;border-radius:12px;font-size:.9rem;max-width:calc(100% - 32px)}
+.qr{width:168px;height:168px;margin:0 auto;border-radius:12px;background:var(--carte);border:1px solid var(--trait);display:grid;grid-template-columns:repeat(12,1fr);padding:10px;gap:2px}
+.qr i{background:var(--encre);border-radius:1px}.qr i.v{background:transparent}
+.apparait{animation:ap .35s ease both}@keyframes ap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tour{width:16px;height:16px;border-radius:50%;border:2px solid var(--trait);border-top-color:var(--indigo);animation:t 0.8s linear infinite;flex:none}@keyframes t{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.apparait,.tour{animation:none}}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--doux);font-weight:500;padding:8px 10px}
+td{padding:11px 10px;border-top:1px solid var(--trait)}.defile{overflow-x:auto}
+.empile{position:sticky;top:calc(64px + env(safe-area-inset-top,0px))}
+
+/* ===== identité Koko : mouvement ===== */
+.logo .ko{transform-box:fill-box;transform-origin:center;animation:toc 3.6s infinite}.logo .ko2{animation-delay:.22s}
+@keyframes toc{0%,10%,100%{transform:scale(1)}5%{transform:scale(1.55)}}
+.nuit{--lp:var(--safran);--ld:var(--nuit)}
+.tete.nuit{background:color-mix(in srgb,var(--nuit) 86%,transparent);border-color:rgba(255,255,255,.09);color:var(--sur-nuit)}
+.tete.nuit .btn.s{background:rgba(255,255,255,.1);color:var(--sur-nuit)}.tete.nuit .btn.b{background:transparent;border-color:rgba(255,255,255,.22);color:var(--sur-nuit)}
+.hero{background:radial-gradient(110% 90% at 85% 0%,var(--nuit2),var(--nuit) 62%);color:var(--sur-nuit);position:relative;overflow:hidden;margin-top:-1px}
+.hero .in{max-width:1040px;margin:0 auto;padding:36px max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px));display:grid;gap:40px;position:relative;z-index:1}
+@media(min-width:900px){.hero .in{grid-template-columns:1.08fr .92fr;align-items:center;padding-block:72px 96px}}
+.hero .doux{color:var(--sur-nuit-doux)}.hero .pill{background:rgba(255,255,255,.1);color:var(--sur-nuit)}
+.hero h1{font-size:clamp(2.3rem,9.4vw,4.1rem);line-height:1.02}
+.hero h1 em{font-style:normal;color:var(--safran);display:block}
+.orbe{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:derive 16s ease-in-out infinite alternate;pointer-events:none}
+@keyframes derive{to{transform:translate(40px,-30px) scale(1.15)}}
+.etoile{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:scint 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes scint{0%,100%{opacity:.15}50%{opacity:.9}}
+#rot{display:inline-block;color:var(--safran);font-weight:600}#rot.chg{animation:mot .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes mot{from{opacity:0;transform:translateY(.6em)}to{opacity:1;transform:none}}
+.scene{position:relative;display:grid;justify-items:center;gap:0}
+.porte{width:104px;height:auto;margin-bottom:-22px;z-index:2;position:relative;filter:drop-shadow(0 10px 24px rgba(255,182,39,.35))}
+.porte .ko{transform-box:fill-box;transform-origin:center;animation:toc 2.4s infinite}.porte .ko2{animation-delay:.2s}
+.porte .halo{transform-box:fill-box;transform-origin:center;animation:halo 2.4s ease-out infinite}
+@keyframes halo{0%{opacity:.5;transform:scale(.9)}70%,100%{opacity:0;transform:scale(1.5)}}
+.kk{position:absolute;top:6px;font-family:var(--marque);font-weight:600;font-size:.85rem;color:var(--safran);opacity:0;animation:kk 2.4s infinite}
+.kk.a{left:calc(50% + 62px);animation-delay:.05s}.kk.b{left:calc(50% + 92px);top:26px;animation-delay:.3s}.kk.c{left:calc(50% + 66px);top:48px;animation-delay:.55s}
+@keyframes kk{0%{opacity:0;transform:translateY(6px) scale(.8)}12%,45%{opacity:1;transform:none}70%,100%{opacity:0;transform:translateY(-8px)}}
+.tel{background:var(--carte);color:var(--encre);border-radius:30px;padding:14px;box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);max-width:340px;width:100%;animation:flotte 7s ease-in-out infinite}
+@keyframes flotte{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.tel .fil{display:flex;flex-direction:column;gap:8px;min-height:292px;justify-content:flex-end;padding-top:10px}
+.pts{display:inline-flex!important;gap:4px;padding:12px 14px!important}.pts span{width:6px;height:6px;border-radius:50%;background:var(--doux);animation:pt 1s infinite}.pts span:nth-child(2){animation-delay:.15s}.pts span:nth-child(3){animation-delay:.3s}
+@keyframes pt{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.ruban{overflow:hidden;border-block:1px solid var(--trait);padding-block:14px;background:var(--carte)}
+.piste{display:flex;gap:36px;width:max-content;animation:glisse 36s linear infinite;font-family:var(--titre);font-weight:500;color:var(--doux);white-space:nowrap}
+.piste b{color:var(--indigo);font-weight:600}@keyframes glisse{to{transform:translateX(-50%)}}
+.bande{padding-block:72px}.bande>.in{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bande.teinte{background:var(--indigo-doux)}
+.rv{transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}.rv.av{opacity:0;transform:translateY(30px)}
+.entre>*{animation:ap .5s cubic-bezier(.2,.7,.2,1) both}.entre>*:nth-child(2){animation-delay:.05s}.entre>*:nth-child(3){animation-delay:.1s}.entre>*:nth-child(4){animation-delay:.15s}.entre>*:nth-child(5){animation-delay:.2s}.entre>*:nth-child(n+6){animation-delay:.25s}
+.btn.p{position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(255,182,39,.35)}
+.btn.p::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:eclat 4.5s ease-in-out infinite}
+@keyframes eclat{0%,70%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.leve{transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}.leve:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(60,20,90,.16)}
+.fait b{font-family:var(--marque);font-weight:600;font-size:clamp(1.7rem,6vw,2.6rem);letter-spacing:-.04em;color:var(--indigo);display:block;line-height:1}
+.pas-liste{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.pas{flex:none;display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:99px;border:1px solid var(--trait);background:var(--carte);font-size:.9rem;font-weight:500;color:var(--doux)}
+.pas i{font-style:normal;font-family:var(--marque);font-size:.7rem;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--puce)}
+.pas[aria-selected="true"]{background:var(--indigo);color:var(--craie);border-color:var(--indigo)}.pas[aria-selected="true"] i{background:var(--safran);color:var(--sur-safran)}
+.pas-barre{height:3px;border-radius:9px;background:var(--puce);overflow:hidden}.pas-barre i{display:block;height:100%;background:var(--safran);transform-origin:left;transform:scaleX(0)}
+@keyframes remplit{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.barre>i{animation:pousse 1s cubic-bezier(.2,.7,.2,1) both;transform-origin:left}@keyframes pousse{from{transform:scaleX(0)}}
+.penche{transform:rotate(-2deg);transition:transform .4s}.penche:hover{transform:rotate(0) scale(1.02)}
+.pied{background:var(--nuit);color:var(--sur-nuit)}.pied .mot{font-family:var(--marque);font-weight:700;font-size:clamp(4rem,24vw,13rem);letter-spacing:-.07em;line-height:.8;color:var(--safran);opacity:.95}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv.av{opacity:1;transform:none}}
+</style>
+
+<div id="racine"></div>
+<div id="calque"></div>
+
+<script>
+/* ---------- état de la maquette ---------- */
+const E={essai:false,montant:12000,pause:false,ton:1,autonomie:1,onglet:'cible',brancheWA:false,
+  connectes:{ml:true,wa:true,ig:false,fb:false,li:false},
+  decisions:[
+   {id:1,t:'Lead chaud',c:'o',qui:'Mme Houngbo · Maquis Chez Tanti · WhatsApp',q:'« Oui ça m\'intéresse, c\'est combien pour un logo ? »',aide:'L\'agent propose de donner votre fourchette (40 à 60 000 FCFA) et un appel.',r:['Je m\'en occupe','Laisse l\'agent répondre'],d:'il y a 12 min'},
+   {id:2,t:'Question',c:'i',qui:'Boutique Awa · WhatsApp',q:'« Faites-vous aussi les enseignes ? »',r:['Oui','Non','Écrire ma réponse'],d:'reste 3 h 40',retenir:true},
+   {id:3,t:'Rendez-vous',c:'v',qui:'Hôtel du Lac · Email',q:'Jeudi 15 h vous convient ? Votre agenda est libre.',r:['Oui, confirme','Autre horaire'],d:'il y a 1 h'}]};
+const F=n=>n.toLocaleString('fr-FR').replace(/ | /g,' ');
+function palier(m){const prix=m<25000?250:m<50000?225:m<100000?200:175;
+  const cpt=m<10000?1:m<25000?2:m<50000?3:5, vit=m<10000?5:m<25000?10:m<50000?20:40, cib=m<10000?'1':m<25000?'2':m<50000?'3':'Illimité', bonus=m<10000?5:m<25000?10:m<50000?15:20;
+  return{prix,ent:Math.floor(m/prix),cpt,cptTxt:cpt===5?'Tous vos comptes':cpt+' compte'+(cpt>1?'s':''),vit,cib,bonus}}
+function suivant(m){const s=[10000,25000,50000,100000].find(x=>x>m);if(!s)return'';const p=palier(s);
+  return`Ajoutez ${F(s-m)} FCFA : ${p.prix} FCFA l'entreprise, ${p.cptTxt.toLowerCase()}, ${p.vit} entreprises par jour.`}
+const RES={ml:['Gmail','ML',310],wa:['WhatsApp','WA',820],ig:['Instagram','IG',140],fb:['Facebook','FB',95],li:['LinkedIn','in',60]};
+const badge=k=>`<span class="ch ${k}">${RES[k][1]}</span>`;
+const LOGO=`<svg width="28" height="30" viewBox="0 0 28 30" aria-hidden="true"><path d="M2 30V12a12 12 0 0 1 24 0v18z" fill="var(--lp)"/><circle class="ko" cx="9.5" cy="15" r="2.6" fill="var(--ld)"/><circle class="ko ko2" cx="18.5" cy="15" r="2.6" fill="var(--ld)"/></svg>`;
+const logo=`<a class="logo" href="#accueil">${LOGO}koko</a>`;
+const cad=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`;
+const I={acc:'<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/>',dec:'<path d="M5 12l4 4 10-10"/><rect x="3" y="3" width="18" height="18" rx="4"/>',conv:'<path d="M4 5h16v11H9l-5 4z"/>',rap:'<path d="M5 20V10M12 20V4M19 20v-7"/>',plus:'<path d="M4 7h16M4 12h16M4 17h16"/>',pro:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0M17 5a3.5 3.5 0 0 1 0 6.5M21 20a6 6 0 0 0-3-5"/>',cam:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',cpt:'<path d="M9 7H6a5 5 0 0 0 0 10h3M15 7h3a5 5 0 0 1 0 10h-3M8 12h8"/>',forf:'<rect x="3" y="6" width="18" height="12" rx="3"/><path d="M3 10h18"/>',reg:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>'};
+const ico=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+
+/* ---------- coquilles ---------- */
+const pub=(html,large)=>`<header class="tete"><div>${logo}<span class="x" style="flex:1"></span><a class="btn xs s" href="#tarifs">Tarifs</a><a class="btn xs s" href="#connexion">Connexion</a><a class="btn xs b" href="#plan" aria-label="Toutes les pages">Pages</a></div></header><main class="page ${large?'large':''}">${html}</main>`;
+const ORDRE=['decrire','analyse','questions','profils','recherche','apercu','inscription','offre','paiement','comptes-connexion','demarrage'];
+const flux=(nom,html)=>{const i=ORDRE.indexOf(nom),prec=i>0?ORDRE[i-1]:'accueil';
+  return`<header class="tete"><div><a class="btn xs s" href="#${prec}" aria-label="Retour">←</a><div class="etapes">${ORDRE.map((_,k)=>`<i class="${k<=i?'ok':''}"></i>`).join('')}</div><a class="btn xs b" href="#plan">Pages</a></div></header><main class="page">${html}</main>`};
+const NAV=[['app-accueil','Accueil','acc'],['decisions','Décisions','dec'],['prospects','Prospects','pro'],['conversations','Conversations','conv'],['campagnes','Campagnes','cam'],['rapports','Rapports','rap'],['comptes','Comptes','cpt'],['forfait','Forfait','forf'],['reglages','Réglages','reg']];
+const app=(nom,titre,html)=>{const nb=E.decisions.length,on=k=>k===nom||(nom==='fiche'&&k==='prospects')||(nom==='fil'&&k==='conversations')||(nom==='campagne'&&k==='campagnes');
+  const reste=E.essai?'Essai · 3 sur 10':'34 entreprises · 19 j';
+  return`<div class="app"><nav class="cote">${logo}<div style="height:10px"></div>${NAV.map(([k,l,i])=>`<a href="#${k}" class="${on(k)?'on':''}">${ico(i)}${l}${k==='decisions'&&nb?`<span class="bad">${nb}</span>`:''}</a>`).join('')}
+   <div style="margin-top:auto" class="bloc g g6"><span class="mini doux">${E.essai?'Essai gratuit':'Votre forfait'}</span><b class="petit">${reste}</b><a class="btn xs p" href="#forfait">${E.essai?'Prendre un forfait':'Recharger'}</a></div><a href="#plan" class="mini">Toutes les pages</a></nav>
+   <div><header class="tete"><div><h3 class="x" style="flex:1">${titre}</h3><a class="pill ${E.essai?'sf':'i'} plus" href="#forfait">${reste}</a><a class="btn xs b" href="#plan">Pages</a></div></header><main class="page g g20">${html}</main></div>
+   <nav class="bas">${[['app-accueil','Accueil','acc'],['decisions','Décisions','dec'],['conversations','Messages','conv'],['rapports','Rapports','rap'],['menu','Plus','plus']].map(([k,l,i])=>`<a href="#${k}" class="${on(k)||(k==='menu'&&['prospects','fiche','campagnes','campagne','comptes','forfait','reglages','menu'].includes(nom))?'on':''}">${ico(i)}${l}${k==='decisions'&&nb?`<span class="bad">${nb}</span>`:''}</a>`).join('')}</nav></div>`};
+
+/* ---------- morceaux réutilisés ---------- */
+function curDyn(m){const p=palier(m);return`<div class="grille" style="grid-template-columns:1fr 1fr">
+   <div class="stat"><b class="num">${F(p.ent)}</b><span class="petit doux">entreprises contactées</span></div>
+   <div class="stat"><b class="num">${p.prix} F</b><span class="petit doux">par entreprise</span></div>
+   <div class="stat"><b>${p.cpt===5?'Tous':p.cpt}</b><span class="petit doux">${p.cpt===1?'compte connecté, au choix':'comptes connectés, au choix'}</span></div>
+   <div class="stat"><b class="num">${p.vit}</b><span class="petit doux">entreprises par jour</span></div></div>
+  ${suivant(m)?`<p class="petit bloc" style="color:var(--indigo);background:var(--indigo-doux)">${suivant(m)}</p>`:''}`}
+function curseur(cta){const m=E.montant;return`<div class="carte g">
+  <div class="l"><span class="x doux petit">Votre forfait, valable 30 jours</span><span class="pill sf" id="cur-pc" ${m===25000?'':'hidden'}>Le plus choisi</span></div>
+  <div class="l" style="align-items:baseline"><b class="num" id="cur-m" style="font-family:var(--titre);font-size:2.3rem;font-weight:500;line-height:1">${F(m)}</b><span class="doux">FCFA</span></div>
+  <input type="range" id="curseur" min="5" max="150" step="1" value="${m/1000}" aria-label="Montant du forfait">
+  <div class="l mini doux"><span class="x">5 000</span><span>150 000 et plus</span></div>
+  <div id="cur-dyn" class="g">${curDyn(m)}</div>
+  ${cta||''}</div>`}
+const lignesFloues=n=>[['Restaurant','Cotonou','pas de logo professionnel'],['Boutique de mode','Porto-Novo','vient d\'ouvrir'],['Hôtel','Ouidah','pas de site web'],['Traiteur','Abomey-Calavi','recrute en ce moment'],['École privée','Cotonou','rentrée dans 6 semaines']].slice(0,n).map((r,i)=>`<div class="rang"><div class="g g6 x" style="flex:1;min-width:0"><span class="flou" style="width:${[120,150,96,134,110][i]}px"></span><span class="petit doux">${r[0]} · ${r[1]}</span></div><span class="pill">${r[2]}</span></div>`).join('');
+const canaux=()=>Object.entries(RES).map(([k,[n,,v]])=>`<div class="l">${badge(k)}<span style="width:82px" class="petit">${n}</span><div class="barre x"><i style="width:${v/8.2}%"></i></div><b class="num petit" style="width:34px;text-align:right">${v}</b></div>`).join('');
+function carteDecision(d){return`<div class="carte g" data-dec="${d.id}"><div class="l"><span class="pill ${d.c}">${d.t}</span><span class="x"></span><span class="mini doux">${d.d}</span></div>
+  <div><p class="petit doux">${d.qui}</p><p class="gras" style="margin-top:4px">${d.q}</p>${d.aide?`<p class="petit doux" style="margin-top:6px">${d.aide}</p>`:''}</div>
+  <div class="l wrap">${d.r.map((x,i)=>`<button class="btn xs ${i?'s':'n'}" data-rep="${d.id}">${x}</button>`).join('')}</div>
+  ${d.retenir?'<label class="l petit doux"><input type="checkbox" id="ret'+d.id+'" checked> Retenir cette réponse pour les prochaines fois</label>':''}</div>`}
+
+/* ---------- pages ---------- */
+const P={};
+const PAS=[
+ ['Il comprend ce que vous vendez','Comprendre',`<div class="bloc g g6"><b>studiokoffi.com</b><span class="petit doux">Logos, affiches et identité visuelle pour les commerces de Cotonou</span><hr class="sep"><span class="petit l"><b class="acc">✓</b> Concurrents étudiés : 4</span><span class="petit l"><b class="acc">✓</b> Prix repérés : 40 à 60 000 FCFA</span></div>`],
+ ['Il trouve qui en a besoin','Cibler',`<div class="bloc">${[['Restaurants et maquis',92],['Boutiques de mode',85],['Écoles privées',78],['Hôtels',74]].map(r=>`<div class="rang"><span>${r[0]}</span><b class="num doux">${r[1]} %</b></div>`).join('')}</div>`],
+ ['Il trouve les bonnes entreprises','Trouver',`<div class="bloc">${lignesFloues(3)}</div><p class="petit doux">Avec leur WhatsApp, leur email ou leur compte Instagram.</p>`],
+ ['Il écrit à chacune un message personnel','Écrire',`<div class="g g6"><div class="bulle e">Bonjour Madame Houngbo, ici Koffi du Studio Koffi. J'ai vu la carte du Maquis Chez Tanti : <b>le logo est difficile à lire sur téléphone</b>. Je vous prépare 3 idées, sans engagement ?</div><span class="mini doux" style="align-self:flex-end">Envoyé depuis votre WhatsApp</span></div>`],
+ ['Il répond et prend les rendez-vous','Répondre',`<div class="g g6"><div class="bulle r">C'est combien pour un logo ?</div><div class="bulle e">Entre 40 000 et 60 000 FCFA. Jeudi 15 h pour en parler ?</div><div class="bulle r">Jeudi 15 h, d'accord.</div><span class="pill v" style="align-self:flex-end">✓ Rendez-vous noté · jeudi 15 h</span></div>`],
+ ['Il apprend ce qui marche','Apprendre',`<div class="defile"><table><tr><th>Cible</th><th>Réponses</th><th>État</th></tr><tr><td>Restaurants</td><td class="num">15 %</td><td><span class="pill v">On accélère</span></td></tr><tr><td>Boutiques</td><td class="num">10 %</td><td><span class="pill">En cours</span></td></tr><tr><td class="doux">Écoles</td><td class="num doux">2 %</td><td><span class="pill o">En pause</span></td></tr></table></div>`]];
+const PORTE=`<svg class="porte" viewBox="0 0 120 130" aria-hidden="true"><ellipse class="halo" cx="60" cy="66" rx="56" ry="60" fill="var(--safran)"/><path d="M12 130V56a48 48 0 0 1 96 0v74z" fill="var(--safran)"/><circle class="ko" cx="42" cy="66" r="9" fill="var(--nuit)"/><circle class="ko ko2" cx="78" cy="66" r="9" fill="var(--nuit)"/></svg>`;
+P.accueil=()=>{const et=Array.from({length:34},(_,i)=>`<i class="etoile" style="left:${(i*37+11)%100}%;top:${(i*53+7)%92}%;animation-delay:${(i%7)*.45}s"></i>`).join('');
+ const sect=['Restaurants','Hôtels','Boutiques','Écoles privées','Cliniques','Agences','Imprimeries','Transport','BTP','Traiteurs','Cabinets comptables','Pharmacies'];
+ const ruban=sect.map((x,i)=>`<span>${i%4===0?'<b>ko ko ko</b> · ':''}${x}</span>`).join('');
+ return`<main class="landing">
+ <header class="tete nuit"><div>${logo}<span style="flex:1"></span><a class="btn xs s" href="#tarifs">Tarifs</a><a class="btn xs s" href="#connexion">Connexion</a><a class="btn xs b" href="#plan">Pages</a></div></header>
+ <section class="hero nuit">${et}<i class="orbe" style="width:340px;height:340px;background:#7A3BB8;right:-80px;top:-60px"></i><i class="orbe" style="width:260px;height:260px;background:#FFB627;left:-120px;bottom:-120px;opacity:.22;animation-delay:-6s"></i>
+  <div class="in"><div class="g g20">
+   <span class="pill" style="align-self:flex-start">Analyse et essai gratuits</span>
+   <h1>On frappe aux portes <em>à votre place.</em></h1>
+   <p class="doux" style="font-size:1.1rem;max-width:30em">Koko trouve les entreprises qui ont besoin de vous et leur écrit sur <span id="rot">WhatsApp</span>, depuis vos propres comptes. Vous, vous recevez les rendez-vous.</p>
+   <form class="g" style="max-width:480px" data-go="analyse"><input class="champ" id="site" placeholder="Votre site web, ex. studiokoffi.com" inputmode="url" style="min-height:58px;border-radius:16px;border-color:transparent"><button class="btn p plein" style="min-height:58px;border-radius:16px;font-size:1.05rem">Trouver mes clients →</button></form>
+   <a href="#decrire" class="petit doux" style="text-decoration:underline;align-self:flex-start">Je n'ai pas de site web</a></div>
+  <div class="scene">${PORTE}<span class="kk a">ko</span><span class="kk b">ko</span><span class="kk c">ko</span>
+   <div class="tel"><div class="l" style="padding-bottom:10px;border-bottom:1px solid var(--trait)">${badge('wa')}<div class="x" style="flex:1"><b class="petit">Maquis Chez Tanti</b><p class="mini doux">depuis votre WhatsApp</p></div><span class="pt"></span></div>
+   <div class="fil" id="tel-fil"><div class="bulle e">Bonjour Madame Houngbo, ici Koffi du Studio Koffi. Le logo du Maquis Chez Tanti est difficile à lire sur téléphone. Je vous prépare 3 idées ?</div></div></div></div></div>
+ </section>
+ <div class="ruban"><div class="piste">${ruban}${ruban}</div></div>
+ <section class="bande"><div class="in"><div class="grille rv" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px">
+   ${[[5,'réseaux pour joindre vos clients',''],[40,'nouveaux messages par jour au maximum, pour protéger vos comptes',''],[10,'entreprises contactées offertes à l\'essai',''],[5000,'FCFA pour commencer, en Mobile Money','']].map(f=>`<div class="fait g g6"><b class="num" data-n="${f[0]}">${F(f[0])}</b><span class="petit doux">${f[1]}</span></div>`).join('')}</div></div></section>
+ <section class="bande teinte"><div class="in g g20"><div class="g g6 rv"><h2>Six gestes, tous faits pour vous</h2><p class="doux">Touchez une étape, ou laissez défiler.</p></div>
+   <div class="pas-liste rv" role="tablist">${PAS.map((x,i)=>`<button class="pas" role="tab" data-pas="${i}" aria-selected="${i===0}"><i>${i+1}</i>${x[1]}</button>`).join('')}</div>
+   <div class="pas-barre"><i id="pas-barre"></i></div>
+   <div class="carte g rv" style="min-height:250px"><h3 id="pas-titre">${PAS[0][0]}</h3><div id="pas-corps"><div class="g">${PAS[0][2]}</div></div></div></div></section>
+ <section class="bande"><div class="in grille2" style="align-items:center;gap:36px"><div class="g rv"><h2>Vous dormez. Koko ne vous réveille que pour l'important.</h2><p class="doux">L'agent travaille seul. Quand une chose compte vraiment, il vous pose la question sur WhatsApp ou dans votre espace. Vous répondez par oui ou par non.</p><a class="btn n" href="#decisions" style="align-self:flex-start">Voir les décisions →</a></div><div class="rv penche">${carteDecision(E.decisions[0]||{id:0,t:'Lead chaud',c:'o',qui:'Maquis Chez Tanti',q:'« C\'est combien pour un logo ? »',r:['Je m\'en occupe','Laisse l\'agent'],d:''})}</div></div></section>
+ <section class="bande teinte"><div class="in g g20"><h2 class="rv">Ce que les autres n'ont pas</h2><div class="grille" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+   ${[['Vos propres comptes','Le prospect voit votre nom et votre numéro, pas ceux d\'un inconnu.','wa'],['Les entreprises d\'ici','Même celles qui n\'ont ni site web ni adresse email professionnelle.','fb'],['Mobile Money, dès 5 000 FCFA','Le montant que vous voulez. Rien n\'est prélevé automatiquement.','ml']].map((c,i)=>`<div class="carte g leve rv" style="transition-delay:${i*90}ms"><span class="ch ${c[2]}" style="width:38px;height:38px;border-radius:12px;font-size:.8rem">${i+1}</span><h3>${c[0]}</h3><p class="petit doux">${c[1]}</p></div>`).join('')}</div></div></section>
+ <section class="bande"><div class="in g g20" style="max-width:600px"><h2 class="c rv">Choisissez votre montant</h2><div class="rv">${curseur('<a class="btn p plein" href="#decrire">Commencer gratuitement →</a>')}</div></div></section>
+ <section class="bande" style="padding-top:0"><div class="in rv" style="max-width:680px"><h2 class="c" style="margin-bottom:16px">Questions fréquentes</h2>
+  <details><summary>Je n'ai pas de site web, je peux utiliser Koko ?</summary><p>Oui. Vous décrivez votre activité en cochant quelques cases, cela prend deux minutes.</p></details>
+  <details><summary>Est-ce risqué pour mon compte WhatsApp ?</summary><p>Koko n'envoie jamais plus de 40 nouveaux messages par jour, augmente le rythme petit à petit et s'arrête au premier signe d'alerte. Vous pouvez débrancher à tout moment.</p></details>
+  <details><summary>Que comprend l'essai gratuit ?</summary><p>10 entreprises contactées par email depuis votre Gmail, pendant 7 jours.</p></details>
+  <details><summary>Que se passe-t-il au bout de 30 jours ?</summary><p>Si vous rechargez avant, vos entreprises restantes sont reportées avec un bonus. Sinon elles sont gardées et reviennent à votre prochaine recharge.</p></details></div></section>
+ <footer class="pied nuit"><div class="in g g20" style="max-width:1040px;margin:0 auto;padding:56px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));overflow:hidden"><p style="max-width:26em;color:var(--sur-nuit-doux)">« Ko ko ko » : c'est ce qu'on dit en arrivant devant une porte, de Cotonou à Abidjan. Nous le disons pour vous.</p><div class="mot rv">koko</div><div class="l wrap petit" style="gap:18px;color:var(--sur-nuit-doux)"><a href="#tarifs">Tarifs</a><a href="#plan">Toutes les pages</a><span>Conditions</span><span>Confidentialité</span><span>Contact WhatsApp</span></div></div></footer></main>`};
+
+P.tarifs=()=>pub(`<section class="g g20" style="padding-top:20px"><h1 class="c">Payez <span class="acc">le montant que vous voulez</span></h1><p class="doux c">À partir de 5 000 FCFA, pour 30 jours. Ni abonnement, ni prélèvement.</p>
+ <div class="grille2" style="align-items:start">${curseur('<a class="btn p plein" href="#decrire">Commencer →</a>')}
+ <div class="g"><div class="carte g g6"><div class="l"><h3 class="x">Essai gratuit</h3><span class="pill v">0 FCFA</span></div><p class="petit doux">10 entreprises contactées par email depuis votre Gmail, pendant 7 jours.</p><a class="btn s plein" href="#decrire">Essayer gratuitement</a></div>
+ <div class="carte g g6"><h3>Compris dans chaque entreprise contactée</h3>${['La recherche et ses coordonnées','L\'étude de l\'entreprise','Un premier message personnel','Jusqu\'à 2 relances','Toutes les réponses de l\'agent','La prise de rendez-vous'].map(x=>`<span class="l petit"><b class="acc">✓</b>${x}</span>`).join('')}</div></div></div>
+ <div class="carte defile"><table><tr><th>Forfait</th><th>Prix par entreprise</th><th>Comptes</th><th>Par jour</th><th>Cibles</th><th>Bonus fidélité</th></tr>
+ ${[[5000,'5 000 +'],[10000,'10 000 +'],[25000,'25 000 +'],[50000,'50 000 +'],[100000,'100 000 +']].map(([m,l])=>{const p=palier(m);return`<tr><td class="gras num">${l}</td><td class="num">${p.prix} F</td><td>${p.cpt===5?'Tous':p.cpt}</td><td class="num">${p.vit}</td><td>${p.cib}</td><td class="num">+${p.bonus} %</td></tr>`}).join('')}</table></div>
+ <p class="petit doux c">Tous les réseaux sont disponibles dès 5 000 FCFA : email, WhatsApp, Instagram, Facebook, LinkedIn. Vous choisissez lesquels connecter.</p></section>`,true);
+
+P.connexion=()=>pub(`<section class="g g20" style="padding-top:28px"><h2>Bon retour</h2><form class="carte g" data-go="app-accueil"><label class="et">Email<input class="champ" id="cx-mail" value="koffi@studiokoffi.com"></label><label class="et">Mot de passe<input class="champ" id="cx-mdp" type="password" value="motdepasse"></label><button class="btn p plein">Me connecter</button><button type="button" class="btn b plein" data-nav="app-accueil">Continuer avec Google</button></form><p class="petit doux c">Pas encore de compte ? <a href="#accueil" style="text-decoration:underline">Commencer gratuitement</a></p></section>`);
+
+P.decrire=()=>flux('decrire',`<div class="g g20"><div class="g g6"><h2>Parlez-nous de votre activité</h2><p class="doux">Deux minutes. L'agent s'en sert pour trouver vos futurs clients.</p></div>
+ <form class="g g20" data-go="analyse"><label class="et">Ce que vous vendez<textarea class="champ" id="f-vend" rows="2">Logos, affiches et identité visuelle pour les commerces</textarea></label>
+ <div class="g g6"><span class="petit doux gras">Les entreprises que vous visez</span><div class="l wrap" data-m>${['Restaurants','Boutiques','Hôtels','Écoles','Cliniques','Agences','BTP','Transport'].map((x,i)=>`<button type="button" class="chip" aria-pressed="${i<3}">${x}</button>`).join('')}</div></div>
+ <div class="g g6"><span class="petit doux gras">Leur taille</span><div class="l wrap" data-m>${['1 à 10','11 à 50','51 à 200','Plus de 200'].map((x,i)=>`<button type="button" class="chip" aria-pressed="${i<2}">${x}</button>`).join('')}</div></div>
+ <label class="et">Où<input class="champ" id="f-ou" value="Cotonou, Porto-Novo, Abomey-Calavi"></label>
+ <div class="g g6"><span class="petit doux gras">Votre prix moyen</span><div class="l wrap">${['Moins de 25 000','25 à 100 000','100 à 500 000','Plus'].map((x,i)=>`<button type="button" class="chip" aria-pressed="${i===1}">${x}</button>`).join('')}</div></div>
+ <div class="g g6"><span class="petit doux gras">Ce que vous voulez obtenir</span><div class="l wrap">${['Des rendez-vous','Des demandes de devis','Des démonstrations','Des commandes'].map((x,i)=>`<button type="button" class="chip" aria-pressed="${i===0}">${x}</button>`).join('')}</div></div>
+ <button class="btn p plein">Analyser mon activité →</button></form></div>`);
+
+P.analyse=()=>flux('analyse',`<div class="g g20"><h2 id="an-titre">Koko étudie <span class="acc">studiokoffi.com</span></h2>
+ <div class="carte g" id="an-1"><span class="petit doux gras">CE QUE VOUS VENDEZ</span><div id="an-liste" class="g g6"></div></div>
+ <div class="carte g" id="an-2" hidden><span class="petit doux gras">VOS CONCURRENTS</span><div id="an-conc" class="g g6"></div></div>
+ <div class="carte g" id="an-3" hidden><span class="petit doux gras">QUI ACHÈTE CE QUE VOUS VENDEZ</span><div id="an-cib"></div></div>
+ <a class="btn p plein" id="an-suite" href="#questions" hidden>Continuer →</a><p class="petit doux c l" id="an-att" style="justify-content:center"><span class="tour"></span>Lecture de votre site…</p></div>`);
+
+P.questions=()=>flux('questions',`<div class="g g20"><div class="g g6"><h2>Deux précisions</h2><p class="doux">Votre site ne le disait pas.</p></div>
+ <div class="carte g"><b>Vous travaillez surtout avec…</b><div class="l wrap">${['De petits commerces','Des entreprises établies','Les deux'].map((x,i)=>`<button class="chip" aria-pressed="${i===0}">${x}</button>`).join('')}</div></div>
+ <div class="carte g"><b>Vous voulez obtenir…</b><div class="l wrap">${['Des rendez-vous','Des demandes de devis','Des commandes'].map((x,i)=>`<button class="chip" aria-pressed="${i===1}">${x}</button>`).join('')}</div></div>
+ <a class="btn p plein" href="#profils">Continuer →</a></div>`);
+
+P.profils=()=>flux('profils',`<div class="g g20"><div class="g g6"><h2>Vos clients idéaux</h2><p class="doux">Décochez ceux qui ne vous intéressent pas.</p></div>
+ ${[['Restaurants et maquis de Cotonou','Beaucoup n\'ont pas de logo professionnel, et leurs budgets collent à vos prix.',92,1],['Boutiques de mode','Elles ont besoin de visuels chaque semaine.',85,1],['Écoles privées','Affiches et flyers à chaque rentrée.',78,1],['Hôtels et résidences','Menus, enseignes et brochures.',74,0]].map((r,i)=>`<label class="carte l" style="align-items:flex-start"><input type="checkbox" id="pc${i}" ${r[3]?'checked':''} style="margin-top:5px;width:18px;height:18px;accent-color:var(--indigo)"><span class="x g g6"><b>${r[0]}</b><span class="petit doux">${r[1]}</span></span><span class="pill i num">${r[2]}</span></label>`).join('')}
+ <button class="btn b plein">+ Ajouter un autre type de client</button><a class="btn p plein" href="#recherche">Chercher ces entreprises →</a></div>`);
+
+P.recherche=()=>flux('recherche',`<div class="g g20 c" style="padding-top:24px"><h2>Koko cherche vos futurs clients</h2><b class="num acc" id="rc-n" style="font-family:var(--titre);font-size:4rem;font-weight:500;line-height:1">0</b><p class="doux">entreprises trouvées</p>
+ <div class="carte g" style="text-align:left"><span class="petit doux gras">ET PAR OÙ LES JOINDRE</span><div id="rc-c" class="g g6"></div></div><p class="petit doux l" style="justify-content:center"><span class="tour"></span><span id="rc-t">Restaurants de Cotonou…</span></p></div>`);
+
+P.apercu=()=>flux('apercu',`<div class="g g20"><div class="g g6 c"><h2>Koko a trouvé <span class="acc num">1 240</span> entreprises pour vous</h2><p class="doux">Leurs noms et leurs contacts s'affichent quand l'agent leur écrit.</p></div>
+ <div class="carte">${lignesFloues(5)}<p class="petit doux c" style="padding-top:12px">et 1 235 autres</p></div>
+ <div class="carte g"><span class="petit doux gras">PAR OÙ LES JOINDRE</span>${canaux()}</div>
+ <a class="btn p plein" href="#inscription">Créer mon compte pour commencer →</a><p class="mini doux c">Gratuit. Aucun paiement à cette étape.</p></div>`);
+
+P.inscription=()=>flux('inscription',`<div class="g g20"><div class="g g6"><h2>Créez votre compte</h2><p class="doux">Votre nom et celui de votre entreprise apparaîtront dans les messages.</p></div>
+ <form class="carte g" data-go="offre"><div class="grille" style="grid-template-columns:1fr 1fr"><label class="et">Prénom<input class="champ" id="i-p" value="Koffi"></label><label class="et">Nom<input class="champ" id="i-n" value="Adjovi"></label></div>
+ <label class="et">Nom de l'entreprise<input class="champ" id="i-e" value="Studio Koffi"></label><label class="et">Email<input class="champ" id="i-m" value="koffi@studiokoffi.com"></label>
+ <label class="et">Numéro WhatsApp<input class="champ" id="i-w" value="+229 97 00 00 00" inputmode="tel"></label><label class="et">Mot de passe<input class="champ" id="i-s" type="password" value="motdepasse"></label>
+ <button class="btn p plein">Créer mon compte →</button><button type="button" class="btn b plein" data-nav="offre">Continuer avec Google</button></form></div>`);
+
+P.offre=()=>flux('offre',`<div class="g g20"><div class="g g6"><h2>Comment voulez-vous commencer ?</h2><p class="doux">1 240 entreprises vous attendent.</p></div>
+ ${curseur('<button class="btn p plein" data-nav="paiement">Payer en Mobile Money →</button><p class="mini doux c">Tous les réseaux disponibles : email, WhatsApp, Instagram, Facebook, LinkedIn.</p>')}
+ <div class="carte plat g"><div class="l"><h3 class="x">Ou essayez gratuitement</h3><span class="pill v">0 FCFA</span></div><p class="petit doux">10 entreprises contactées par email, depuis votre Gmail, pendant 7 jours. Les autres réseaux restent verrouillés.</p><button class="btn s plein" data-essai="1">Essayer gratuitement</button></div></div>`);
+
+P.paiement=()=>{const p=palier(E.montant);return flux('paiement',`<div class="g g20"><h2>Paiement</h2>
+ <div class="carte g g6"><div class="rang"><span class="doux">Forfait 30 jours</span><b class="num">${F(E.montant)} FCFA</b></div><div class="rang"><span class="doux">Entreprises contactées</span><b class="num">${F(p.ent)}</b></div><div class="rang"><span class="doux">Comptes connectés</span><b>${p.cptTxt}</b></div><div class="rang"><span class="doux">Offre de bienvenue</span><b class="acc num">+${Math.round(p.ent*.2)} entreprises</b></div></div>
+ <form class="carte g" data-paye="1"><span class="petit doux gras">VOTRE MOYEN DE PAIEMENT</span><div class="l wrap">${['MTN MoMo','Moov Money','Wave','Celtiis','Orange Money'].map((x,i)=>`<button type="button" class="chip" aria-pressed="${i===0}">${x}</button>`).join('')}</div>
+ <label class="et">Numéro à débiter<input class="champ" id="pay-n" value="+229 97 00 00 00" inputmode="tel"></label><button class="btn p plein">Payer ${F(E.montant)} FCFA</button><p class="mini doux c">Vous validerez le paiement sur votre téléphone.</p></form></div>`)};
+
+P['comptes-connexion']=()=>{const max=E.essai?1:palier(E.montant).cpt,nb=Object.values(E.connectes).filter(Boolean).length;
+ return flux('comptes-connexion',`<div class="g g20"><div class="g g6"><h2>Connectez vos comptes</h2><p class="doux">Koko écrira à vos prospects depuis vos comptes, en votre nom. Vous verrez chaque conversation chez vous, comme d'habitude.</p></div>
+ <div class="l"><span class="pill ${E.essai?'sf':'i'}">${E.essai?'Essai gratuit : Gmail seulement':`Votre forfait : ${palier(E.montant).cptTxt.toLowerCase()}, au choix`}</span><span class="x"></span><span class="petit doux num">${nb} connecté${nb>1?'s':''}</span></div>
+ <div class="carte">${Object.entries(RES).map(([k,[n,,v]])=>{const on=E.connectes[k],verrou=E.essai&&k!=='ml',plein=!on&&nb>=max&&!verrou;
+  return`<div class="rang">${badge(k)}<div class="x g" style="gap:0;flex:1;min-width:0"><b>${n}</b><span class="petit doux num">${v} entreprises joignables</span></div>${on?`<button class="pill v" data-cx="${k}">✓ Connecté</button>`:verrou?`<span class="pill">${cad} Avec un forfait</span>`:plein?`<a class="pill o" href="#forfait">Forfait supérieur</a>`:`<button class="btn xs n" data-cx="${k}">Connecter</button>`}</div>`}).join('')}
+  <div class="rang"><span class="ch" style="background:var(--flou);color:var(--encre)">M</span><div class="x" style="flex:1"><b>Messenger</b><br><span class="petit doux">Bientôt disponible</span></div></div></div>
+ <div class="bloc g g6 petit"><span class="l"><b class="acc">✓</b>Jamais plus de 40 nouveaux messages par jour et par compte</span><span class="l"><b class="acc">✓</b>Vous voyez tout dans vos propres applications</span><span class="l"><b class="acc">✓</b>Vous débranchez quand vous voulez</span></div>
+ <p class="petit doux">Conseil de l'agent : 820 de vos prospects sont sur WhatsApp, 60 sur LinkedIn. Commencez par WhatsApp.</p>
+ <a class="btn p plein" href="#demarrage">Continuer →</a></div>`)};
+
+P.demarrage=()=>flux('demarrage',`<div class="g g20"><div class="g g6"><h2>Derniers réglages</h2><p class="doux">Tout est prérempli. Corrigez ce qui est faux.</p></div>
+ <div class="carte g"><label class="et">Nom affiché dans les messages<input class="champ" id="d-n" value="Koffi Adjovi — Studio Koffi"></label><label class="et">Ce que l'agent peut annoncer<textarea class="champ" id="d-p" rows="2">Logo : 40 000 à 60 000 FCFA. Délai : 5 jours.</textarea></label><label class="et">Ne jamais contacter<input class="champ" id="d-x" value="Mes clients actuels, Studio Pixel"></label></div>
+ <div class="g"><b>Choisissez le ton de vos messages</b>${[['Simple et direct','Bonjour Madame Houngbo, ici Koffi du Studio Koffi. Le logo du Maquis Chez Tanti est difficile à lire sur téléphone. Je vous prépare 3 idées, sans engagement ?'],['Très poli','Bonjour Madame Houngbo, je me permets de vous écrire. Je suis Koffi, graphiste à Cotonou. Accepteriez-vous que je vous propose 3 idées de logo pour le Maquis Chez Tanti ?'],['Chaleureux','Bonjour Madame Houngbo ! J\'adore la carte du Maquis Chez Tanti. Je suis Koffi, graphiste, et j\'ai 3 idées de logo pour vous. Je vous les montre ?']].map((t,i)=>`<button class="carte ${E.ton===i?'':'plat'} g g6" data-ton="${i}" style="text-align:left;${E.ton===i?'outline:2px solid var(--indigo)':''}"><span class="l"><b class="x">${t[0]}</b>${E.ton===i?'<span class="pill i">Choisi</span>':''}</span><span class="petit doux">${t[1]}</span></button>`).join('')}</div>
+ <div class="carte g g6"><b>L'agent écrit seul et vous demande pour l'important</b><p class="petit doux">Prix, rendez-vous, prospects très intéressés : il vous pose la question. Vous pourrez changer ce réglage.</p></div>
+ <a class="btn p plein" href="#app-accueil">Lancer l'agent →</a><p class="mini doux c">Les premiers messages partent aujourd'hui.</p></div>`);
+
+P['app-accueil']=()=>app('app-accueil','Bonjour Koffi',`
+ ${E.essai?`<div class="carte g" style="background:var(--indigo-doux)"><div class="l"><b class="x">Essai gratuit</b><span class="pill sf">reste 4 jours</span></div><div class="barre sf"><i style="width:30%"></i></div><p class="petit">3 entreprises contactées sur 10 · 1 réponse déjà reçue</p><p class="petit"><b>820 entreprises</b> sont joignables sur WhatsApp.</p><a class="btn p plein" href="#forfait">Tout débloquer dès 5 000 FCFA</a></div>`
+ :`<div class="carte l" style="background:var(--baobab-doux)"><div class="x g" style="gap:2px;flex:1"><span class="mini" style="color:var(--baobab)">KOKO VOUS A RAPPORTÉ</span><b class="num" style="font-family:var(--titre);font-size:1.6rem;font-weight:500">180 000 FCFA</b><span class="petit doux">pour 35 000 FCFA payés · 3 contrats signés</span></div></div>`}
+ <div class="l"><span class="pt ${E.pause?'o':''}"></span><span class="x petit">${E.pause?'L\'agent est en pause':'L\'agent travaille'}</span><button class="btn xs b" data-pause="1">${E.pause?'Reprendre':'Mettre en pause'}</button></div>
+ <div class="g"><div class="l"><h3 class="x">${E.decisions.length?E.decisions.length+' décision'+(E.decisions.length>1?'s':'')+' vous attend'+(E.decisions.length>1?'ent':''):'Aucune décision en attente'}</h3><a href="#decisions" class="petit acc">Tout voir</a></div>${E.decisions.slice(0,2).map(carteDecision).join('')||'<div class="bloc petit doux">L\'agent se débrouille. Il vous écrira quand il aura besoin de vous.</div>'}</div>
+ <div class="g"><h3>Cette semaine</h3><div class="grille" style="grid-template-columns:1fr 1fr">${[[E.essai?3:86,'contactées'],[E.essai?1:14,'réponses'],[E.essai?0:5,'intéressées'],[E.essai?0:2,'rendez-vous']].map(s=>`<div class="stat"><b class="num">${s[0]}</b><span class="petit doux">${s[1]}</span></div>`).join('')}</div></div>
+ <div class="carte g"><span class="petit doux gras">PROCHAINE ACTION CONSEILLÉE</span><p>Vos restaurants répondent 3 fois plus que vos écoles. Déplacer le budget ?</p><div class="l"><button class="btn xs n" data-toast="C'est fait : le budget des écoles passe sur les restaurants.">Oui</button><button class="btn xs s" data-toast="D'accord, on ne change rien.">Non</button></div></div>
+ <div class="grille2"><div class="carte g"><span class="petit doux gras">PAR CANAL</span>${[['wa','WhatsApp',62,12],['ml','Email',24,2]].filter(r=>!E.essai||r[0]==='ml').map(r=>`<div class="l">${badge(r[0])}<span class="x petit">${r[1]}</span><span class="petit doux num">${r[2]} envoyés · ${r[3]} réponses</span></div>`).join('')}</div>
+ <div class="carte g"><div class="l"><span class="petit doux gras x">VOS COMPTES</span><a class="petit acc" href="#comptes">Gérer</a></div><div class="l">${badge('ml')}<span class="x petit">Gmail</span><span class="petit doux num">12 / 30 aujourd'hui</span></div>${E.essai?`<div class="l">${badge('wa')}<span class="x petit">WhatsApp</span><span class="pill">${cad} Verrouillé</span></div>`:`<div class="l">${badge('wa')}<span class="x petit">WhatsApp</span><span class="petit doux num">24 / 40 aujourd'hui</span></div>`}</div></div>
+ <div class="carte g"><span class="petit doux gras">CE QUE L'AGENT A FAIT AUJOURD'HUI</span>${[['10:42','A répondu à Boutique Awa (question sur les délais)'],['09:15','A écrit à 12 restaurants de Cotonou'],['08:30','A trouvé 18 nouvelles entreprises']].map(r=>`<div class="l" style="align-items:flex-start"><span class="petit doux num" style="width:44px">${r[0]}</span><span class="x petit">${r[1]}</span></div>`).join('')}</div>`);
+
+P.decisions=()=>app('decisions','Décisions',`<div class="l"><span class="chip" aria-pressed="true">En attente · ${E.decisions.length}</span><button class="chip" data-toast="12 décisions déjà répondues ce mois-ci.">Déjà répondues</button></div>
+ ${E.decisions.map(carteDecision).join('')||'<div class="carte c g"><h3>Tout est réglé</h3><p class="doux petit">L\'agent vous écrira sur WhatsApp à la prochaine question.</p></div>'}
+ <p class="petit doux">Sans réponse au bout de 4 heures, l'agent fait patienter le prospect et vous relance. Vous pouvez aussi répondre par Oui ou Non sur WhatsApp.</p>`);
+
+const PRO=[['Maquis Chez Tanti','Cotonou','wa','Intéressé','o'],['Hôtel du Lac','Cotonou','ml','Rendez-vous jeudi','v'],['Boutique Awa','Porto-Novo','wa','En discussion','i'],['Restaurant Le Privé','Cotonou','wa','Relance dans 2 j',''],['École Les Lauréats','Abomey-Calavi','ml','À contacter','']];
+P.prospects=()=>app('prospects','Prospects',`<div class="l"><input class="champ x" id="pr-q" placeholder="Chercher une entreprise" style="flex:1"><button class="btn b xs" data-toast="Importez un fichier Excel ou ajoutez une entreprise à la main.">+ Ajouter</button></div>
+ <div class="l wrap">${['Toutes','Intéressées','En discussion','À contacter'].map((x,i)=>`<button class="chip" aria-pressed="${i===0}">${x}</button>`).join('')}</div>
+ <div class="carte"><p class="petit doux" style="padding-bottom:6px">1 240 trouvées · 186 contactées</p>${PRO.map(r=>`<a class="rang" href="#fiche">${badge(r[2])}<span class="x g" style="gap:0;flex:1;min-width:0"><b>${r[0]}</b><span class="petit doux">${r[1]}</span></span><span class="pill ${r[4]}">${r[3]}</span></a>`).join('')}</div>
+ <div class="carte g"><span class="petit doux gras">ELLES ATTENDENT ENCORE</span>${lignesFloues(3)}<p class="petit"><b class="num">1 054</b> entreprises pas encore contactées · <b class="num">820</b> joignables sur WhatsApp</p><a class="btn p plein" href="#forfait">Les débloquer</a></div>`);
+
+P.fiche=()=>app('fiche','Maquis Chez Tanti',`<a href="#prospects" class="petit acc">← Tous les prospects</a>
+ <div class="carte g"><div class="l"><div class="x" style="flex:1"><h3>Maquis Chez Tanti</h3><p class="petit doux">Restaurant · Cotonou · 1 à 10 personnes</p></div><span class="pill i num">92</span></div><p class="petit">Contact : <b>Mme Houngbo</b>, gérante</p></div>
+ <div class="carte g g6"><span class="petit doux gras">POURQUOI LUI ÉCRIRE</span><p>Logo difficile à lire sur sa page Facebook. A ouvert un deuxième point de vente en octobre.</p></div>
+ <div class="carte g g6"><span class="petit doux gras">COMMENT LA JOINDRE</span><div class="l">${badge('wa')}<span class="x">+229 96 12 34 56</span><span class="pill v">Utilisé</span></div><div class="l">${badge('fb')}<span class="x">Maquis Chez Tanti</span></div></div>
+ <div class="carte g"><span class="petit doux gras">HISTORIQUE</span>${[['Lun 09:12','Premier message envoyé sur WhatsApp'],['Lun 14:30','Elle répond : « Oui ça m\'intéresse, c\'est combien ? »'],['Lun 14:41','L\'agent donne votre fourchette de prix']].map(r=>`<div class="l" style="align-items:flex-start"><span class="petit doux num" style="width:74px">${r[0]}</span><span class="x petit">${r[1]}</span></div>`).join('')}<a class="btn s plein" href="#fil">Voir la conversation</a></div>
+ <div class="carte g"><span class="petit doux gras">RÉSULTAT</span><div class="l wrap">${['Signé','En discussion','Perdu'].map((x,i)=>`<button class="chip" aria-pressed="${i===1}">${x}</button>`).join('')}</div><label class="et">Ma note<textarea class="champ" id="fi-note" rows="2" placeholder="Visible seulement par vous"></textarea></label><button class="btn b plein" data-toast="Maquis Chez Tanti ne sera plus contacté.">Ne plus contacter</button></div>`);
+
+P.conversations=()=>app('conversations','Conversations',`<div class="l wrap">${['Toutes','À moi','Gérées par l\'agent'].map((x,i)=>`<button class="chip" aria-pressed="${i===0}">${x}</button>`).join('')}</div>
+ <div class="carte">${[['Maquis Chez Tanti','wa','Oui ça m\'intéresse, c\'est combien…','14:30','o','Chaud'],['Hôtel du Lac','ml','Jeudi 15 h me va très bien','11:02','v','RDV'],['Boutique Awa','wa','Faites-vous aussi les enseignes ?','10:40','i','Question'],['Restaurant Le Privé','wa','Vous : Bonjour Monsieur Dossou…','hier','','']].map(r=>`<a class="rang" href="#fil">${badge(r[1])}<span class="x g" style="gap:0;flex:1;min-width:0"><b>${r[0]}</b><span class="petit doux" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r[2]}</span></span><span class="g g6" style="align-items:flex-end"><span class="mini doux">${r[3]}</span>${r[5]?`<span class="pill ${r[4]}">${r[5]}</span>`:''}</span></a>`).join('')}</div>
+ <p class="petit doux">Ces conversations sont aussi dans votre WhatsApp et votre boîte email. Si vous répondez vous-même depuis votre téléphone, l'agent vous laisse la main.</p>`);
+
+P.fil=()=>app('fil','Maquis Chez Tanti',`<div class="l"><a href="#conversations" class="petit acc x" style="flex:1">← Conversations</a>${badge('wa')}<span class="pill ${E.main?'o':'i'}">${E.main?'Vous avez la main':'Géré par l\'agent'}</span></div>
+ <div class="g">
+  <div class="bulle e">Bonjour Madame Houngbo, ici Koffi du Studio Koffi, graphiste à Cotonou. J'ai vu la carte du Maquis Chez Tanti sur Facebook : le logo est difficile à lire sur téléphone. Je vous prépare 3 idées de logo, sans engagement ?<br><span class="mini doux">Répondez STOP pour ne plus recevoir de message</span></div>
+  <button class="mini acc" style="align-self:flex-end" data-toast="Choisie pour son logo peu lisible et son 2e point de vente. WhatsApp : c'est là qu'elle répond.">Pourquoi ce message ?</button>
+  <div class="bulle r">Oui ça m'intéresse, c'est combien pour un logo ?</div>
+  <div class="bulle e">Entre 40 000 et 60 000 FCFA selon le projet, livré en 5 jours.</div></div>
+ ${E.main?`<div class="carte g"><textarea class="champ" id="fil-msg" rows="2" placeholder="Votre message"></textarea><div class="l"><button class="btn p x" style="flex:1" data-toast="Message envoyé depuis votre WhatsApp.">Envoyer</button><button class="btn s" data-main="0">Rendre la main</button></div></div>`
+ :`<div class="carte g"><span class="petit doux gras">L'AGENT PRÉPARE</span><p>« Je peux vous appeler demain matin pour en parler ? »</p><div class="l wrap"><button class="btn xs n" data-toast="Message envoyé depuis votre WhatsApp.">Envoyer</button><button class="btn xs s" data-toast="Vous pouvez corriger le texte avant l'envoi.">Modifier</button><button class="btn xs b" data-main="1">Reprendre la main</button></div></div>`}`);
+
+P.campagnes=()=>app('campagnes','Campagnes',`<a class="btn p plein" href="#campagne">+ Nouvelle campagne</a>
+ ${[['Restaurants de Cotonou','En cours','v',124,19,3,'4 100 FCFA par rendez-vous'],['Boutiques de mode','En cours','v',62,6,1,'Email et WhatsApp'],['Écoles privées','En pause','o',18,0,0,'Mise en pause par l\'agent, avec votre accord']].map(c=>`<a class="carte g" href="#campagne"><div class="l"><h3 class="x">${c[0]}</h3><span class="pill ${c[2]}">${c[1]}</span></div><div class="grille" style="grid-template-columns:repeat(3,1fr)">${[[c[3],'contactées'],[c[4],'réponses'],[c[5],'rendez-vous']].map(s=>`<div class="stat" style="padding:10px"><b class="num" style="font-size:1.3rem">${s[0]}</b><span class="mini doux">${s[1]}</span></div>`).join('')}</div><span class="petit doux">${c[6]}</span></a>`).join('')}`);
+
+P.campagne=()=>{const o=E.onglet,ong=[['cible','Cible'],['messages','Messages'],['rythme','Rythme'],['budget','Budget']];
+ const corps={cible:`<div class="g"><span class="petit doux gras">SECTEURS</span><div class="l wrap">${['Restaurants','Maquis','Traiteurs'].map(x=>`<span class="chip" aria-pressed="true">${x} ×</span>`).join('')}<button class="chip">+ Ajouter</button></div><span class="petit doux gras">VILLES</span><div class="l wrap">${['Cotonou','Abomey-Calavi'].map(x=>`<span class="chip" aria-pressed="true">${x} ×</span>`).join('')}<button class="chip">+ Ajouter</button></div><span class="petit doux gras">TAILLE</span><div class="l wrap" data-m>${['1 à 10','11 à 50','51 à 200','Plus de 200'].map((x,i)=>`<button class="chip" aria-pressed="${i<2}">${x}</button>`).join('')}</div><span class="petit doux gras">SIGNAUX</span><div class="l wrap" data-m>${['Pas de logo professionnel','Ouverture récente','Recrute'].map((x,i)=>`<button class="chip" aria-pressed="${i<2}">${x}</button>`).join('')}</div><p class="bloc petit"><b class="num">1 240</b> entreprises correspondent · <b class="num">1 054</b> pas encore contactées</p></div>`,
+  messages:`<div class="g"><span class="petit doux gras">TON</span><div class="l wrap">${['Très poli','Simple et direct','Chaleureux'].map((x,i)=>`<button class="chip" aria-pressed="${i===1}">${x}</button>`).join('')}</div><span class="petit doux gras">EXEMPLE</span><div class="bulle e" style="max-width:100%">Bonjour Madame Houngbo, ici Koffi du Studio Koffi. Le logo du Maquis Chez Tanti est difficile à lire sur téléphone. Je vous prépare 3 idées, sans engagement ?</div><label class="et">L'offre mise en avant<input class="champ" id="ca-offre" value="3 idées de logo, sans engagement"></label><button class="btn s plein" data-toast="Voici 3 autres exemples écrits pour de vraies entreprises.">Voir 3 autres exemples</button></div>`,
+  rythme:`<div class="g"><span class="petit doux gras">ORDRE DES CANAUX</span><div class="rang">${badge('wa')}<span class="x" style="flex:1">1. WhatsApp</span><span class="doux">↕</span></div><div class="rang">${badge('ml')}<span class="x" style="flex:1">2. Email</span><span class="doux">↕</span></div><span class="petit doux gras">RELANCES</span>${[['Jour 1','Premier message'],['Jour 3','Relance avec une réalisation'],['Jour 7','Dernier message, court']].map(r=>`<div class="rang"><b class="petit">${r[0]}</b><span class="petit doux">${r[1]}</span></div>`).join('')}<p class="petit doux">Jamais plus de 3 messages sans réponse à la même entreprise.</p></div>`,
+  budget:`<div class="g"><label class="et">Entreprises par jour<input type="range" id="ca-j" min="1" max="10" value="6"></label><p class="bloc petit">6 par jour · votre forfait en permet jusqu'à 10</p><div class="rang"><span class="doux">Part du forfait</span><b class="num">60 entreprises</b></div><div class="barre"><i style="width:70%"></i></div><p class="petit doux num">42 déjà contactées</p></div>`};
+ return app('campagne','Restaurants de Cotonou',`<a href="#campagnes" class="petit acc">← Campagnes</a>
+ <div class="carte g" style="background:var(--indigo-doux)"><span class="petit gras" style="color:var(--indigo)">CE QUE VOUS POUVEZ EN ATTENDRE</span><div class="grille" style="grid-template-columns:repeat(3,1fr)">${[['~60','contactées'],['8 à 14','réponses'],['2 à 4','rendez-vous']].map(s=>`<div><b class="num" style="font-family:var(--titre);font-size:1.4rem;font-weight:500;display:block">${s[0]}</b><span class="mini doux">${s[1]}</span></div>`).join('')}</div><span class="mini doux">Estimation, à confirmer par vos premiers résultats.</span></div>
+ <div class="l" style="overflow-x:auto;padding-bottom:2px">${ong.map(([k,l])=>`<button class="chip" data-onglet="${k}" aria-pressed="${o===k}">${l}</button>`).join('')}</div>
+ <div class="carte">${corps[o]}</div><div class="l"><button class="btn p x" style="flex:1" data-toast="Campagne enregistrée.">Enregistrer</button><button class="btn b" data-toast="Campagne mise en pause.">Pause</button></div>`)};
+
+P.rapports=()=>app('rapports','Rapports',`<div class="l wrap">${['Cette semaine','Ce mois','Depuis le début'].map((x,i)=>`<button class="chip" aria-pressed="${i===1}">${x}</button>`).join('')}</div>
+ <div class="carte g"><span class="petit doux gras">LE CHEMIN DE VOS PROSPECTS</span>${[['Trouvées',1240,100],['Contactées',186,60],['Ont répondu',25,34],['Intéressées',9,20],['Rendez-vous',4,12],['Signés',1,6]].map(r=>`<div class="g" style="gap:4px"><div class="l"><span class="x petit">${r[0]}</span><b class="num petit">${F(r[1])}</b></div><div class="barre"><i style="width:${r[2]}%"></i></div></div>`).join('')}</div>
+ <div class="grille" style="grid-template-columns:1fr 1fr"><div class="stat"><b class="num">23 400</b><span class="petit doux">FCFA dépensés</span></div><div class="stat"><b class="num">60 000</b><span class="petit doux">FCFA gagnés</span></div><div class="stat"><b class="num">5 850</b><span class="petit doux">FCFA par rendez-vous</span></div><div class="stat"><b class="num">13 %</b><span class="petit doux">de réponses</span></div></div>
+ <div class="grille2"><div class="carte g"><span class="petit doux gras">PAR CANAL</span><div class="l">${badge('wa')}<span class="x petit">WhatsApp</span><b class="num petit">16 % de réponses</b></div><div class="l">${badge('ml')}<span class="x petit">Email</span><b class="num petit">5 % de réponses</b></div></div>
+ <div class="carte g"><span class="petit doux gras">PAR CAMPAGNE</span><div class="l"><span class="x petit">Restaurants</span><b class="num petit">15 % · 3 RDV</b></div><div class="l"><span class="x petit">Boutiques</span><b class="num petit">10 % · 1 RDV</b></div></div></div>
+ <div class="carte g g6"><span class="petit doux gras">CE QUE L'AGENT A APPRIS</span><p class="petit">Les restaurants répondent surtout le mardi entre 9 h et 11 h.</p><p class="petit">L'accroche « logo illisible sur téléphone » marche 2 fois mieux que les autres.</p></div>
+ <div class="carte g"><span class="petit doux gras">VOS RAPPORTS</span><div class="rang"><span>Point du jour sur WhatsApp</span><button class="tog" role="switch" aria-checked="true" aria-label="Point du jour"></button></div><div class="rang"><span>Bilan de la semaine, le lundi</span><button class="tog" role="switch" aria-checked="true" aria-label="Bilan de la semaine"></button></div><div class="rang"><span>Bilan du mois par email</span><button class="tog" role="switch" aria-checked="false" aria-label="Bilan du mois"></button></div><button class="btn s plein" data-toast="Image prête à partager en statut WhatsApp.">Partager mon bilan de la semaine</button></div>`);
+
+P.comptes=()=>{const max=E.essai?1:palier(E.montant).cpt,nb=Object.values(E.connectes).filter(Boolean).length;
+ return app('comptes','Vos comptes',`<div class="bloc l"><span class="x petit">${E.essai?'Essai gratuit : Gmail seulement':`Votre forfait : ${palier(E.montant).cptTxt.toLowerCase()} en même temps, au choix`}</span><b class="num petit">${nb} / ${max===5?5:max}</b></div>
+ ${Object.entries(RES).map(([k,[n,,v]])=>{const on=E.connectes[k],verrou=E.essai&&k!=='ml',plein=!on&&nb>=max&&!verrou,q=k==='wa'?[24,40]:[12,30];
+  return`<div class="carte g"><div class="l">${badge(k)}<div class="x" style="flex:1;min-width:0"><b>${n}</b><p class="petit doux">${on?(k==='wa'?'+229 97 00 00 00':k==='ml'?'koffi@studiokoffi.com':'@studiokoffi'):v+' entreprises joignables ici'}</p></div>${on?'<span class="pill v">En bonne santé</span>':''}</div>
+  ${on?`<div class="g" style="gap:4px"><div class="l petit"><span class="x doux">Aujourd'hui</span><b class="num">${q[0]} / ${q[1]}</b></div><div class="barre v"><i style="width:${q[0]/q[1]*100}%"></i></div></div><button class="btn xs b" data-cx="${k}">Débrancher</button>`
+  :verrou?`<a class="btn xs s" href="#forfait">${cad} Disponible avec un forfait</a>`:plein?`<a class="btn xs s" href="#forfait">Passer au forfait supérieur pour l'ajouter</a>`:`<button class="btn xs n" data-cx="${k}">Connecter</button>`}</div>`}).join('')}
+ <p class="petit doux">Limite fixe : 40 nouveaux messages par jour et par compte. Au-delà, WhatsApp peut limiter votre compte.</p>`)};
+
+P.forfait=()=>app('forfait','Forfait',`
+ ${E.essai?`<div class="carte g"><div class="l"><h3 class="x">Essai gratuit</h3><span class="pill sf">reste 4 jours</span></div><div class="barre sf"><i style="width:30%"></i></div><p class="petit doux">3 entreprises contactées sur 10, par email.</p></div>`
+ :`<div class="carte g"><h3>Votre forfait</h3><div class="g" style="gap:4px"><div class="l petit"><span class="x doux">Entreprises</span><b class="num">86 / 120</b></div><div class="barre"><i style="width:72%"></i></div></div><div class="g" style="gap:4px"><div class="l petit"><span class="x doux">Durée</span><b class="num">reste 19 jours</b></div><div class="barre sf"><i style="width:37%"></i></div></div><p class="bloc petit">Rechargez avant le 3 décembre : vos 34 entreprises restantes sont reportées, avec 10 % en plus.</p></div>`}
+ <h3>${E.essai?'Prendre un forfait':'Recharger'}</h3>${curseur('<button class="btn p plein" data-nav="paiement">Payer en Mobile Money →</button>')}
+ <div class="carte g"><span class="petit doux gras">HISTORIQUE</span>${[['14 nov.','Maquis Chez Tanti, contactée','− 1'],['14 nov.','Hôtel du Lac, contactée','− 1'],['12 nov.','Forfait 30 000 FCFA, MTN MoMo','+ 120'],['11 nov.','Restaurant Le Privé, non livré','+ 1']].map(r=>`<div class="rang"><span class="g" style="gap:0"><span class="petit">${r[1]}</span><span class="mini doux">${r[0]}</span></span><b class="num">${r[2]}</b></div>`).join('')}</div>`);
+
+P.reglages=()=>app('reglages','Réglages',`
+ <div class="carte g"><h3>Mon activité</h3><label class="et">Ce que vous vendez<textarea class="champ" id="rg-a" rows="2">Logos, affiches et identité visuelle pour les commerces de Cotonou</textarea></label><label class="et">Vos prix<input class="champ" id="rg-p" value="Logo : 40 000 à 60 000 FCFA"></label><button class="btn s plein" data-toast="L'agent relit votre site.">Relancer l'analyse de mon site</button></div>
+ <div class="carte g"><h3>Ce que l'agent décide seul</h3><div class="l wrap">${['Prudent','Équilibré','Autonome'].map((x,i)=>`<button class="chip" data-auto="${i}" aria-pressed="${E.autonomie===i}">${x}</button>`).join('')}</div><p class="petit doux">${['Vous validez les premiers messages de chaque campagne.','L\'agent écrit seul et vous demande pour l\'important.','L\'agent fait tout et vous prévient après.'][E.autonomie]}</p>
+ ${[['Écrire le premier message',[0,1,1]],['Relancer',[1,1,1]],['Répondre à une question simple',[1,1,1]],['Annoncer un prix',[0,0,1]],['Confirmer un rendez-vous',[0,0,1]],['Répondre à un prospect très intéressé',[0,0,1]]].map(r=>`<div class="rang"><span class="petit">${r[0]}</span><span class="pill ${r[1][E.autonomie]?'v':'i'}">${r[1][E.autonomie]?'Agent seul':'Me demande'}</span></div>`).join('')}</div>
+ <div class="carte g"><h3>Ce que l'agent dit</h3><label class="et">Nom affiché<input class="champ" id="rg-n" value="Koffi Adjovi — Studio Koffi"></label><label class="et">Ne jamais dire<input class="champ" id="rg-j" value="Ne jamais promettre une livraison en moins de 3 jours"></label><div class="rang"><span class="petit">Réponses retenues</span><span class="pill">4</span></div></div>
+ <div class="carte g"><h3>Horaires et agenda</h3><div class="rang"><span class="petit">Rendez-vous possibles</span><b class="petit">Lun–Ven, 9 h – 17 h</b></div><div class="rang"><span class="petit">Agenda Google</span><span class="pill v">Branché</span></div><div class="rang"><span class="petit">Ne pas me déranger le dimanche</span><button class="tog" role="switch" aria-checked="true" aria-label="Ne pas déranger le dimanche"></button></div></div>
+ <div class="carte g"><h3>À ne pas contacter</h3><div class="l wrap">${['Studio Pixel','Maquis du Port','hotelbenin.bj'].map(x=>`<span class="chip">${x} ×</span>`).join('')}<button class="chip">+ Ajouter</button></div></div>
+ <div class="carte g g6"><h3>Ce que vous ne pouvez pas changer</h3><p class="petit doux">40 nouveaux messages par jour et par compte · « Répondez STOP » dans chaque premier message · Pas d'envoi avant 8 h, après 19 h, ni le dimanche.</p></div>
+ <button class="btn b plein" data-nav="accueil">Me déconnecter</button>`);
+
+P.menu=()=>app('menu','Plus',`<div class="carte">${NAV.filter(n=>['prospects','campagnes','comptes','forfait','reglages'].includes(n[0])).map(([k,l,i])=>`<a class="rang" href="#${k}"><span class="l" style="color:var(--doux)">${ico(i)}</span><b class="x" style="flex:1">${l}</b><span class="doux">→</span></a>`).join('')}</div><a class="btn s plein" href="#plan">Toutes les pages de la maquette</a>`);
+
+P.plan=()=>pub(`<section class="g g20" style="padding-top:16px"><div class="g g6"><h2>Toutes les pages</h2><p class="doux">Touchez une page pour l'ouvrir. Les données sont des exemples.</p></div>
+ <div class="carte l"><div class="x" style="flex:1"><b>Voir en mode essai gratuit</b><p class="petit doux">Gmail seulement, réseaux verrouillés</p></div><button class="tog" role="switch" aria-checked="${E.essai}" data-mode="1" aria-label="Mode essai gratuit"></button></div>
+ ${[['Le site public',[['accueil','Page d\'accueil'],['tarifs','Tarifs'],['connexion','Connexion']]],
+   ['Le parcours d\'un nouveau client',[['decrire','Décrire son activité'],['analyse','L\'agent analyse, en direct'],['questions','Questions de l\'agent'],['profils','Clients idéaux'],['recherche','Recherche des entreprises'],['apercu','Aperçu flouté'],['inscription','Inscription'],['offre','Essai gratuit ou forfait'],['paiement','Paiement Mobile Money'],['comptes-connexion','Connecter ses comptes'],['demarrage','Derniers réglages']]],
+   ['Le tableau de bord',[['app-accueil','Accueil'],['decisions','Décisions'],['prospects','Prospects'],['fiche','Fiche d\'un prospect'],['conversations','Conversations'],['fil','Une conversation'],['campagnes','Campagnes'],['campagne','Régler une campagne'],['rapports','Rapports'],['comptes','Comptes connectés'],['forfait','Forfait'],['reglages','Réglages']]]
+  ].map(([t,l])=>`<div class="g g6"><h3>${t}</h3><div class="carte">${l.map(([k,n],i)=>`<a class="rang" href="#${k}"><span class="num doux petit" style="width:22px">${i+1}</span><span class="x" style="flex:1">${n}</span><span class="doux">→</span></a>`).join('')}</div></div>`).join('')}</section>`);
+
+/* ---------- moteur ---------- */
+let minuteries=[],inter=[];const R=document.getElementById('racine'),C=document.getElementById('calque');
+const plus=(f,ms)=>minuteries.push(setTimeout(f,ms));
+function toast(t){C.innerHTML=`<div class="toast apparait" role="status">${t}</div>`;setTimeout(()=>{if(C.querySelector('.toast'))C.innerHTML=''},2600)}
+function page(){return (location.hash||'#accueil').slice(1)}
+function rendre(garde){minuteries.forEach(clearTimeout);minuteries=[];inter.forEach(clearInterval);inter=[];const n=P[page()]?page():'accueil';const y=window.scrollY;R.innerHTML=P[n]();if(garde)window.scrollTo(0,y);else window.scrollTo(0,0);
+  if(n==='analyse')animAnalyse();if(n==='recherche')animRecherche();if(n==='accueil')animAccueil();animer(garde)}
+function compte(el){const fin=+el.dataset.n,t0=performance.now();const f=t=>{const q=Math.min(1,(t-t0)/1100);el.textContent=F(Math.round(fin*(1-Math.pow(1-q,3))));if(q<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function animer(garde){if(!garde){const m=R.querySelector('main.page');if(m)m.classList.add('entre')}
+  if(!('IntersectionObserver' in window))return;const vh=innerHeight;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('av');e.target.querySelectorAll('[data-n]').forEach(compte);io.unobserve(e.target)}}),{threshold:.12});
+  R.querySelectorAll('.rv').forEach(el=>{if(!garde&&el.getBoundingClientRect().top>vh*.92)el.classList.add('av');io.observe(el)})}
+function animAccueil(){const mots=['WhatsApp','email','Instagram','LinkedIn','Facebook'];let i=0;const rot=document.getElementById('rot');
+  inter.push(setInterval(()=>{if(!rot.isConnected)return;i=(i+1)%mots.length;rot.classList.remove('chg');void rot.offsetWidth;rot.textContent=mots[i];rot.classList.add('chg')},2300));
+  const M=[['e','Bonjour Madame Houngbo, ici Koffi du Studio Koffi. Le logo du Maquis Chez Tanti est difficile à lire sur téléphone. Je vous prépare 3 idées ?'],['r','Oui, ça m\'intéresse. C\'est combien ?'],['e','Entre 40 000 et 60 000 FCFA. Jeudi 15 h pour en parler ?'],['r','Jeudi 15 h, d\'accord.'],['ok','Rendez-vous noté · jeudi 15 h']];
+  const bul=m=>m[0]==='ok'?`<span class="pill v apparait" style="align-self:center">✓ ${m[1]}</span>`:`<div class="bulle ${m[0]} apparait">${m[1]}</div>`;let k=1;
+  const tour=()=>{const fil=document.getElementById('tel-fil');if(!fil)return;
+    if(k>=M.length){plus(()=>{fil.innerHTML=bul(M[0]);k=1;plus(tour,1700)},4200);return}
+    fil.insertAdjacentHTML('beforeend',`<div class="bulle ${M[k][0]==='r'?'r':'e'} pts" id="pts"><span></span><span></span><span></span></div>`);
+    plus(()=>{const x=document.getElementById('pts');if(x)x.remove();fil.insertAdjacentHTML('beforeend',bul(M[k]));k++;plus(tour,1500)},1100)};
+  plus(tour,1800);
+  let st=0,auto=true;const go=n=>{st=n;document.querySelectorAll('[data-pas]').forEach((b,j)=>b.setAttribute('aria-selected',j===n));
+    const t=document.getElementById('pas-titre'),c=document.getElementById('pas-corps'),bar=document.getElementById('pas-barre');if(!c)return;
+    t.textContent=PAS[n][0];c.innerHTML=`<div class="g apparait">${PAS[n][2]}</div>`;bar.style.animation='none';void bar.offsetWidth;bar.style.animation=auto?'remplit 4.6s linear both':'none'};
+  window._pas=n=>{auto=false;go(n)};document.getElementById('pas-barre').style.animation='remplit 4.6s linear both';
+  inter.push(setInterval(()=>{if(auto)go((st+1)%PAS.length)},4600))}
+function animAnalyse(){const L=document.getElementById('an-liste'),ok=t=>`<span class="l petit apparait"><b class="acc">✓</b>${t}</span>`;
+  ['Logos et identité visuelle','Affiches, flyers, menus','Prix : 40 000 à 60 000 FCFA','Zone : Cotonou et environs'].forEach((t,i)=>plus(()=>L&&L.insertAdjacentHTML('beforeend',ok(t)),500+i*550));
+  plus(()=>{document.getElementById('an-2').hidden=false;document.getElementById('an-att').lastChild.textContent='Étude de vos concurrents…'},2900);
+  ['Studio Pixel','Créa Bénin','Agence Kpodo','Design 229'].forEach((t,i)=>plus(()=>document.getElementById('an-conc').insertAdjacentHTML('beforeend',ok(t)),3200+i*450));
+  plus(()=>{document.getElementById('an-3').hidden=false;document.getElementById('an-cib').innerHTML=[['Restaurants et maquis',92],['Boutiques de mode',85],['Écoles privées',78]].map(r=>`<div class="rang apparait"><span>${r[0]}</span><b class="num doux">${r[1]} %</b></div>`).join('');
+    document.getElementById('an-att').hidden=true;document.getElementById('an-suite').hidden=false;document.getElementById('an-titre').innerHTML='Koko a compris <span class="acc">votre activité</span>'},5300)}
+function animRecherche(){const N=document.getElementById('rc-n'),T=document.getElementById('rc-t'),Cx=document.getElementById('rc-c');let n=0;
+  const pas=()=>{n=Math.min(1240,n+47);if(N)N.textContent=F(n);if(n<1240)plus(pas,60)};pas();
+  ['Boutiques de Porto-Novo…','Écoles d\'Abomey-Calavi…','Recherche des numéros WhatsApp…','Recherche des adresses email…'].forEach((t,i)=>plus(()=>T&&(T.textContent=t),800+i*800));
+  Object.entries(RES).forEach(([k,[nm,,v]],i)=>plus(()=>Cx&&Cx.insertAdjacentHTML('beforeend',`<div class="l apparait">${badge(k)}<span class="x petit">${nm}</span><b class="num petit">${v}</b></div>`),1500+i*500));
+  plus(()=>{if(page()==='recherche')location.hash='apercu'},4700)}
+function modalWA(){C.innerHTML=`<div class="voile" data-ferme="1"><div class="carte g c apparait"><h3>Scannez avec WhatsApp</h3><div class="qr">${Array.from({length:144},(_,i)=>`<i class="${(i*7+(i%5)*3+(i>>2))%3?'':'v'}"></i>`).join('')}</div><p class="petit doux">Ouvrez WhatsApp › Appareils connectés › Connecter un appareil</p><button class="btn p plein" data-waok="1">J'ai scanné le code</button><button class="btn s plein" data-ferme="1">Annuler</button></div></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('button,[data-ferme]');if(!b)return;const d=b.dataset;
+  if(d.ferme&&(e.target===b||b.tagName==='BUTTON')){C.innerHTML='';return}
+  if(d.waok){E.connectes.wa=true;C.innerHTML='';rendre(true);toast('WhatsApp connecté : +229 97 00 00 00');return}
+  if(d.pas){window._pas&&window._pas(+d.pas);return}
+  if(d.nav){location.hash=d.nav;return}
+  if(d.essai){E.essai=true;E.connectes={ml:false,wa:false,ig:false,fb:false,li:false};location.hash='comptes-connexion';return}
+  if(d.rep){const dec=E.decisions.find(x=>x.id==d.rep);E.decisions=E.decisions.filter(x=>x.id!=d.rep);rendre(true);toast(dec?`Noté : « ${b.textContent.trim()} ». L'agent s'en occupe.`:'Noté.');return}
+  if(d.pause){E.pause=!E.pause;rendre(true);toast(E.pause?'Envois en pause. Les conversations en cours continuent.':'L\'agent a repris.');return}
+  if(d.cx){const k=d.cx;if(E.connectes[k]){E.connectes[k]=false;rendre(true);toast(RES[k][0]+' débranché.')}else if(k==='wa'){modalWA()}else{E.connectes[k]=true;rendre(true);toast(RES[k][0]+' connecté.')}return}
+  if(d.ton){E.ton=+d.ton;rendre(true);return}
+  if(d.auto){E.autonomie=+d.auto;rendre(true);return}
+  if(d.onglet){E.onglet=d.onglet;rendre(true);return}
+  if(d.main){E.main=d.main==='1';rendre(true);toast(E.main?'Vous avez la main. L\'agent n\'écrit plus dans cette conversation.':'L\'agent reprend la conversation.');return}
+  if(d.mode){E.essai=!E.essai;E.connectes=E.essai?{ml:true,wa:false,ig:false,fb:false,li:false}:{ml:true,wa:true,ig:false,fb:false,li:false};rendre(true);toast(E.essai?'Mode essai gratuit activé.':'Mode forfait activé.');return}
+  if(d.toast){toast(d.toast);return}
+  if(b.classList.contains('tog')){b.setAttribute('aria-checked',b.getAttribute('aria-checked')!=='true');return}
+  if(b.classList.contains('chip')&&b.hasAttribute('aria-pressed')&&b.tagName==='BUTTON'){const grp=b.parentElement.querySelectorAll('.chip[aria-pressed]');const multi=b.parentElement.hasAttribute('data-m');
+    if(!multi)grp.forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed',multi?b.getAttribute('aria-pressed')!=='true':'true')}
+});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
+  if(f.dataset.paye){E.essai=false;C.innerHTML=`<div class="voile"><div class="carte g c apparait"><span class="tour" style="margin:0 auto;width:28px;height:28px"></span><h3>Validez sur votre téléphone</h3><p class="petit doux">Composez votre code secret Mobile Money.</p></div></div>`;
+    setTimeout(()=>{C.innerHTML='';E.connectes={ml:false,wa:false,ig:false,fb:false,li:false};location.hash='comptes-connexion';toast('Paiement reçu. Votre forfait est actif pour 30 jours.')},1900);return}
+  if(f.dataset.go)location.hash=f.dataset.go});
+document.addEventListener('input',e=>{if(e.target.id==='curseur'){const m=E.montant=e.target.value*1000;document.getElementById('cur-m').textContent=F(m);document.getElementById('cur-pc').hidden=m!==25000;document.getElementById('cur-dyn').innerHTML=curDyn(m)}});
+window.addEventListener('hashchange',()=>rendre(false));rendre(false);
+</script>

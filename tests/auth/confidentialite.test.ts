@@ -26,6 +26,24 @@ describe("Confidentialité des comptes", () => {
     expect(extrait).not.toMatch(/existe déjà|déjà inscrit|already registered/i);
   });
 
+  it("un mot de passe faible n'est pas confondu avec un compte existant", () => {
+    const debut = actions.indexOf("export async function inscription");
+    const fin = actions.indexOf("export async function creerEntreprise");
+    const bloc = actions.slice(debut, fin);
+
+    // Supabase renvoie le statut 422 pour un mot de passe faible COMME pour
+    // un email déjà pris : filtrer sur le statut seul ferait passer un mot
+    // de passe refusé pour une inscription réussie.
+    expect(bloc).not.toMatch(/status\s*===\s*422/);
+
+    // Le mot de passe faible doit donc être traité en premier.
+    const posFaible = bloc.indexOf("weak_password");
+    const posExistant = bloc.indexOf("user_already_exists");
+    expect(posFaible).toBeGreaterThan(-1);
+    expect(posExistant).toBeGreaterThan(-1);
+    expect(posFaible).toBeLessThan(posExistant);
+  });
+
   it("la connexion donne le même message pour email inconnu et mot de passe faux", () => {
     expect(actions).toMatch(/Adresse email ou mot de passe incorrect/);
     // Un seul message d'échec possible sur ce chemin.

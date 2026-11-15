@@ -234,14 +234,31 @@ otp_length = 6
 otp_expiry = 3600
 
 # Use a production-ready SMTP server
+#
+# ───── Djeli : envoi des emails par Resend (module 04) ─────
+#
+# Ce bloc reste VOLONTAIREMENT commenté. En local, les emails doivent être
+# attrapés par le serveur de test intégré (Inbucket, http://127.0.0.1:54324) :
+# sinon chaque inscription de test partirait vraiment vers une vraie boîte et
+# consommerait le quota Resend.
+#
+# En PRODUCTION, Supabase hébergé ne lit pas ce fichier : le SMTP se règle
+# dans le tableau de bord du projet, à la page
+# « Authentication → Emails → SMTP Settings », avec exactement ces valeurs.
+# Le domaine djeliai.com doit être vérifié dans Resend avant le premier envoi.
+#
+# Pour tester un envoi réel depuis le local (optionnel) : mets RESEND_API_KEY
+# dans .env.local, décommente les 8 lignes ci-dessous, puis relance la base
+# avec `npm run db:stop` suivi de `npm run db:start`.
+#
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.sendgrid.net"
+# host = "smtp.resend.com"
 # port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# user = "resend"
+# pass = "env(RESEND_API_KEY)"
+# admin_email = "bonjour@djeliai.com"
+# sender_name = "Djeli"
 
 # Uncomment to customize email template
 

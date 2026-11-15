@@ -78,16 +78,23 @@ export async function inscription(
 
   if (error) {
     log.warn("inscription.erreur", { code: error.code });
-    // Email déjà pris : on ne le dit pas. Même réponse que pour un succès.
-    if (error.code === "user_already_exists" || error.status === 422) {
-      return succes({ emailAConfirmer: true });
-    }
+
+    // Mot de passe refusé : le dire ne révèle rien sur l'existence du compte.
+    // Ce test passe AVANT celui du compte existant : Supabase renvoie le
+    // statut 422 dans les deux cas, donc filtrer sur le statut seul ferait
+    // passer un mot de passe trop faible pour une inscription réussie.
     if (error.code === "weak_password") {
       return echec(
         "Ce mot de passe est trop simple. Choisissez-en un plus long.",
         "mot_de_passe_faible",
       );
     }
+
+    // Email déjà pris : on ne le dit pas. Même réponse que pour un succès.
+    if (error.code === "user_already_exists" || error.code === "email_exists") {
+      return succes({ emailAConfirmer: true });
+    }
+
     return echec(
       "La création du compte a échoué. Réessayez dans un instant.",
       "echec_inscription",
