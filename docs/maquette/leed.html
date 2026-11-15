@@ -1,0 +1,1043 @@
+<title>Maquette leed</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Maquette leed — les écrans sont montrés à la largeur d'un téléphone,
+   posés sur une paillasse grise ; le sommaire est à gauche sur grand écran. */
+:root {
+  --papier: #ffffff;
+  --encre: #111111;
+  --doux: #6b6b6b;
+  --trait: #e6e6e6;
+  --chip: #f4f4f4;
+  --indigo: #2a2e8c;
+  --indigo-doux: #eeeffa;
+  --safran: #f4a51c;
+  --baobab: #1f7a50;
+  --baobab-doux: #e8f3ee;
+  --alerte: #b4410e;
+  --alerte-doux: #fcece2;
+  --paillasse: #ebebed;
+  --titre: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --texte: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paillasse: #19191c; color-scheme: light; }
+}
+:root[data-theme="dark"] { --paillasse: #19191c; color-scheme: light; }
+
+* { box-sizing: border-box; }
+body { background: var(--paillasse); color: var(--encre); font-family: var(--texte); font-size: 15px; line-height: 1.5; }
+h1,h2,h3,h4 { font-family: var(--titre); margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+/* ── Cadre général ── */
+.appli { display: grid; grid-template-columns: 1fr; min-height: 100%; }
+.sommaire {
+  background: var(--papier); border-bottom: 1px solid var(--trait);
+  padding-block: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+}
+.som-haut { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.som-titre { font-family: var(--titre); font-weight: 700; font-size: 17px; }
+.som-titre span { color: var(--doux); font-weight: 500; font-size: 13px; font-family: var(--texte); }
+.som-liste { display: none; margin-top: 14px; }
+.sommaire[data-ouvert="true"] .som-liste { display: block; }
+.som-groupe { font-family: var(--texte); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--doux); margin: 16px 0 6px; }
+.som-lien { display: flex; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 8px; font-size: 14px; color: var(--doux); }
+.som-lien:hover { background: var(--chip); color: var(--encre); }
+.som-lien[aria-current="true"] { background: var(--indigo-doux); color: var(--indigo); font-weight: 600; }
+.som-num { font-variant-numeric: tabular-nums; min-width: 22px; }
+
+.scene { padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.entete { max-width: 430px; margin: 0 auto 12px; }
+.entete .fil { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--doux); }
+.entete h2 { font-size: 21px; font-weight: 700; margin-top: 2px; }
+.entete .note { color: var(--doux); font-size: 14px; margin-top: 4px; }
+
+/* ── L'écran lui-même : largeur d'un téléphone ── */
+.tel { max-width: 430px; margin: 0 auto; background: var(--papier); border-radius: 18px; overflow: hidden; box-shadow: 0 1px 2px #0000000f, 0 8px 24px #00000012; }
+.ecran { display: flex; flex-direction: column; min-height: 560px; }
+.corps { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.corps.serre { gap: 10px; }
+.corps.plein { padding: 0; }
+
+/* ── Barres ── */
+.barre { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--trait); }
+.barre .g { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.barre h3 { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.retour { font-size: 18px; color: var(--doux); line-height: 1; }
+.marque { display: inline-flex; align-items: center; }
+.marque svg { height: 17px; width: auto; display: block; }
+
+.onglets-bas { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--trait); background: var(--papier); }
+.onglets-bas button { padding: 9px 2px 10px; font-size: 10px; color: var(--doux); display: grid; gap: 3px; justify-items: center; }
+.onglets-bas button[aria-current="true"] { color: var(--indigo); font-weight: 600; }
+.onglets-bas .pastille { position: relative; }
+.onglets-bas .pastille b { position: absolute; top: -4px; right: -9px; background: var(--alerte); color: #fff; font-size: 9px; font-weight: 700; border-radius: 9px; padding: 0 4px; }
+.ico { width: 18px; height: 18px; display: block; }
+
+/* ── Éléments ── */
+.carte { border: 1px solid var(--trait); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.carte.vif { border-color: var(--alerte); background: var(--alerte-doux); }
+.carte.calme { background: var(--chip); border-color: transparent; }
+.ligne { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ligne.haut { align-items: flex-start; }
+.col { display: flex; flex-direction: column; gap: 10px; }
+.col.serre { gap: 6px; }
+.min { min-width: 0; }
+
+.bt { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: 10px; padding: 11px 16px; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.bt.action { background: var(--safran); color: var(--encre); }
+.bt.sombre { background: var(--encre); color: var(--papier); }
+.bt.cadre { border: 1px solid var(--trait); }
+.bt.petit { padding: 7px 12px; font-size: 13px; border-radius: 8px; }
+.bt.large { width: 100%; }
+.bts { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.etiq { display: inline-flex; align-items: center; gap: 5px; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600; background: var(--chip); }
+.etiq.ok { background: var(--baobab-doux); color: var(--baobab); }
+.etiq.feu { background: var(--alerte-doux); color: var(--alerte); }
+.etiq.marque { background: var(--indigo-doux); color: var(--indigo); }
+.pt { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+.chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.chiffres > div { background: var(--chip); border-radius: 10px; padding: 9px 8px; min-width: 0; }
+.chiffres b { display: block; font-family: var(--titre); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.chiffres span { font-size: 11px; color: var(--doux); display: block; line-height: 1.25; }
+.chiffres.deux { grid-template-columns: repeat(2, 1fr); }
+.chiffres.trois { grid-template-columns: repeat(3, 1fr); }
+
+.titrine { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--doux); }
+.sourdine { color: var(--doux); font-size: 13px; }
+.petit { font-size: 13px; }
+.gros { font-family: var(--titre); font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
+.num { font-variant-numeric: tabular-nums; }
+
+.jauge { height: 7px; border-radius: 99px; background: var(--chip); overflow: hidden; }
+.jauge i { display: block; height: 100%; background: var(--indigo); }
+.jauge.or i { background: var(--safran); }
+.jauge.vert i { background: var(--baobab); }
+
+.champ { border: 1px solid var(--trait); border-radius: 10px; padding: 11px 13px; font-size: 14px; color: var(--doux); background: var(--papier); }
+.champ.actif { border-color: var(--indigo); box-shadow: 0 0 0 2px var(--indigo-doux); color: var(--encre); }
+.liste { display: flex; flex-direction: column; }
+.liste > * { padding: 12px 0; border-top: 1px solid var(--trait); }
+.liste > *:first-child { border-top: 0; }
+
+.bulle { max-width: 84%; padding: 9px 12px; border-radius: 14px; font-size: 14px; }
+.bulle.lui { background: var(--chip); border-bottom-left-radius: 3px; align-self: flex-start; }
+.bulle.moi { background: var(--indigo-doux); border-bottom-right-radius: 3px; align-self: flex-end; }
+.flou { filter: blur(5px); user-select: none; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--doux); padding: 0 8px 7px 0; }
+td { padding: 9px 8px 9px 0; border-top: 1px solid var(--trait); vertical-align: top; }
+td:last-child, th:last-child { padding-right: 0; text-align: right; }
+.defile { overflow-x: auto; }
+
+.pied { display: flex; align-items: center; justify-content: space-between; gap: 10px; max-width: 430px; margin: 14px auto 0; }
+.pied button { color: var(--doux); font-size: 14px; padding: 8px 10px; border-radius: 8px; }
+.pied button:hover { background: var(--papier); color: var(--encre); }
+.pied button[disabled] { opacity: .35; cursor: default; }
+.compteur { font-size: 13px; color: var(--doux); font-variant-numeric: tabular-nums; }
+
+@media (min-width: 900px) {
+  .appli { grid-template-columns: 272px 1fr; }
+  .sommaire { border-bottom: 0; border-right: 1px solid var(--trait); height: 100dvh; overflow-y: auto; position: sticky; top: 0; }
+  .som-liste { display: block; }
+  .som-bascule { display: none; }
+  .scene { padding-block: 28px 56px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="appli">
+  <nav class="sommaire" id="sommaire" aria-label="Les écrans">
+    <div class="som-haut">
+      <div>
+        <div class="som-titre">Maquette <span>· leed</span></div>
+        <div class="sourdine" style="font-size:12px"><span id="total"></span> écrans · données d'exemple</div>
+      </div>
+      <button class="bt cadre petit som-bascule" id="bascule" aria-expanded="false">Les écrans</button>
+    </div>
+    <div class="som-liste" id="som-liste"></div>
+  </nav>
+
+  <main class="scene">
+    <div class="entete">
+      <div class="fil" id="fil"></div>
+      <h2 id="titre"></h2>
+      <p class="note" id="note"></p>
+    </div>
+    <div class="tel"><div class="ecran" id="ecran"></div></div>
+    <div class="pied">
+      <button id="prec">← Précédent</button>
+      <span class="compteur" id="compteur"></span>
+      <button id="suiv">Suivant →</button>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const e = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  /* ── Briques ── */
+  // Le logo leed : lettres construites en formes, le « d » final en disque plein.
+  const marque = () =>
+    `<span class="marque"><svg viewBox="0 36 496 180" role="img" aria-label="leed">
+      <rect x="0" y="36" width="32" height="180" fill="currentColor"/>
+      <path d="M176 146A54 54 0 1 0 164.55 179.25" fill="none" stroke="currentColor" stroke-width="32"/>
+      <path d="M68 146H192" fill="none" stroke="currentColor" stroke-width="26"/>
+      <path d="M328 146A54 54 0 1 0 316.55 179.25" fill="none" stroke="currentColor" stroke-width="32"/>
+      <path d="M220 146H344" fill="none" stroke="currentColor" stroke-width="26"/>
+      <circle cx="426" cy="146" r="70" fill="var(--indigo)"/>
+      <rect x="464" y="36" width="32" height="180" fill="currentColor"/>
+    </svg></span>`;
+  const barre = (titre, droite = "", retour = false) =>
+    `<div class="barre"><div class="g">${retour ? '<span class="retour">←</span>' : ""}${titre}</div><div class="g">${droite}</div></div>`;
+  const barreMarque = (droite = "") => barre(marque(), droite);
+  const bt = (t, k = "cadre", c = "") => `<span class="bt ${k} ${c}">${t}</span>`;
+  const etiq = (t, k = "") => `<span class="etiq ${k}">${t}</span>`;
+  const jauge = (pct, k = "") => `<div class="jauge ${k}"><i style="width:${pct}%"></i></div>`;
+  const chiffres = (l, k = "") =>
+    `<div class="chiffres ${k}">${l.map(([v, s]) => `<div><b>${v}</b><span>${s}</span></div>`).join("")}</div>`;
+  const carte = (c, k = "") => `<div class="carte ${k}">${c}</div>`;
+  const titrine = (t) => `<div class="titrine">${t}</div>`;
+  const champ = (t, actif = false) => `<div class="champ ${actif ? "actif" : ""}">${t}</div>`;
+  const tableau = (entetes, lignes) =>
+    `<div class="defile"><table><thead><tr>${entetes.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${lignes
+      .map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`)
+      .join("")}</tbody></table></div>`;
+
+  const ICO = {
+    maison: "M3 10.2 12 3l9 7.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z",
+    coche: "M9 12.5l2.2 2.2L15.8 9M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z",
+    bulle: "M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z",
+    barres: "M5 20V10M12 20V4M19 20v-7",
+    menu: "M4 7h16M4 12h16M4 17h16",
+  };
+  const ico = (d) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICO[d]}"/></svg>`;
+  const barreBas = (actif) => {
+    const o = [
+      ["accueil", "Accueil", "maison", 0],
+      ["decisions", "Décisions", "coche", 3],
+      ["conversations", "Messages", "bulle", 0],
+      ["rapports", "Rapports", "barres", 0],
+      ["plus", "Plus", "menu", 0],
+    ];
+    return `<div class="onglets-bas">${o
+      .map(
+        ([id, l, i, n]) =>
+          `<button ${actif === id ? 'aria-current="true"' : ""}><span class="${n ? "pastille" : ""}">${ico(i)}${n ? `<b>${n}</b>` : ""}</span>${l}</button>`,
+      )
+      .join("")}</div>`;
+  };
+
+  /* ══════════ LES ÉCRANS ══════════ */
+  const E = [];
+  const ecran = (id, groupe, titre, note, html) => E.push({ id, groupe, titre, note, html });
+
+  /* ───── Site public ───── */
+  ecran("accueil", "Site public", "Page d'accueil", "Le visiteur colle l'adresse de son site, ou décrit son activité.",
+    barreMarque(bt("Connexion", "cadre", "petit")) +
+    `<div class="corps">
+      ${etiq("Essai gratuit · 10 entreprises contactées")}
+      <h1 style="font-family:var(--titre);font-size:30px;font-weight:700;line-height:1.08;letter-spacing:-0.035em">Trouvez vos clients<br><span style="color:var(--indigo)">pendant que vous dormez</span></h1>
+      <p class="sourdine">leed étudie votre marché, écrit à vos futurs clients depuis vos propres comptes et vous amène des rendez-vous.</p>
+      ${champ("L'adresse de votre site, ex. studiokoffi.bj", true)}
+      ${bt("Trouver mes clients", "action", "large")}
+      <p class="petit" style="text-align:center;color:var(--doux)">Pas de site ? <u>Décrivez votre activité</u></p>
+      <div class="carte calme">
+        ${titrine("Depuis vos propres comptes")}
+        <div class="ligne"><span class="petit">WhatsApp · Instagram · Facebook</span>${etiq("Vos comptes", "marque")}</div>
+        <p class="sourdine">C'est vous qui écrivez, pas un numéro inconnu.</p>
+      </div>
+      <p class="petit" style="text-align:center;color:var(--doux)">Paiement en Mobile Money dès 5 000 FCFA</p>
+    </div>`)
+
+  ecran("tarifs", "Site public", "Tarifs", "Le curseur part sur 25 000 FCFA, le palier le plus choisi.",
+    barreMarque(bt("Connexion", "cadre", "petit")) +
+    `<div class="corps">
+      <h3 style="font-size:22px;font-weight:700">Payez ce que vous voulez</h3>
+      <p class="sourdine">Pas d'abonnement. Un forfait valable 30 jours, dès 5 000 FCFA.</p>
+      ${carte(`
+        <div class="ligne"><span class="gros">25 000 FCFA</span>${etiq("Le plus choisi", "marque")}</div>
+        ${jauge(50)}
+        ${chiffres([["111", "Entreprises contactées"], ["225 F", "Par entreprise"], ["3", "Comptes connectés"], ["20/j", "Rythme"]], "deux")}
+        ${bt("Essayer gratuitement", "action", "large")}
+        <p class="petit" style="text-align:center;color:var(--doux)">Ajoutez 25 000 FCFA : 200 F l'entreprise et tous vos comptes</p>`)}
+      ${carte(`${titrine("Compris dans chaque entreprise contactée")}
+        <div class="col serre petit">
+          <div>✓ La recherche de l'entreprise et de ses coordonnées</div>
+          <div>✓ Son étude et le choix du canal</div>
+          <div>✓ Un premier message personnel et 2 relances</div>
+          <div>✓ Toutes les réponses de l'agent et la prise de rendez-vous</div>
+        </div>`, "calme")}
+    </div>`)
+
+  ecran("apropos", "Site public", "À propos", "Qui fait leed, et pourquoi. Aucun chiffre tant qu'il n'est pas vrai.",
+    barreMarque(bt("Connexion", "cadre", "petit")) +
+    `<div class="corps">
+      <h3 style="font-size:22px;font-weight:700">Fait à Cotonou, pour l'Afrique de l'Ouest</h3>
+      <p class="sourdine">Les outils de prospection existants sont en anglais, en dollars, par carte bancaire, et par email seulement. Ici, l'email professionnel est rare. On discute sur WhatsApp.</p>
+      ${carte(`${titrine("Ce qu'on fait autrement")}
+        <div class="liste petit">
+          <div><b>On écrit depuis vos comptes.</b><div class="sourdine">Le prospect voit votre nom, votre photo, votre numéro.</div></div>
+          <div><b>On paie en Mobile Money.</b><div class="sourdine">MTN, Moov, Wave, Celtiis, Orange. Pas de carte.</div></div>
+          <div><b>On connaît les entreprises d'ici.</b><div class="sourdine">Même celles qui n'ont ni site ni email.</div></div>
+        </div>`)}
+      ${carte(`${titrine("Nous écrire")}<div class="petit">bonjour@leed.app · WhatsApp +229 ·· ·· ·· ··</div>`, "calme")}
+    </div>`)
+
+  ecran("support", "Site public", "Support", "Les questions fréquentes, puis la discussion.",
+    barreMarque(bt("Connexion", "cadre", "petit")) +
+    `<div class="corps">
+      <h3 style="font-size:20px;font-weight:700">Comment peut-on vous aider ?</h3>
+      ${champ("Chercher une question…")}
+      <div class="liste petit">
+        <div class="ligne"><span>Est-ce que mon compte WhatsApp risque quelque chose ?</span><span class="sourdine">+</span></div>
+        <div class="ligne"><span>Comment je paie sans carte bancaire ?</span><span class="sourdine">+</span></div>
+        <div class="ligne"><span>Que se passe-t-il à la fin de mon forfait ?</span><span class="sourdine">+</span></div>
+        <div class="ligne"><span>Qui voit mes conversations ?</span><span class="sourdine">+</span></div>
+        <div class="ligne"><span>Est-ce que c'est du spam ?</span><span class="sourdine">+</span></div>
+      </div>
+      ${carte(`<div class="ligne"><div class="min"><b class="petit">Pas trouvé ?</b><div class="sourdine">On répond en quelques minutes.</div></div>${bt("Nous écrire", "sombre", "petit")}</div>`, "calme")}
+    </div>`)
+
+  /* ───── Parcours ───── */
+  ecran("entree", "Parcours", "Décrire son activité", "Deux portes d'entrée : le site, ou le formulaire.",
+    barreMarque() +
+    `<div class="corps">
+      ${titrine("Étape 1 sur 6")}
+      <h3 style="font-size:20px;font-weight:700">Parlez-nous de votre activité</h3>
+      ${carte(`<div class="ligne"><b class="petit">J'ai un site web</b>${etiq("Le plus rapide", "marque")}</div>
+        ${champ("studiokoffi.bj", true)}
+        ${bt("Analyser mon site", "action", "large")}`)}
+      ${carte(`<b class="petit">Je n'ai pas de site</b>
+        <p class="sourdine">Décrivez ce que vous vendez en quelques lignes et cochez des cases.</p>
+        ${bt("Remplir le formulaire", "cadre", "large")}`, "calme")}
+    </div>`)
+
+  ecran("formulaire", "Parcours", "Le formulaire", "Pour ceux qui n'ont pas de site. Sept questions, des cases à cocher.",
+    barre(`<span class="retour">←</span><h3>Votre activité</h3>`) +
+    `<div class="corps serre">
+      <div class="col serre"><span class="titrine">Ce que vous vendez</span>${champ("Logos, affiches, identités visuelles", true)}</div>
+      <div class="col serre"><span class="titrine">Votre client idéal</span>${champ("Commerces de Cotonou qui veulent soigner leur image")}</div>
+      <div class="col serre"><span class="titrine">Secteurs visés</span>
+        <div class="bts">${etiq("Restaurants ✓", "marque")}${etiq("Boutiques ✓", "marque")}${etiq("Écoles ✓", "marque")}${etiq("Hôtels")}${etiq("+ ajouter")}</div></div>
+      <div class="col serre"><span class="titrine">Taille des entreprises</span>
+        <div class="bts">${etiq("1 à 10 ✓", "marque")}${etiq("11 à 50 ✓", "marque")}${etiq("51 à 200")}${etiq("200 et +")}</div></div>
+      <div class="col serre"><span class="titrine">Pays et villes</span>
+        <div class="bts">${etiq("Bénin ✓", "marque")}${etiq("Cotonou ✓", "marque")}${etiq("Porto-Novo ✓", "marque")}${etiq("+ ajouter")}</div></div>
+      <div class="col serre"><span class="titrine">Votre prix moyen</span>${champ("40 000 à 60 000 FCFA")}</div>
+      <div class="col serre"><span class="titrine">Votre objectif</span>
+        <div class="bts">${etiq("Rendez-vous ✓", "marque")}${etiq("Devis")}${etiq("Commande")}</div></div>
+      ${bt("Lancer l'analyse", "action", "large")}
+    </div>`)
+
+  ecran("analyse", "Parcours", "L'agent analyse", "90 secondes. Chaque étape se coche en direct.",
+    barreMarque() +
+    `<div class="corps">
+      ${titrine("Étape 2 sur 6")}
+      <h3 style="font-size:20px;font-weight:700">L'agent étudie studiokoffi.bj</h3>
+      <div class="liste petit">
+        <div class="ligne"><span>Je lis votre site</span><span style="color:var(--baobab)">✓</span></div>
+        <div class="ligne"><span>J'identifie ce que vous vendez</span><span style="color:var(--baobab)">✓</span></div>
+        <div class="ligne"><span>J'étudie vos concurrents</span><span class="sourdine">●●●</span></div>
+        <div class="ligne" style="opacity:.4"><span>Je cherche qui achète ça</span><span></span></div>
+      </div>
+      ${carte(`${titrine("Ce que j'ai compris")}
+        <div class="col serre petit">
+          <div><b>Offres</b><div class="sourdine">Logos, affiches, identités visuelles, cartes de visite</div></div>
+          <div><b>Zone</b><div class="sourdine">Cotonou, Porto-Novo, Abomey-Calavi</div></div>
+          <div><b>Point fort</b><div class="sourdine">Livraison en 72 h, 8 ans d'expérience</div></div>
+        </div>`)}
+      ${jauge(62)}
+      <p class="petit" style="text-align:center;color:var(--doux)">Encore 35 secondes</p>
+    </div>`)
+
+  ecran("questions", "Parcours", "Les questions", "Une à trois questions, seulement si une information manque.",
+    barreMarque() +
+    `<div class="corps">
+      ${titrine("Étape 3 sur 6 · question 1 sur 2")}
+      <h3 style="font-size:19px;font-weight:700">Votre site ne dit pas vos prix. Quelle fourchette ?</h3>
+      <div class="col serre">
+        ${champ("Moins de 25 000 FCFA")}
+        ${champ("25 000 à 50 000 FCFA")}
+        ${champ("50 000 à 100 000 FCFA ✓", true)}
+        ${champ("Plus de 100 000 FCFA")}
+        ${champ("Je préfère ne pas le dire")}
+      </div>
+      <div class="bts"><span class="bt cadre">Passer</span>${bt("Continuer", "action")}</div>
+    </div>`)
+
+  ecran("cibles", "Parcours", "Vos clients idéaux", "Trois à cinq profils, notés. Le visiteur décoche ou ajoute.",
+    barreMarque() +
+    `<div class="corps">
+      ${titrine("Étape 4 sur 6")}
+      <h3 style="font-size:20px;font-weight:700">Voici qui achète ce que vous vendez</h3>
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Restaurants et maquis de Cotonou</b><div class="sourdine">Forte demande, budgets compatibles</div></div><span class="etiq marque num">92</span></div>
+        <div class="ligne"><span class="sourdine petit">312 entreprises</span>${etiq("Retenu ✓", "ok")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Boutiques de mode</b><div class="sourdine">Besoin de visuels chaque semaine</div></div><span class="etiq marque num">85</span></div>
+        <div class="ligne"><span class="sourdine petit">248 entreprises</span>${etiq("Retenu ✓", "ok")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Écoles privées</b><div class="sourdine">Affiches et flyers chaque rentrée</div></div><span class="etiq num">78</span></div>
+        <div class="ligne"><span class="sourdine petit">96 entreprises</span>${etiq("Écarté")}</div>`, "calme")}
+      <div class="bts">${bt("+ Ajouter une cible", "cadre")}${bt("Continuer", "action")}</div>
+    </div>`)
+
+  ecran("recherche", "Parcours", "La recherche", "L'agent cherche les entreprises et par où les joindre.",
+    barreMarque() +
+    `<div class="corps">
+      ${titrine("Étape 5 sur 6")}
+      <h3 style="font-size:20px;font-weight:700">Je cherche vos prospects</h3>
+      ${carte(`<div class="ligne"><span class="petit">Restaurants et maquis</span><b class="num">312</b></div>
+        ${jauge(100, "vert")}
+        <div class="ligne"><span class="petit">Boutiques de mode</span><b class="num">248</b></div>
+        ${jauge(100, "vert")}
+        <div class="ligne"><span class="petit">Je cherche leurs coordonnées…</span><span class="sourdine">●●●</span></div>
+        ${jauge(44)}`)}
+      <p class="sourdine petit">Numéro WhatsApp, email, compte Instagram, page Facebook, profil LinkedIn : l'agent cherche par où chaque entreprise est joignable.</p>
+    </div>`)
+
+  ecran("apercu", "Parcours", "L'aperçu", "Le vrai nombre et la vraie liste, sans les noms ni les coordonnées.",
+    barreMarque() +
+    `<div class="corps">
+      <h3 style="font-size:20px;font-weight:700">leed a trouvé <span class="num">1 240</span> entreprises pour vous</h3>
+      ${carte(`
+        <div class="liste petit">
+          <div><div class="flou"><b>Maquis Chez Tanti</b></div><div class="sourdine">Restaurant · Cotonou · 1-10 pers. · « pas de logo professionnel »</div></div>
+          <div><div class="flou"><b>Boutique Awa Mode</b></div><div class="sourdine">Boutique · Porto-Novo · 1-10 pers. · « vient d'ouvrir »</div></div>
+          <div class="flou"><b>Hôtel du Lac</b><div>Hôtel · Cotonou · 11-50 pers.</div></div>
+        </div>`)}
+      ${carte(`${titrine("Par où les joindre")}
+        <div class="col serre">
+          <div class="ligne petit"><span>WhatsApp</span><b class="num">820</b></div>${jauge(100)}
+          <div class="ligne petit"><span>Email</span><b class="num">310</b></div>${jauge(38)}
+          <div class="ligne petit"><span>Instagram</span><b class="num">140</b></div>${jauge(17)}
+          <div class="ligne petit"><span>Facebook</span><b class="num">95</b></div>${jauge(12)}
+          <div class="ligne petit"><span>LinkedIn</span><b class="num">60</b></div>${jauge(7)}
+        </div>`, "calme")}
+      ${bt("Créer mon compte pour commencer", "action", "large")}
+    </div>`)
+
+  ecran("inscription", "Parcours", "Inscription", "Tout ce qui a été fait avant est conservé.",
+    barre(`<span class="retour">←</span><h3>Créer mon compte</h3>`) +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne petit"><span>Votre analyse est prête</span>${etiq("1 240 prospects", "ok")}</div>`, "calme")}
+      <div class="col serre"><span class="titrine">Prénom et nom</span>${champ("Koffi Adjovi", true)}</div>
+      <div class="col serre"><span class="titrine">Nom de l'entreprise</span>${champ("Studio Koffi")}
+        <p class="sourdine" style="font-size:12px">Il apparaîtra dans vos messages : « Koffi, du Studio Koffi »</p></div>
+      <div class="col serre"><span class="titrine">Email</span>${champ("koffi@studiokoffi.bj")}</div>
+      <div class="col serre"><span class="titrine">Numéro WhatsApp</span>${champ("+229 01 97 00 00 00")}
+        <p class="sourdine" style="font-size:12px">On vous y enverra un code, puis vos alertes</p></div>
+      <div class="col serre"><span class="titrine">Mot de passe</span>${champ("••••••••")}</div>
+      ${bt("Créer mon compte", "action", "large")}
+      ${bt("Continuer avec Google", "cadre", "large")}
+    </div>`)
+
+  ecran("offre", "Parcours", "Essai ou forfait", "Le curseur est placé d'avance sur 25 000 FCFA.",
+    barre(`<h3>Comment voulez-vous commencer ?</h3>`) +
+    `<div class="corps">
+      ${carte(`
+        <div class="ligne"><b>Essai gratuit</b><span class="gros" style="font-size:20px">0 FCFA</span></div>
+        <div class="col serre petit">
+          <div>✓ 10 entreprises contactées par email</div>
+          <div>✓ Depuis votre Gmail · 7 jours</div>
+          <div class="sourdine">🔒 WhatsApp, Instagram, Facebook, LinkedIn</div>
+        </div>
+        ${bt("Essayer gratuitement", "cadre", "large")}`, "calme")}
+      ${carte(`
+        <div class="ligne"><b>Forfait</b>${etiq("Le plus choisi", "marque")}</div>
+        <span class="gros">25 000 FCFA</span>
+        ${jauge(50)}
+        ${chiffres([["111", "Entreprises"], ["3", "Comptes"], ["20/j", "Rythme"], ["30 j", "Validité"]], "deux")}
+        <p class="petit">Tous vos réseaux : WhatsApp, Instagram, Facebook, LinkedIn, email</p>
+        ${bt("Payer et commencer", "action", "large")}`)}
+      <p class="petit" style="text-align:center;color:var(--doux)">Rien n'est jamais perdu : les entreprises non utilisées sont reportées si vous rechargez à temps.</p>
+    </div>`)
+
+  ecran("paiement", "Parcours", "Paiement Mobile Money", "Pas de carte bancaire. On valide sur son téléphone.",
+    barre(`<span class="retour">←</span><h3>Payer 25 000 FCFA</h3>`) +
+    `<div class="corps">
+      ${titrine("Votre opérateur")}
+      <div class="bts">${etiq("MTN MoMo ✓", "marque")}${etiq("Moov")}${etiq("Wave")}${etiq("Celtiis")}${etiq("Orange")}</div>
+      <div class="col serre"><span class="titrine">Numéro à débiter</span>${champ("+229 01 97 00 00 00", true)}</div>
+      ${carte(`
+        <div class="ligne petit"><span>Forfait</span><b class="num">25 000 FCFA</b></div>
+        <div class="ligne petit"><span>Entreprises contactées</span><b class="num">111</b></div>
+        <div class="ligne petit"><span>Validité</span><b>30 jours</b></div>
+        <div class="ligne petit"><span>Comptes connectés</span><b>3 au choix</b></div>`, "calme")}
+      ${bt("Payer 25 000 FCFA", "action", "large")}
+      <p class="petit" style="text-align:center;color:var(--doux)">Vous recevrez une demande de validation sur votre téléphone.</p>
+    </div>`)
+
+  ecran("comptes-connexion", "Parcours", "Connecter ses comptes", "L'étape qui fait la différence : l'agent écrit depuis ses comptes.",
+    barre(`<h3>Connectez vos comptes</h3>`) +
+    `<div class="corps serre">
+      <p class="sourdine petit">leed écrira à vos prospects depuis vos comptes, en votre nom. Vous pouvez débrancher à tout moment.</p>
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">WhatsApp</b><div class="sourdine">820 de vos prospects sont joignables ici</div></div>${bt("Connecter", "sombre", "petit")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Gmail</b><div class="sourdine">310 prospects · votre agenda vient avec</div></div>${bt("Connecter", "cadre", "petit")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Instagram</b><div class="sourdine">140 prospects</div></div>${bt("Connecter", "cadre", "petit")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">Facebook</b><div class="sourdine">95 prospects</div></div>${bt("Connecter", "cadre", "petit")}</div>`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit">LinkedIn</b><div class="sourdine">60 prospects</div></div>${bt("Connecter", "cadre", "petit")}</div>`)}
+      ${carte(`<div class="ligne"><span class="petit sourdine">Messenger</span>${etiq("Bientôt")}</div>`, "calme")}
+      ${carte(`${titrine("Ce que vous devez savoir")}
+        <div class="col serre petit">
+          <div>• 40 nouveaux messages par jour au maximum, par compte</div>
+          <div>• leed ne lit jamais vos conversations privées</div>
+          <div>• Vous débranchez quand vous voulez</div>
+        </div>`, "calme")}
+      <p class="petit" style="text-align:center;color:var(--doux)">3 comptes compris dans votre forfait</p>
+    </div>`)
+
+  ecran("qr", "Parcours", "Brancher WhatsApp", "Un QR code à scanner, comme pour WhatsApp Web.",
+    barre(`<span class="retour">←</span><h3>Brancher WhatsApp</h3>`) +
+    `<div class="corps">
+      <div style="display:grid;place-items:center;gap:14px;padding:10px 0">
+        <div style="width:180px;height:180px;border-radius:12px;background:repeating-conic-gradient(var(--encre) 0 25%, var(--papier) 0 50%) 0/22px 22px;border:1px solid var(--trait)"></div>
+        <p class="petit" style="text-align:center;max-width:280px">Ouvrez WhatsApp sur votre téléphone → Réglages → Appareils connectés → Connecter un appareil</p>
+      </div>
+      ${carte(`${titrine("À savoir")}<p class="petit">Votre numéro reste le vôtre. Vous verrez chaque message partir et chaque réponse arriver dans votre WhatsApp, comme d'habitude.</p>`, "calme")}
+      <p class="petit" style="text-align:center;color:var(--doux)">En attente du scan…</p>
+    </div>`)
+
+  ecran("miseenroute", "Parcours", "La mise en route", "Trois minutes, tout est prérempli.",
+    barre(`<h3>Derniers réglages</h3>`) +
+    `<div class="corps serre">
+      ${titrine("Étape 6 sur 6")}
+      <div class="col serre"><span class="titrine">Nom affiché dans les messages</span>${champ("Koffi, du Studio Koffi", true)}</div>
+      <div class="col serre"><span class="titrine">Ce que l'agent peut annoncer</span>
+        <div class="bts">${etiq("Prix ✓", "marque")}${etiq("Délais ✓", "marque")}${etiq("Remises")}</div></div>
+      <div class="col serre"><span class="titrine">À ne pas contacter</span>${champ("Vos clients actuels, vos concurrents…")}</div>
+      <div class="col serre"><span class="titrine">Entreprises par jour</span>
+        ${jauge(50)}<div class="ligne petit"><span class="sourdine">10 par jour</span><span class="sourdine">maximum 20</span></div></div>
+      <div class="col serre"><span class="titrine">Horaires des rendez-vous</span>${champ("Lundi au vendredi, 9 h – 17 h")}</div>
+      ${bt("Voir des exemples de messages", "action", "large")}
+    </div>`)
+
+  ecran("style", "Parcours", "Valider le style", "Trois exemples, une seule fois. Ensuite l'agent écrit seul.",
+    barre(`<span class="retour">←</span><h3>Choisissez le ton</h3>`) +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne"><b class="petit">Simple et direct</b>${etiq("Choisi ✓", "ok")}</div>
+        <p class="petit">« Bonjour Madame Houngbo, ici Koffi du Studio Koffi, graphiste à Cotonou. J'ai vu la carte du Maquis Chez Tanti sur Facebook : le logo est difficile à lire sur téléphone. Je vous prépare 3 idées, sans engagement ? »</p>`)}
+      ${carte(`<b class="petit">Très poli</b>
+        <p class="petit sourdine">« Bonjour Madame, permettez-moi de me présenter : Koffi Adjovi, graphiste à Cotonou. J'ai eu l'occasion de voir la carte de votre établissement… »</p>`, "calme")}
+      ${carte(`<b class="petit">Chaleureux</b>
+        <p class="petit sourdine">« Bonjour Madame Houngbo ! Koffi du Studio Koffi. Votre maquis a l'air super, mais votre logo mérite mieux 🙂 Je vous montre 3 idées ? »</p>`, "calme")}
+      ${bt("Lancer la prospection", "action", "large")}
+    </div>`)
+
+  /* ───── Tableau de bord ───── */
+  ecran("tb-accueil", "Tableau de bord", "Accueil", "La question à laquelle la page répond : est-ce que ça marche, et a-t-on besoin de moi ?",
+    barre(`${marque()}`, `${etiq("Reste 34", "marque")}`) +
+    `<div class="corps serre">
+      <div class="ligne"><div><b>Bonjour Koffi</b><div class="sourdine petit"><span class="pt" style="color:var(--baobab)"></span> L'agent travaille</div></div>${bt("Pause", "cadre", "petit")}</div>
+      ${carte(`<div class="ligne"><span class="titrine">3 décisions vous attendent</span><span class="petit sourdine">Tout voir</span></div>
+        <div class="liste">
+          <div><b class="petit">🔥 Mme Houngbo veut un devis</b><div class="sourdine petit">Maquis Chez Tanti · WhatsApp</div>
+            <div class="bts" style="margin-top:8px">${bt("Je m'en occupe", "sombre", "petit")}${bt("Laisse l'agent", "cadre", "petit")}</div></div>
+          <div><b class="petit">❓ « Faites-vous les enseignes ? »</b>
+            <div class="bts" style="margin-top:8px">${bt("Oui", "cadre", "petit")}${bt("Non", "cadre", "petit")}${bt("Écrire", "cadre", "petit")}</div></div>
+        </div>`, "vif")}
+      ${titrine("Cette semaine")}
+      ${chiffres([["86", "contactés"], ["14", "réponses"], ["5", "intéressés"], ["2", "rendez-vous"]])}
+      ${carte(`<div class="ligne petit"><span>Forfait</span><b class="num">86 / 120</b></div>${jauge(72, "or")}
+        <div class="ligne petit sourdine"><span>Reste 19 jours</span><span>34 entreprises</span></div>`, "calme")}
+      ${carte(`${titrine("Par canal")}
+        <div class="ligne petit"><span>WhatsApp</span><span class="num sourdine">62 envoyés · 12 réponses</span></div>${jauge(72)}
+        <div class="ligne petit"><span>Email</span><span class="num sourdine">24 envoyés · 2 réponses</span></div>${jauge(28)}`)}
+      ${carte(`${titrine("Aujourd'hui")}
+        <div class="col serre petit sourdine">
+          <div><b class="num" style="color:var(--encre)">10:42</b> A répondu à Boutique Awa</div>
+          <div><b class="num" style="color:var(--encre)">09:15</b> A écrit à 12 restaurants</div>
+          <div><b class="num" style="color:var(--encre)">08:30</b> A trouvé 18 nouveaux prospects</div>
+        </div>`)}
+    </div>` + barreBas("accueil"))
+
+  ecran("tb-decisions", "Tableau de bord", "Décisions", "La page la plus importante. Tout ce que l'agent ne tranche pas seul.",
+    barre(`<h3>Décisions</h3>`, `${etiq("3 en attente", "feu")}`) +
+    `<div class="corps serre">
+      <div class="bts">${etiq("En attente ✓", "marque")}${etiq("Déjà répondues")}</div>
+      ${carte(`<div class="ligne"><span class="etiq feu">🔥 Lead chaud</span><span class="sourdine" style="font-size:12px">il y a 12 min</span></div>
+        <div><b class="petit">Mme Houngbo — Maquis Chez Tanti</b><div class="sourdine petit">Cotonou · WhatsApp</div></div>
+        <p class="petit">« Oui ça m'intéresse, c'est combien pour un logo ? »</p>
+        ${carte(`<p class="petit"><b>L'agent propose :</b> donner votre fourchette (40 à 60 000 FCFA) et proposer un appel.</p>`, "calme")}
+        <div class="bts">${bt("Je m'en occupe", "sombre", "petit")}${bt("Laisse l'agent", "cadre", "petit")}${bt("Voir le fil", "cadre", "petit")}</div>`, "vif")}
+      ${carte(`<div class="ligne"><span class="etiq">❓ Question</span><span class="sourdine" style="font-size:12px">reste 3 h 40</span></div>
+        <p class="petit">Boutique Awa demande : « Faites-vous aussi les enseignes ? »</p>
+        <div class="bts">${bt("Oui", "cadre", "petit")}${bt("Non", "cadre", "petit")}${bt("Écrire ma réponse", "cadre", "petit")}</div>
+        <label class="petit sourdine">☐ Retenir cette réponse pour les prochaines fois</label>`)}
+      ${carte(`<div class="ligne"><span class="etiq">📅 Rendez-vous</span></div>
+        <p class="petit">Hôtel du Lac propose jeudi 15 h. Votre agenda est libre.</p>
+        <div class="bts">${bt("Oui, confirme", "sombre", "petit")}${bt("Autre horaire", "cadre", "petit")}</div>`)}
+      <p class="petit" style="text-align:center;color:var(--doux)">Sans réponse après 4 h, l'agent envoie un mot d'attente au prospect.</p>
+    </div>` + barreBas("decisions"))
+
+  ecran("tb-prospects", "Tableau de bord", "Prospects", "Toutes les entreprises trouvées, avec filtres et export.",
+    barre(`<h3>Prospects</h3>`, bt("+ Ajouter", "cadre", "petit")) +
+    `<div class="corps serre">
+      <div class="ligne"><span class="petit"><b class="num">1 240</b> trouvés · <b class="num">186</b> contactés</span><span class="petit sourdine">Export</span></div>
+      ${champ("Chercher une entreprise…")}
+      <div class="bts">${etiq("Campagne ▾")}${etiq("Statut ▾")}${etiq("Canal ▾")}${etiq("Ville ▾")}</div>
+      <div class="liste">
+        <div class="ligne haut"><div class="min"><b class="petit">Maquis Chez Tanti</b><div class="sourdine petit">Cotonou · WhatsApp</div></div>${etiq("🔥 Intéressé", "feu")}</div>
+        <div class="ligne haut"><div class="min"><b class="petit">Hôtel du Lac</b><div class="sourdine petit">Cotonou · Email</div></div>${etiq("📅 RDV jeudi", "ok")}</div>
+        <div class="ligne haut"><div class="min"><b class="petit">Boutique Awa</b><div class="sourdine petit">Porto-Novo · WhatsApp</div></div>${etiq("💬 En discussion")}</div>
+        <div class="ligne haut"><div class="min"><b class="petit">Restaurant Le Privé</b><div class="sourdine petit">Cotonou · WhatsApp</div></div>${etiq("⏳ Relance J3")}</div>
+        <div class="ligne haut"><div class="min"><b class="petit">École Les Lauréats</b><div class="sourdine petit">Calavi · Email</div></div>${etiq("À contacter")}</div>
+        <div class="ligne haut"><div class="min"><b class="petit">Salon Élégance</b><div class="sourdine petit">Cotonou · Instagram</div></div>${etiq("À contacter")}</div>
+      </div>
+    </div>` + barreBas("plus"))
+
+  ecran("tb-prospect", "Tableau de bord", "Fiche d'un prospect", "Pourquoi lui écrire, par où le joindre, tout l'historique.",
+    barre(`<span class="retour">←</span><h3>Maquis Chez Tanti</h3>`, `<span class="etiq marque num">92</span>`) +
+    `<div class="corps serre">
+      <div class="sourdine petit">Restaurant · Cotonou · 1-10 personnes</div>
+      <div><b class="petit">Mme Houngbo</b><span class="sourdine petit"> · gérante</span></div>
+      ${carte(`${titrine("Pourquoi lui écrire")}
+        <p class="petit">Logo difficile à lire sur sa page Facebook. A ouvert un 2ᵉ point de vente en octobre.</p>`, "calme")}
+      ${carte(`${titrine("Comment la joindre")}
+        <div class="col serre petit">
+          <div class="ligne"><span><span class="pt" style="color:var(--baobab)"></span> WhatsApp +229 96…</span>${etiq("Utilisé", "ok")}</div>
+          <div class="ligne sourdine"><span>Email</span><span>non trouvé</span></div>
+          <div class="ligne sourdine"><span>Instagram</span><span>@chez_tanti</span></div>
+        </div>`)}
+      ${carte(`${titrine("Historique")}
+        <div class="col serre petit">
+          <div><span class="sourdine num">Lun 09:12</span> → WhatsApp : premier message</div>
+          <div><span class="sourdine num">Lun 14:30</span> ← « Oui ça m'intéresse, c'est combien ? »</div>
+          <div><span class="sourdine num">Lun 14:41</span> → Réponse de l'agent</div>
+        </div>`)}
+      <div class="bts">${bt("Voir la conversation", "sombre", "petit")}${bt("Marquer signé", "cadre", "petit")}${bt("Ne plus contacter", "cadre", "petit")}</div>
+      <div class="col serre"><span class="titrine">Ma note</span>${champ("Rappeler après les fêtes…")}</div>
+    </div>`)
+
+  ecran("tb-conversations", "Tableau de bord", "Conversations", "Tous les canaux dans une seule boîte. On peut reprendre la main.",
+    barre(`<span class="retour">←</span><h3>Maquis Chez Tanti</h3>`, etiq("WhatsApp", "ok")) +
+    `<div class="corps serre">
+      <div class="ligne"><span class="sourdine petit">Géré par l'agent</span>${bt("Reprendre la main", "cadre", "petit")}</div>
+      <div class="col serre" style="gap:8px">
+        <div class="bulle moi">Bonjour Madame Houngbo, ici Koffi du Studio Koffi, graphiste à Cotonou. J'ai vu la carte du Maquis sur Facebook : le logo est difficile à lire sur téléphone. Je vous prépare 3 idées ? <span class="sourdine" style="font-size:11px">✓✓</span></div>
+        <div class="bulle lui">Oui ça m'intéresse, c'est combien pour un logo ?</div>
+        <div class="bulle moi">Entre 40 000 et 60 000 FCFA selon le projet. Je peux vous appeler demain matin ? <span class="sourdine" style="font-size:11px">✓✓</span></div>
+      </div>
+      ${carte(`<div class="ligne"><span class="titrine">L'agent prépare</span><span class="sourdine" style="font-size:12px">dans 8 min</span></div>
+        <p class="petit">« Parfait. Je vous envoie 3 pistes jeudi matin, et on en parle ensuite ? »</p>
+        <div class="bts">${bt("Envoyer", "action", "petit")}${bt("Modifier", "cadre", "petit")}${bt("Annuler", "cadre", "petit")}</div>`)}
+    </div>` + barreBas("conversations"))
+
+  ecran("tb-campagnes", "Tableau de bord", "Campagnes", "Une campagne = une cible, un message, un budget.",
+    barre(`<h3>Campagnes</h3>`, bt("+ Nouvelle", "cadre", "petit")) +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne"><div class="min"><b class="petit"><span class="pt" style="color:var(--baobab)"></span> Restaurants de Cotonou</b></div>${bt("Pause", "cadre", "petit")}</div>
+        <div class="sourdine petit num">124 contactés · 19 réponses · 3 RDV</div>
+        <div class="ligne petit"><span class="sourdine">WhatsApp, Email · 10 par jour</span><b class="num">4 100 F / RDV</b></div>`)}
+      ${carte(`<div class="ligne"><div class="min"><b class="petit"><span class="pt" style="color:var(--baobab)"></span> Boutiques de mode</b></div>${bt("Pause", "cadre", "petit")}</div>
+        <div class="sourdine petit num">62 contactés · 6 réponses · 1 RDV</div>`)}
+      ${carte(`<div class="ligne"><div class="min"><b class="petit sourdine">○ Écoles privées</b></div>${bt("Reprendre", "cadre", "petit")}</div>
+        <div class="sourdine petit">En pause depuis le 8 novembre</div>`, "calme")}
+    </div>` + barreBas("plus"))
+
+  ecran("tb-campagne", "Tableau de bord", "Réglages d'une campagne", "Quatre onglets : cible, messages, rythme, budget.",
+    barre(`<span class="retour">←</span><h3>Restaurants de Cotonou</h3>`) +
+    `<div class="corps serre">
+      <div class="bts">${etiq("Cible ✓", "marque")}${etiq("Messages")}${etiq("Rythme")}${etiq("Budget")}</div>
+      <div class="col serre"><span class="titrine">Secteurs</span>
+        <div class="bts">${etiq("Restaurants ×")}${etiq("Maquis ×")}${etiq("Traiteurs ×")}${etiq("+ ajouter")}</div></div>
+      <div class="col serre"><span class="titrine">Villes</span>
+        <div class="bts">${etiq("Cotonou ×")}${etiq("Abomey-Calavi ×")}${etiq("+ ajouter")}</div></div>
+      <div class="col serre"><span class="titrine">Taille</span>
+        <div class="bts">${etiq("1-10 ✓", "marque")}${etiq("11-50 ✓", "marque")}${etiq("51-200")}${etiq("200+")}</div></div>
+      <div class="col serre"><span class="titrine">Signaux d'achat</span>
+        <div class="bts">${etiq("Pas de logo pro ✓", "marque")}${etiq("Ouverture récente ✓", "marque")}${etiq("Recrute")}</div></div>
+      ${carte(`<div class="ligne"><span class="petit"><b class="num">1 240</b> entreprises correspondent</span></div>
+        <div class="sourdine petit num">1 054 pas encore contactées</div>`, "calme")}
+      ${bt("Enregistrer", "action", "large")}
+    </div>`)
+
+  ecran("tb-simulateur", "Tableau de bord", "Le simulateur", "Avant de dépenser : ce qu'on peut attendre, d'après nos vrais taux mesurés.",
+    barre(`<span class="retour">←</span><h3>Nouvelle campagne</h3>`) +
+    `<div class="corps">
+      <div class="col serre"><span class="titrine">Budget</span>
+        <span class="gros">15 000 FCFA</span>${jauge(35)}</div>
+      <div class="col serre"><span class="titrine">Canal</span>
+        <div class="bts">${etiq("WhatsApp ✓", "marque")}${etiq("Email")}${etiq("Instagram")}</div></div>
+      ${chiffres([["~105", "contactés"], ["~14 à 24", "réponses"], ["~3 à 6", "rendez-vous"], ["~2 500 F", "par RDV"]], "deux")}
+      ${carte(`<p class="petit sourdine">Estimation fondée sur 1 240 prospects contactés dans ce secteur et ce pays ces 90 derniers jours.</p>`, "calme")}
+      <div class="bts">${bt("Comparer un autre budget", "cadre")}${bt("Lancer", "action")}</div>
+    </div>`)
+
+  ecran("tb-rapports", "Tableau de bord", "Rapports", "Le chemin des prospects, l'argent, et ce que l'agent a appris.",
+    barre(`<h3>Rapports</h3>`, etiq("Cette semaine ▾")) +
+    `<div class="corps serre">
+      ${carte(`${titrine("Le chemin des prospects")}
+        <div class="col serre petit">
+          <div class="ligne"><span>Trouvés</span><b class="num">1 240</b></div>${jauge(100)}
+          <div class="ligne"><span>Contactés</span><b class="num">186</b></div>${jauge(15)}
+          <div class="ligne"><span>Ont répondu</span><b class="num">25 · 13 %</b></div>${jauge(8)}
+          <div class="ligne"><span>Intéressés</span><b class="num">9</b></div>${jauge(4)}
+          <div class="ligne"><span>Rendez-vous</span><b class="num">4</b></div>${jauge(2, "vert")}
+          <div class="ligne"><span>Signés</span><b class="num">1 · 60 000 F</b></div>${jauge(1, "vert")}
+        </div>`)}
+      ${carte(`${titrine("L'argent")}
+        ${chiffres([["23 400", "FCFA dépensés"], ["5 850", "FCFA par RDV"], ["60 000", "FCFA gagnés"]], "trois")}`, "calme")}
+      ${carte(`${titrine("Ce que l'agent a appris")}
+        <div class="col serre petit">
+          <div>• Les restaurants répondent surtout le mardi entre 9 h et 11 h</div>
+          <div>• L'accroche « logo illisible sur téléphone » marche 2× mieux</div>
+        </div>`)}
+      ${carte(`${titrine("Ce qu'il propose")}
+        <p class="petit">Mettre le budget des écoles sur les restaurants.</p>
+        <div class="bts">${bt("Oui", "sombre", "petit")}${bt("Non", "cadre", "petit")}</div>`, "vif")}
+    </div>` + barreBas("rapports"))
+
+  ecran("tb-comptes", "Tableau de bord", "Comptes connectés", "La santé de chaque compte, et ce qu'on gagne à en brancher un de plus.",
+    barre(`<span class="retour">←</span><h3>Vos comptes</h3>`) +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne"><b class="petit">WhatsApp</b>${etiq("En bonne santé", "ok")}</div>
+        <div class="sourdine petit num">+229 97 00 00 00</div>
+        <div class="ligne petit"><span>Aujourd'hui</span><b class="num">24 / 40</b></div>${jauge(60)}
+        <div class="ligne"><span class="sourdine petit num">820 prospects joignables ici</span>${bt("Débrancher", "cadre", "petit")}</div>`)}
+      ${carte(`<div class="ligne"><b class="petit">Gmail</b>${etiq("En bonne santé", "ok")}</div>
+        <div class="sourdine petit">koffi@studiokoffi.bj · agenda branché ✓</div>
+        <div class="ligne petit"><span>Aujourd'hui</span><b class="num">12 / 30</b></div>${jauge(40)}`)}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit sourdine">Instagram</b><div class="sourdine petit num">140 prospects joignables</div></div>${bt("Connecter", "sombre", "petit")}</div>`, "calme")}
+      ${carte(`<div class="ligne haut"><div class="min"><b class="petit sourdine">Facebook</b><div class="sourdine petit num">95 prospects</div></div>${bt("Connecter", "cadre", "petit")}</div>`, "calme")}
+      <p class="petit" style="text-align:center;color:var(--doux)">3 comptes compris dans votre forfait · 2 branchés</p>
+    </div>`)
+
+  ecran("tb-forfait", "Tableau de bord", "Forfait", "Comme un forfait internet : ce qui reste, et pour combien de temps.",
+    barre(`<span class="retour">←</span><h3>Votre forfait</h3>`) +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne petit"><span>Entreprises</span><b class="num">86 / 120</b></div>${jauge(72, "or")}
+        <div class="ligne petit" style="margin-top:6px"><span>Durée</span><b class="num">reste 19 jours</b></div>${jauge(63)}
+        <div class="ligne" style="margin-top:4px"><span class="sourdine petit">● Gmail ● WhatsApp ○ Instagram</span></div>`)}
+      ${carte(`<p class="petit">Rechargez avant le 3 décembre : vos <b class="num">34</b> entreprises restantes sont reportées, avec 10 % en plus.</p>
+        ${bt("Recharger", "action", "large")}`, "vif")}
+      ${carte(`${titrine("Réglages")}
+        <div class="ligne petit"><span>Pas plus de</span><b class="num">10 par jour</b></div>${jauge(50)}
+        <div class="ligne petit" style="margin-top:6px"><span>Me prévenir à</span>${etiq("20 % ▾")}</div>`)}
+      ${carte(`${titrine("Historique")}
+        <div class="col serre petit">
+          <div class="ligne"><span>14 nov. Maquis Chez Tanti · WhatsApp</span><b class="num">−1</b></div>
+          <div class="ligne"><span>14 nov. Hôtel du Lac · Email</span><b class="num">−1</b></div>
+          <div class="ligne"><span>12 nov. Forfait 10 000 FCFA · MTN</span><b class="num" style="color:var(--baobab)">+40</b></div>
+          <div class="ligne"><span>11 nov. Le Privé · non livré, rendue</span><b class="num" style="color:var(--baobab)">+1</b></div>
+        </div>`)}
+    </div>`)
+
+  ecran("tb-recharge", "Tableau de bord", "Recharger", "Le palier suivant est toujours montré, en FCFA économisés.",
+    barre(`<span class="retour">←</span><h3>Recharger</h3>`) +
+    `<div class="corps">
+      <div class="col serre"><span class="gros">25 000 FCFA</span>${jauge(50)}
+        <div class="ligne petit sourdine"><span>5 000</span><span>150 000</span></div></div>
+      ${chiffres([["111", "Entreprises"], ["225 F", "Par entreprise"], ["3", "Comptes"], ["20/j", "Rythme"]], "deux")}
+      ${carte(`<p class="petit"><b>Ajoutez 25 000 FCFA :</b> vous passez à 200 F l'entreprise, tous vos comptes et 40 par jour. Vous économisez <b class="num">6 250 FCFA</b>.</p>`, "calme")}
+      ${carte(`<div class="ligne petit"><span>Entreprises reportées</span><b class="num" style="color:var(--baobab)">+34</b></div>
+        <div class="ligne petit"><span>Bonus de fidélité</span><b class="num" style="color:var(--baobab)">+15 %</b></div>`, "calme")}
+      <div class="col serre"><span class="titrine">Opérateur</span>
+        <div class="bts">${etiq("MTN ✓", "marque")}${etiq("Moov")}${etiq("Wave")}${etiq("Celtiis")}</div></div>
+      ${bt("Payer 25 000 FCFA", "action", "large")}
+    </div>`)
+
+  ecran("tb-reglages", "Tableau de bord", "Réglages", "Sept onglets. Tout ce que le client peut corriger lui-même.",
+    barre(`<h3>Réglages</h3>`) +
+    `<div class="corps serre">
+      <div class="liste">
+        <div class="ligne"><div class="min"><b class="petit">Mon activité</b><div class="sourdine petit">Ce que l'agent a compris de votre site</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">Ce que l'agent dit</b><div class="sourdine petit">Signature, prix, ce qu'il ne doit jamais dire</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">Autonomie</b><div class="sourdine petit">Ce qu'il fait seul, ce qu'il vous demande</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">Alertes</b><div class="sourdine petit">Quoi, où, à quelles heures</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">Horaires et agenda</b><div class="sourdine petit">Vos créneaux de rendez-vous</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">À ne pas contacter</b><div class="sourdine petit">Clients actuels, concurrents, proches</div></div><span class="sourdine">›</span></div>
+        <div class="ligne"><div class="min"><b class="petit">Mon compte</b><div class="sourdine petit">Nom, mot de passe, collègues, mes données</div></div><span class="sourdine">›</span></div>
+      </div>
+      ${carte(`${titrine("Ce qui ne se change pas")}
+        <div class="col serre petit sourdine">
+          <div>• 40 messages par jour et par compte</div>
+          <div>• « Répondez STOP » dans chaque premier message</div>
+          <div>• Pas d'envoi avant 8 h, après 19 h, ni le dimanche</div>
+          <div>• Chaque message est contrôlé avant d'être envoyé</div>
+        </div>`, "calme")}
+    </div>` + barreBas("plus"))
+
+  ecran("tb-autonomie", "Tableau de bord", "Autonomie de l'agent", "Trois niveaux, puis le réglage ligne par ligne.",
+    barre(`<span class="retour">←</span><h3>Autonomie</h3>`) +
+    `<div class="corps serre">
+      ${carte(`<b class="petit">Prudent</b><p class="sourdine petit">Je valide les premiers messages de chaque campagne</p>`, "calme")}
+      ${carte(`<div class="ligne"><b class="petit">Équilibré</b>${etiq("Choisi ✓", "ok")}</div>
+        <p class="sourdine petit">L'agent écrit seul, il me demande pour l'important</p>`)}
+      ${carte(`<b class="petit">Autonome</b><p class="sourdine petit">L'agent fait tout, il me prévient après</p>`, "calme")}
+      ${carte(`${titrine("Dans le détail")}
+        <div class="col serre petit">
+          <div class="ligne"><span>Écrire le premier message</span>${etiq("Agent seul", "ok")}</div>
+          <div class="ligne"><span>Relancer</span>${etiq("Agent seul", "ok")}</div>
+          <div class="ligne"><span>Répondre à une question simple</span>${etiq("Agent seul", "ok")}</div>
+          <div class="ligne"><span>Annoncer un prix</span>${etiq("Me demande", "marque")}</div>
+          <div class="ligne"><span>Confirmer un rendez-vous</span>${etiq("Me demande", "marque")}</div>
+          <div class="ligne"><span>Répondre à un lead chaud</span>${etiq("Me demande", "marque")}</div>
+        </div>`)}
+    </div>`)
+
+  ecran("tb-whatsapp", "Tableau de bord", "Piloter depuis WhatsApp", "Le client peut tout faire sans ouvrir le site.",
+    barre(`<h3>leed sur WhatsApp</h3>`, etiq("Numéro leed", "marque")) +
+    `<div class="corps">
+      <div class="col serre" style="gap:8px">
+        <div class="bulle lui">🔥 Mme Houngbo (Maquis Chez Tanti) veut un devis pour un logo.<br><br>Je réponds avec votre fourchette 40–60 000 ?</div>
+        <div class="bulle moi">Oui</div>
+        <div class="bulle lui">C'est fait. Je vous préviens dès qu'elle répond.</div>
+        <div class="bulle moi">Où en est-on ?</div>
+        <div class="bulle lui">Cette semaine : 86 contactés, 14 réponses, 2 rendez-vous.<br>Forfait : 34 entreprises, 19 jours.</div>
+      </div>
+      ${carte(`${titrine("Ce que vous pouvez écrire")}
+        <div class="col serre petit sourdine">
+          <div>« Pause » · « Reprends »</div>
+          <div>« Montre-moi les leads chauds »</div>
+          <div>« Ne contacte plus les écoles »</div>
+          <div>« Mon prix pour un logo c'est 50 000 »</div>
+        </div>`, "calme")}
+    </div>`)
+
+  /* ───── Espace admin ───── */
+  const barreAdmin = (t, d = "") => barre(`${marque()}<span class="etiq" style="margin-left:4px">admin</span>`, d || `<span class="sourdine petit">${t}</span>`);
+
+  ecran("ad-accueil", "Espace admin", "Accueil admin", "Ce que l'équipe leed surveille chaque matin.",
+    barreAdmin("Lundi 16 nov.") +
+    `<div class="corps serre">
+      ${chiffres([["34", "clients actifs"], ["61", "comptes branchés"], ["2", "à rebrancher"], ["7", "tickets"]])}
+      ${carte(`<div class="ligne"><span class="titrine">À traiter aujourd'hui</span></div>
+        <div class="liste petit">
+          <div class="ligne"><span>⚠️ 2 comptes WhatsApp déconnectés</span>${etiq("Urgent", "feu")}</div>
+          <div class="ligne"><span>📝 12 messages bloqués à relire</span>${etiq("Aujourd'hui")}</div>
+          <div class="ligne"><span>💳 3 paiements en attente > 1 h</span>${etiq("Aujourd'hui")}</div>
+          <div class="ligne"><span>🗂️ Annuaire : source BCEAO à rafraîchir</span>${etiq("Cette semaine")}</div>
+        </div>`, "vif")}
+      ${carte(`${titrine("Ce mois")}
+        <div class="ligne petit"><span>Encaissé</span><b class="num">1 240 000 FCFA</b></div>
+        <div class="ligne petit"><span>Coût Unipile</span><b class="num">−200 000 FCFA</b></div>
+        <div class="ligne petit"><span>Coût IA</span><b class="num">−148 000 FCFA</b></div>
+        <div class="ligne petit" style="border-top:1px solid var(--trait);padding-top:8px"><b>Reste</b><b class="num" style="color:var(--baobab)">892 000 FCFA</b></div>`)}
+      ${carte(`${titrine("Santé de l'envoi")}
+        <div class="ligne petit"><span>WhatsApp</span><span class="num sourdine">52 comptes · 1 alerte</span></div>${jauge(94, "vert")}
+        <div class="ligne petit"><span>Email</span><span class="num sourdine">9 comptes · 0 alerte</span></div>${jauge(100, "vert")}`)}
+    </div>`)
+
+  ecran("ad-clients", "Espace admin", "Clients", "Qui paie, qui consomme, qui risque de partir.",
+    barreAdmin("34 clients") +
+    `<div class="corps serre">
+      ${champ("Chercher un client…")}
+      <div class="bts">${etiq("Actifs ✓", "marque")}${etiq("En essai")}${etiq("Expirés")}${etiq("À risque")}</div>
+      ${tableau(["Client", "Forfait", "Reste", "État"], [
+        ["<b>Studio Koffi</b><div class='sourdine'>Cotonou</div>", "<span class='num'>25 000</span>", "<span class='num'>34 / 111</span>", etiq("Actif", "ok")],
+        ["<b>Traiteur Saveurs</b><div class='sourdine'>Abidjan</div>", "<span class='num'>10 000</span>", "<span class='num'>4 / 40</span>", etiq("Bientôt fini", "feu")],
+        ["<b>Agence Teranga</b><div class='sourdine'>Dakar</div>", "<span class='num'>50 000</span>", "<span class='num'>180 / 250</span>", etiq("Actif", "ok")],
+        ["<b>École Les Lauréats</b><div class='sourdine'>Calavi</div>", "Essai", "<span class='num'>6 / 10</span>", etiq("En essai")],
+        ["<b>Imprimerie Sogbo</b><div class='sourdine'>Porto-Novo</div>", "—", "<span class='num'>0</span>", etiq("Expiré")],
+      ])}
+    </div>`)
+
+  ecran("ad-client", "Espace admin", "Fiche d'un client", "Tout sur un client, sans jamais lire ses conversations privées.",
+    barre(`<span class="retour">←</span><h3>Studio Koffi</h3>`, etiq("Actif", "ok")) +
+    `<div class="corps serre">
+      <div class="sourdine petit">Koffi Adjovi · koffi@studiokoffi.bj · +229 01 97 ·· ·· ··<br>Client depuis le 12 novembre 2026</div>
+      ${chiffres([["25 000", "forfait FCFA"], ["34", "entreprises restantes"], ["19", "jours restants"], ["2", "comptes branchés"]], "deux")}
+      ${carte(`${titrine("Ses comptes")}
+        <div class="col serre petit">
+          <div class="ligne"><span>WhatsApp +229 97…</span>${etiq("Bonne santé", "ok")}</div>
+          <div class="ligne"><span>Gmail koffi@…</span>${etiq("Bonne santé", "ok")}</div>
+        </div>`)}
+      ${carte(`${titrine("Ce qu'il nous coûte ce mois")}
+        <div class="ligne petit"><span>Unipile (2 comptes)</span><b class="num">6 560 FCFA</b></div>
+        <div class="ligne petit"><span>IA (186 prospects)</span><b class="num">7 440 FCFA</b></div>
+        <div class="ligne petit"><span>Frais Mobile Money</span><b class="num">750 FCFA</b></div>
+        <div class="ligne petit" style="border-top:1px solid var(--trait);padding-top:8px"><b>Marge</b><b class="num" style="color:var(--baobab)">10 250 FCFA</b></div>`, "calme")}
+      <div class="bts">${bt("Voir ses campagnes", "cadre", "petit")}${bt("Offrir des entreprises", "cadre", "petit")}${bt("Suspendre", "cadre", "petit")}</div>
+    </div>`)
+
+  ecran("ad-comptes", "Espace admin", "Santé des comptes", "Le risque n° 1 : un compte client suspendu. On le voit venir ici.",
+    barreAdmin("61 comptes branchés") +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne"><span class="titrine">Facturation Unipile ce mois</span></div>
+        <div class="ligne petit"><span>Pic de comptes simultanés</span><b class="num">61</b></div>
+        <div class="ligne petit"><span>À payer</span><b class="num">255 € · 167 000 FCFA</b></div>
+        <p class="sourdine" style="font-size:12px">Facturé sur le pic du mois, même si des comptes sont débranchés ensuite.</p>`)}
+      <div class="bts">${etiq("Tous ✓", "marque")}${etiq("À surveiller")}${etiq("Suspendus")}</div>
+      ${carte(`<div class="ligne"><div class="min"><b class="petit">Traiteur Saveurs · WhatsApp</b><div class="sourdine petit">+225 07 ·· ·· ·· ··</div></div>${etiq("Déconnecté", "feu")}</div>
+        <p class="petit">Depuis 2 h. Envois suspendus, client prévenu sur WhatsApp.</p>
+        <div class="bts">${bt("Relancer le client", "sombre", "petit")}${bt("Voir le journal", "cadre", "petit")}</div>`, "vif")}
+      ${carte(`<div class="ligne"><div class="min"><b class="petit">Agence Teranga · WhatsApp</b></div>${etiq("À surveiller", "feu")}</div>
+        <p class="petit">Taux de livraison en baisse (82 %). Volume réduit automatiquement à 20 par jour.</p>`)}
+      ${carte(`<div class="ligne"><span class="petit">52 comptes en bonne santé</span>${etiq("OK", "ok")}</div>`, "calme")}
+    </div>`)
+
+  ecran("ad-annuaire", "Espace admin", "Annuaire et sources", "D'où viennent les entreprises, et ce qu'on a le droit d'en faire.",
+    barreAdmin("1,2 M entreprises") +
+    `<div class="corps serre">
+      ${chiffres([["1,2 M", "entreprises"], ["16", "pays"], ["68 %", "avec téléphone"], ["31 %", "avec site"]], "deux")}
+      ${carte(`${titrine("Sources actives")}
+        <div class="col serre petit">
+          <div class="ligne"><span>Overture Maps</span><span class="sourdine num">il y a 3 j</span></div>
+          <div class="ligne"><span>Foursquare OS</span><span class="sourdine num">il y a 3 j</span></div>
+          <div class="ligne"><span>OpenStreetMap</span><span class="sourdine num">hier</span></div>
+          <div class="ligne"><span>GLEIF</span><span class="sourdine num">hier</span></div>
+          <div class="ligne"><span>Certificate Transparency</span><span class="sourdine num">ce matin</span></div>
+        </div>`)}
+      ${carte(`<div class="ligne"><b class="petit">BCEAO — banques agréées</b>${etiq("À rafraîchir", "feu")}</div>
+        <p class="petit">Dernier import il y a 4 mois. Un nouveau document est publié.</p>
+        ${bt("Importer le document", "sombre", "petit")}`, "vif")}
+      ${carte(`${titrine("En attente de relecture")}
+        <div class="col serre petit">
+          <div class="ligne"><span>Rapprochements douteux</span><b class="num">47</b></div>
+          <div class="ligne"><span>Catégories à classer</span><b class="num">128</b></div>
+          <div class="ligne"><span>Demandes de suppression</span><b class="num">2</b></div>
+        </div>`)}
+    </div>`)
+
+  ecran("ad-messages", "Espace admin", "Messages bloqués", "Les messages que le contrôle a refusés. On corrige la règle, pas le message.",
+    barreAdmin("12 à relire") +
+    `<div class="corps serre">
+      ${carte(`<div class="ligne"><span class="etiq feu">Refusé</span><span class="sourdine" style="font-size:12px">il y a 20 min</span></div>
+        <div class="sourdine petit">Studio Koffi → Boutique Awa · WhatsApp</div>
+        <p class="petit">« …je vous garantis une augmentation de vos ventes dès le premier mois. »</p>
+        ${carte(`<p class="petit"><b>Règle :</b> pas de fausse promesse (INTERDITS.md §1)</p>`, "calme")}
+        <div class="bts">${bt("Confirmer le blocage", "sombre", "petit")}${bt("C'est une erreur", "cadre", "petit")}</div>`, "vif")}
+      ${carte(`<div class="ligne"><span class="etiq feu">Refusé</span><span class="sourdine" style="font-size:12px">il y a 1 h</span></div>
+        <div class="sourdine petit">Agence Teranga → Hôtel Terrou · Email</div>
+        <p class="petit">« Suite à notre échange de la semaine dernière… »</p>
+        ${carte(`<p class="petit"><b>Règle :</b> pas de fausse familiarité</p>`, "calme")}`)}
+      ${carte(`${titrine("Cette semaine")}
+        <div class="ligne petit"><span>Messages contrôlés</span><b class="num">2 480</b></div>
+        <div class="ligne petit"><span>Bloqués</span><b class="num">31 · 1,3 %</b></div>
+        <div class="ligne petit"><span>Blocages confirmés</span><b class="num">28</b></div>`, "calme")}
+    </div>`)
+
+  ecran("ad-paiements", "Espace admin", "Paiements", "Chaque paiement, son opérateur, et les rattrapages.",
+    barreAdmin("3 en attente") +
+    `<div class="corps serre">
+      ${chiffres([["1 240 000", "FCFA ce mois"], ["52", "paiements"], ["3", "en attente"], ["1", "échoué"]], "deux")}
+      ${carte(`<div class="ligne"><b class="petit">Traiteur Saveurs</b>${etiq("En attente", "feu")}</div>
+        <div class="sourdine petit num">10 000 FCFA · Wave · depuis 1 h 20</div>
+        <div class="bts">${bt("Revérifier", "sombre", "petit")}${bt("Annuler", "cadre", "petit")}</div>`, "vif")}
+      ${tableau(["Client", "Montant", "Opérateur", "État"], [
+        ["Studio Koffi", "<span class='num'>25 000</span>", "MTN", etiq("Reçu", "ok")],
+        ["Agence Teranga", "<span class='num'>50 000</span>", "Orange", etiq("Reçu", "ok")],
+        ["Boutique Awa", "<span class='num'>5 000</span>", "Moov", etiq("Reçu", "ok")],
+        ["Imprimerie Sogbo", "<span class='num'>10 000</span>", "Celtiis", etiq("Échoué", "feu")],
+      ])}
+    </div>`)
+
+  ecran("ad-support", "Espace admin", "Support", "Ce que l'agent de support n'a pas su traiter arrive ici.",
+    barreAdmin("7 tickets") +
+    `<div class="corps serre">
+      <div class="bts">${etiq("Ouverts ✓", "marque")}${etiq("En attente")}${etiq("Fermés")}</div>
+      ${carte(`<div class="ligne"><b class="petit">Traiteur Saveurs</b>${etiq("Paiement", "feu")}</div>
+        <p class="petit">« J'ai payé avec Wave mais mon forfait n'est pas crédité. »</p>
+        <div class="sourdine petit">il y a 40 min · l'agent n'a pas su répondre</div>
+        <div class="bts">${bt("Répondre", "sombre", "petit")}${bt("Voir le paiement", "cadre", "petit")}</div>`, "vif")}
+      ${carte(`<div class="ligne"><b class="petit">Agence Teranga</b>${etiq("Compte")}</div>
+        <p class="petit">« Comment j'ajoute un collègue à mon compte ? »</p>
+        <div class="sourdine petit">il y a 3 h</div>`)}
+      ${carte(`${titrine("L'agent de support cette semaine")}
+        <div class="ligne petit"><span>Questions reçues</span><b class="num">142</b></div>
+        <div class="ligne petit"><span>Traitées seul</span><b class="num">135 · 95 %</b></div>
+        <div class="ligne petit"><span>Passées à l'équipe</span><b class="num">7</b></div>`, "calme")}
+    </div>`)
+
+  ecran("ad-couts", "Espace admin", "Coûts et marges", "Ce qu'on gagne vraiment, client par client.",
+    barreAdmin("Novembre 2026") +
+    `<div class="corps serre">
+      ${carte(`${titrine("Ce mois")}
+        <div class="ligne petit"><span>Encaissé</span><b class="num">1 240 000 FCFA</b></div>
+        <div class="ligne petit"><span>Unipile · 61 comptes</span><b class="num">−167 000</b></div>
+        <div class="ligne petit"><span>IA · 4 820 prospects</span><b class="num">−148 000</b></div>
+        <div class="ligne petit"><span>Frais Mobile Money</span><b class="num">−37 000</b></div>
+        <div class="ligne petit" style="border-top:1px solid var(--trait);padding-top:8px"><b>Marge</b><b class="num" style="color:var(--baobab)">888 000 · 72 %</b></div>`)}
+      ${carte(`${titrine("Marge par palier de forfait")}
+        <div class="col serre petit">
+          <div class="ligne"><span>5 000 FCFA · 6 clients</span><b class="num">+770 F / client</b></div>${jauge(8, "or")}
+          <div class="ligne"><span>10 000 FCFA · 11 clients</span><b class="num">+1 540</b></div>${jauge(16, "or")}
+          <div class="ligne"><span>25 000 FCFA · 12 clients</span><b class="num">+9 970</b></div>${jauge(45, "vert")}
+          <div class="ligne"><span>50 000 FCFA et + · 5 clients</span><b class="num">+22 100</b></div>${jauge(100, "vert")}
+        </div>`)}
+      ${carte(`<p class="petit">Les forfaits sous 25 000 FCFA ne rapportent presque rien. Tout l'enjeu est de faire monter les clients d'un palier.</p>`, "calme")}
+      ${carte(`${titrine("Alerte")}
+        <p class="petit">2 clients à 5 000 FCFA ont branché 2 comptes : on perd sur eux ce mois-ci.</p>`, "vif")}
+    </div>`)
+
+  /* ══════════ Navigation ══════════ */
+  const liste = document.getElementById("som-liste");
+  let html = "";
+  let groupe = "";
+  E.forEach((s, i) => {
+    if (s.groupe !== groupe) {
+      groupe = s.groupe;
+      html += `<div class="som-groupe">${e(groupe)}</div>`;
+    }
+    html += `<button class="som-lien" data-i="${i}"><span class="som-num">${String(i + 1).padStart(2, "0")}</span><span>${e(s.titre)}</span></button>`;
+  });
+  liste.innerHTML = html;
+
+  const vue = { i: 0 };
+  const $ = (id) => document.getElementById(id);
+  $("total").textContent = String(E.length);
+
+  function montrer(i, parHash) {
+    vue.i = Math.max(0, Math.min(E.length - 1, i));
+    const s = E[vue.i];
+    $("fil").textContent = s.groupe;
+    $("titre").textContent = s.titre;
+    $("note").textContent = s.note;
+    $("ecran").innerHTML = s.html;
+    $("compteur").textContent = `${vue.i + 1} / ${E.length}`;
+    $("prec").disabled = vue.i === 0;
+    $("suiv").disabled = vue.i === E.length - 1;
+    liste.querySelectorAll(".som-lien").forEach((b) =>
+      b.setAttribute("aria-current", String(Number(b.dataset.i) === vue.i)),
+    );
+    if (!parHash) {
+      try { history.replaceState(null, "", "#" + s.id); } catch (_) {}
+    }
+    const actif = liste.querySelector('[aria-current="true"]');
+    if (actif && window.innerWidth >= 900) actif.scrollIntoView({ block: "nearest" });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  liste.addEventListener("click", (ev) => {
+    const b = ev.target.closest(".som-lien");
+    if (!b) return;
+    montrer(Number(b.dataset.i));
+    if (window.innerWidth < 900) $("sommaire").dataset.ouvert = "false";
+    $("bascule").setAttribute("aria-expanded", "false");
+  });
+  $("prec").addEventListener("click", () => montrer(vue.i - 1));
+  $("suiv").addEventListener("click", () => montrer(vue.i + 1));
+  $("bascule").addEventListener("click", () => {
+    const s = $("sommaire");
+    const o = s.dataset.ouvert !== "true";
+    s.dataset.ouvert = String(o);
+    $("bascule").setAttribute("aria-expanded", String(o));
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (ev.target && /INPUT|TEXTAREA/.test(ev.target.tagName)) return;
+    if (ev.key === "ArrowRight") montrer(vue.i + 1);
+    if (ev.key === "ArrowLeft") montrer(vue.i - 1);
+  });
+  window.addEventListener("hashchange", () => {
+    const i = E.findIndex((s) => s.id === location.hash.slice(1));
+    if (i >= 0 && i !== vue.i) montrer(i, true);
+  });
+
+  const depart = E.findIndex((s) => s.id === location.hash.slice(1));
+  montrer(depart >= 0 ? depart : 0, true);
+})();
+</script>
