@@ -1,38 +1,38 @@
-import type { Metadata } from "next";
-import { Inter, Bricolage_Grotesque } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+import { Shell } from "@/components/Shell";
+import { Footer } from "@/components/Footer";
+import { BRAND } from "@/components/data";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const GeistSans = localFont({
+  src: "../fonts/Geist-Variable.woff2",
+  variable: "--font-geist-sans",
+  weight: "100 900",
   display: "swap",
-  weight: ["400", "500", "600"],
 });
-
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
-  subsets: ["latin"],
+const GeistMono = localFont({
+  src: "../fonts/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  weight: "100 900",
   display: "swap",
-  weight: ["500", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "djeli — Trouvez vos clients pendant que vous dormez",
-    template: "%s | djeli",
-  },
+  title: `${BRAND} — 24/7 AI agent that finds clients while you sleep`,
   description:
-    "L'agent commercial IA qui trouve vos clients, leur écrit et vous apporte des rendez-vous. Email, WhatsApp, partout en Afrique de l'Ouest.",
-  metadataBase: new URL("https://djeliai.com"),
+    "Enter your domain and let AI find ideal customers, write personalized emails, and handle follow-ups.",
+  icons: { icon: "/favicon.svg" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export const viewport: Viewport = { themeColor: "#f6f5f3", width: "device-width", initialScale: 1 };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="fr"
-      className={`${inter.variable} ${bricolage.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full`}>
+      <body className="h-full">
+        <Shell footer={<Footer />}>{children}</Shell>
+      </body>
     </html>
   );
 }
