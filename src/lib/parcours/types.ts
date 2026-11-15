@@ -1,0 +1,45 @@
+/** Les données du parcours du visiteur, de « décrire son activité » à l'aperçu. */
+export type Formulaire = {
+  vend: string;
+  client: string;
+  secteurs: string[];
+  taille: string;
+  zone: string;
+  prixMoyen: string;
+  objectif: string;
+};
+
+export type Entree =
+  | { mode: "site"; site: string }
+  | { mode: "formulaire"; formulaire: Formulaire };
+
+export type Fiche = {
+  nom: string;
+  resume: string;
+  offres: string[];
+  zone: string;
+  forces: string[];
+  concurrents: string[];
+};
+
+export type Question = { id: string; texte: string; choix: string[] };
+
+export type Profil = { id: string; nom: string; raison: string; note: number; actif: boolean };
+
+export type Canal = "WhatsApp" | "Email" | "Instagram" | "Facebook" | "LinkedIn";
+
+export type Apercu = {
+  total: number;
+  exemples: { secteur: string; ville: string; taille: string; indice: string }[];
+  canaux: { canal: Canal; nombre: number }[];
+};
+
+export type Etat = {
+  entree?: Entree;
+  fiche?: Fiche;
+  questions?: Question[];
+  reponses?: Record<string, string>;
+  profils?: Profil[];
+  apercu?: Apercu;
+  compte?: { prenom: string; entreprise: string; email: string; pays: string };
+};
