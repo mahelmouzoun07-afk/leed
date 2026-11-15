@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Code, Copy, Database, FlaskConical, LayoutGrid, Menu, Search, Sparkles, Target, X } from "lucide-react";
+import { ChevronDown, Database, LayoutGrid, Menu, Search, Sparkles, Target, X } from "lucide-react";
 import { Logo, useUI } from "./ui";
 
 const PRODUCTS = [
-  { icon: Sparkles, title: "Outreach Agent", text: "24/7 AI SDR that runs cold email outreach end-to-end", href: "/" },
-  { icon: Search, title: "AI search for companies & people", text: "Search 106M companies and 400M+ validated people", href: "/tools/explorer/" },
-  { icon: Code, title: "API", text: "Power your own agent with high-precision unique data", href: "/api-docs/" },
-  { icon: Database, title: "B2B Company Database", text: "106M companies and 400M+ validated people, ready for bulk data workflows", href: "/b2b-database/" },
-  { icon: FlaskConical, title: "Deep research agents", text: "Enrich accounts with unique AI-derived datapoints", href: "/tools/explorer/?mode=research" },
-  { icon: Copy, title: "Lookalike Companies", text: "Discover companies similar to your best customers", href: "/tools/explorer/?mode=lookalike" },
-  { icon: Target, title: "ICP Explorer", text: "Build and refine your ideal customer segments", href: "/tools/explorer/?mode=icp" },
+  { icon: Sparkles, title: "Agent de prospection", text: "Il trouve vos clients, leur écrit depuis vos comptes et pose vos rendez-vous", href: "/" },
+  { icon: Target, title: "Explorateur de cibles", text: "Décrivez votre client idéal et voyez combien d'entreprises lui ressemblent", href: "/tools/explorer/" },
+  { icon: Database, title: "Annuaire d'entreprises", text: "Les entreprises d'Afrique de l'Ouest, même celles qui n'ont pas de site. Bientôt", href: "/b2b-database/" },
+  { icon: Search, title: "Simulateur de budget", text: "Choisissez un montant et voyez ce que vous obtenez", href: "/#pricing" },
 ];
 
 const navItem =
@@ -59,7 +56,7 @@ export function Header() {
               className={`inline-flex items-center gap-1 ${navItem}`}
             >
               <LayoutGrid className="h-4 w-4" />
-              Products
+              Produits
               <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
             {open && (
@@ -89,13 +86,13 @@ export function Header() {
             )}
           </div>
           <Link prefetch={false} href="/#pricing" className={navItem}>
-            Pricing
+            Tarifs
           </Link>
           <Link prefetch={false} href="/affiliate/?src=header" className={navItem}>
-            Affiliates
+            Parrainage
           </Link>
           <Link prefetch={false} href="/about/" className={navItem}>
-            About
+            À propos
           </Link>
           <a
             href="#"
@@ -105,7 +102,7 @@ export function Header() {
             }}
             className={`${navItem} whitespace-nowrap`}
           >
-            Sign in
+            Connexion
           </a>
         </nav>
         <button
@@ -121,7 +118,7 @@ export function Header() {
       {mobile && (
         <div className="fixed inset-x-0 bottom-0 top-[72px] z-40 overflow-y-auto bg-background px-4 pb-8 md:hidden">
           <div className="flex flex-col">
-            <div className="py-3 text-sm font-medium text-muted-foreground">Products</div>
+            <div className="py-3 text-sm font-medium text-muted-foreground">Produits</div>
             {PRODUCTS.map((p) => (
               <Link prefetch={false}
                 key={p.title}
@@ -135,9 +132,9 @@ export function Header() {
             ))}
             <div className="my-3 h-px bg-border" />
             {[
-              ["Pricing", "/#pricing"],
-              ["Affiliates", "/affiliate/?src=header"],
-              ["About", "/about/"],
+              ["Tarifs", "/#pricing"],
+              ["Parrainage", "/affiliate/?src=header"],
+              ["À propos", "/about/"],
             ].map(([l, h]) => (
               <Link key={l} href={h} onClick={() => setMobile(false)} className="py-3 text-lg text-foreground">
                 {l}
@@ -149,9 +146,9 @@ export function Header() {
                 setMobile(false);
                 openSignIn();
               }}
-              className="cta-primary mt-4 rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground"
+              className="mt-4 rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground"
             >
-              Sign in
+              Connexion
             </button>
           </div>
         </div>

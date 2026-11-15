@@ -4,16 +4,25 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { X } from "lucide-react";
 import { BRAND_LOWER } from "./data";
 
-/* ---------- Logo (placeholder mark, not the original's) ---------- */
-export function Logo({ className = "" }: { className?: string }) {
+/* ---------- Logo leed ----------
+   Mot construit en formes géométriques (pas de texte) : hauteur d'x 140,
+   ascendante 180, graisse 32. Le « d » final est un disque plein : le point
+   d'arrivée, le client trouvé. Source : scripts/logo/construire.cjs.
+   `inverse` : version pour fond sombre (lettres blanches, disque safran). */
+export function Logo({ className = "", inverse = false }: { className?: string; inverse?: boolean }) {
+  const encre = inverse ? "#ffffff" : "var(--foreground)";
+  const disque = inverse ? "var(--safran)" : "var(--indigo)";
   return (
-    <span className={`inline-flex h-7 items-center gap-1.5 select-none ${className}`} aria-label={BRAND_LOWER}>
-      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-        <rect x="0" y="0" width="9" height="9" rx="2" fill="#c7c7c7" />
-        <rect x="11" y="11" width="9" height="9" rx="2" fill="#c7c7c7" />
-        <rect x="11" y="0" width="9" height="9" rx="4.5" fill="var(--brand-500)" />
+    <span className={`inline-flex h-7 items-center select-none ${className}`}>
+      <svg height="22" viewBox="0 36 496 180" role="img" aria-label={BRAND_LOWER}>
+        <rect x="0" y="36" width="32" height="180" fill={encre} />
+        <path d="M176 146A54 54 0 1 0 164.55 179.25" fill="none" stroke={encre} strokeWidth="32" />
+        <path d="M68 146H192" fill="none" stroke={encre} strokeWidth="26" />
+        <path d="M328 146A54 54 0 1 0 316.55 179.25" fill="none" stroke={encre} strokeWidth="32" />
+        <path d="M220 146H344" fill="none" stroke={encre} strokeWidth="26" />
+        <circle cx="426" cy="146" r="70" fill={disque} />
+        <rect x="464" y="36" width="32" height="180" fill={encre} />
       </svg>
-      <span className="text-[24px] leading-none tracking-[-0.03em] text-foreground">{BRAND_LOWER}</span>
     </span>
   );
 }

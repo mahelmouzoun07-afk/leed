@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { Shell } from "@/components/Shell";
 import { Footer } from "@/components/Footer";
 import { BRAND } from "@/components/data";
 
+// Texte : Geist, la police du format d'origine (les espacements sont réglés pour elle).
 const GeistSans = localFont({
   src: "../fonts/Geist-Variable.woff2",
   variable: "--font-geist-sans",
@@ -17,19 +19,25 @@ const GeistMono = localFont({
   weight: "100 900",
   display: "swap",
 });
+// Titres : Bricolage Grotesque, police variable à forte personnalité (voir docs/DESIGN.md).
+const Bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: `${BRAND} — 24/7 AI agent that finds clients while you sleep`,
+  title: `${BRAND} — Trouvez vos clients pendant que vous dormez`,
   description:
-    "Enter your domain and let AI find ideal customers, write personalized emails, and handle follow-ups.",
+    "Leed étudie votre marché, écrit à vos futurs clients depuis vos propres comptes (WhatsApp, Instagram, Facebook, LinkedIn, email) et vous amène des rendez-vous.",
   icons: { icon: "/favicon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#f6f5f3", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full`}>
+    <html lang="fr" className={`${GeistSans.variable} ${GeistMono.variable} ${Bricolage.variable} h-full`}>
       <body className="h-full">
         <Shell footer={<Footer />}>{children}</Shell>
       </body>

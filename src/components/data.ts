@@ -1,7 +1,7 @@
-// Placeholder brand: the original's name, logo, people and long copy are replaced
-// by neutral sample content (layout and behaviour follow the original).
-export const BRAND = "Prospra";
-export const BRAND_LOWER = "prospra";
+// Contenu de la marque leed. Les exemples (Studio Koffi, ses prospects) sont
+// des illustrations du produit, pas des clients réels ni des résultats.
+export const BRAND = "Leed";
+export const BRAND_LOWER = "leed";
 
 export type Testimonial = {
   quote: string;
@@ -13,159 +13,77 @@ export type Testimonial = {
   noName?: boolean;
 };
 
-const T = (
-  quote: string,
-  name: string,
-  company: string,
-  color: string,
-  noName = false,
-): Testimonial => ({
-  quote,
-  name,
-  company,
-  color,
-  noName,
-  initials: (noName ? company : name)
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase(),
-});
+// Témoignages : volontairement vides. On n'en affiche que de vrais
+// (docs/INTERDITS.md). Les emplacements restent pour garder la mise en page.
+export const ROWS: Testimonial[][] = [[], [], []];
+export const MOBILE_ORDER: Testimonial[] = [];
+export const TESTIMONIAL_SLOTS = 5;
 
-export const ROWS: Testimonial[][] = [
-  [
-    T(
-      "I had tried two other outreach tools and spent days on domains, DNS and warm-up. Here you type your web address and the setup happens for you… and the replies come from the actual decision makers, so trials convert really well.",
-      "Daniel Morrow",
-      "Ledgerline",
-      "#0891b2",
-    ),
-    T(
-      "School groups were always the hardest door to open for us. With this agent they are now the ones answering most often, and a few of them are already signing.",
-      "Sophie Lindqvist",
-      "Campus Pulse",
-      "#b45309",
-    ),
-    T("We closed six deals that are already at an advanced stage.", "Tunde Adebayo", "Gatepass", "#7c3aed"),
-    T(
-      "I have led sales teams for years and I'm honestly impressed. It feels like having a whole team, on your own.",
-      "Ethan Clarke",
-      "Northvest",
-      "#0284c7",
-    ),
-  ],
-  [
-    T(
-      "I'm hooked on this platform. It's the simplest, clearest tool I have used for outreach. Exactly what I needed.",
-      "Kofi Mensah",
-      "StoryLoom",
-      "#dc2626",
-    ),
-    T(
-      "It books several demos a week on its own — I would happily spend more if that keeps going… and with very little guidance the leads are spot on. Other tools gave me the worst fits.",
-      "Ryan Becker",
-      "Menuboost",
-      "#059669",
-    ),
-    T(
-      "I got replies from the smallest plan, which surprised me. Two of them are already booked meetings.",
-      "Nadia Haddad",
-      "Brightforge",
-      "#1d4ed8",
-    ),
-    T("It opened doors we would have spent months knocking on by hand.", "Amira Qureshi", "The Policy Desk", "#0369a1"),
-  ],
-  [
-    T(
-      "An agency got us zero responses. With this, people actually reply, and what took hours now takes me fifteen minutes a day.",
-      "Claire Dubois",
-      "Voxa Studio",
-      "#7c3aed",
-    ),
-    T(
-      "A CEO told me he was glad we had researched his company. The opening line it wrote landed perfectly.",
-      "Vikram Rao",
-      "Harbor Asia",
-      "#0d9488",
-    ),
-    T("The product is on fire. Congrats!", "", "Lumen Jewellery", "#d97706", true),
-    T(
-      "Fully automated so far: emails went out, they said yes please, the agent replied with a booking link and they booked.",
-      "Oliver Grant",
-      "SafeAudit",
-      "#4f46e5",
-    ),
-  ],
-];
-
-// Phone order: the three rows interleaved.
-export const MOBILE_ORDER: Testimonial[] = [0, 1, 2, 3].flatMap((i) => ROWS.map((r) => r[i]));
-
+// Pastille du haut de page : uniquement des faits de notre offre.
 export const STATS = [
-  { value: "202,525", label: "hot leads for 17,637 companies" },
-  { value: "$9", label: "median cost per lead" },
+  { value: "Essai gratuit", label: "10 entreprises contactées par email" },
+  { value: "Dès 5 000 FCFA", label: "en Mobile Money, sans abonnement" },
 ];
 
 export const COMPETITORS = [
-  { domain: "kilnandcraft.com", color: "#a3a3a3" },
-  { domain: "stonewarehub.com", color: "#84cc16" },
-  { domain: "tablecrafted.com", color: "#22c55e" },
-  { domain: "potterydepot.com", color: "#60a5fa" },
-  { domain: "hospitalityware.com", color: "#f59e0b" },
-  { domain: "glazeco.com", color: "#ef4444" },
+  { domain: "atelier-graphique.bj", color: "#a3a3a3" },
+  { domain: "studio-creation.ci", color: "#2a2e8c" },
+  { domain: "agence-visuelle.sn", color: "#1f7a50" },
+  { domain: "print-et-design.tg", color: "#f4a51c" },
+  { domain: "logo-express.bj", color: "#6b6b6b" },
+  { domain: "maison-identite.ci", color: "#111111" },
 ];
 
 export const FIT_ROWS = [
-  ["Restaurant groups", 92],
-  ["Boutique hotels", 88],
-  ["Specialty cafés", 85],
-  ["Caterers", 79],
-  ["Wine bars", 74],
+  ["Restaurants et maquis", 92],
+  ["Boutiques de mode", 85],
+  ["Écoles privées", 78],
+  ["Hôtels et résidences", 74],
+  ["Salons de beauté", 71],
 ] as const;
 
+// `email` porte ici le canal par lequel le prospect est joignable.
 export const PEOPLE = [
-  { i: "LW", name: "Laura Whitman", role: "Owner", company: "Juniper Table", email: "laura@junipertable.com" },
-  { i: "MO", name: "Marcus Osei", role: "Head Chef", company: "Fig & Ember", email: "marcus@figandember.com" },
-  { i: "EC", name: "Elena Castro", role: "Founder", company: "The Daily Grind", email: "elena@thedailygrind.com" },
-  { i: "HL", name: "Hannah Lee", role: "Owner", company: "Hannah Lee Catering", email: "hannah@hannahleecatering.com" },
-  { i: "PN", name: "Priya Nair", role: "F&B Manager", company: "Hotel Saffron", email: "priya@hotelsaffron.com" },
-  { i: "JD", name: "James Doyle", role: "Owner", company: "Doyle Wine Bar", email: "james@doylewinebar.com" },
+  { i: "RH", name: "Rosine Houngbo", role: "Gérante", company: "Maquis Chez Tanti", email: "WhatsApp · Facebook" },
+  { i: "MD", name: "Moussa Diallo", role: "Fondateur", company: "Boutique Teranga", email: "Instagram · WhatsApp" },
+  { i: "AK", name: "Aïcha Koné", role: "Directrice", company: "École Les Lauréats", email: "Email · LinkedIn" },
+  { i: "YA", name: "Yao Amoussou", role: "Gérant", company: "Résidence Le Palmier", email: "WhatsApp · Email" },
+  { i: "FS", name: "Fatou Sow", role: "Propriétaire", company: "Salon Élégance", email: "Instagram · Facebook" },
+  { i: "KM", name: "Kévin Mensah", role: "Responsable", company: "Traiteur Saveurs", email: "WhatsApp · Email" },
 ];
 
 export const CAMPAIGNS = [
-  ["Restaurant groups", "Scaling", "$1.69", true],
-  ["Boutique hotels", "Scaling", "$1.87", true],
-  ["Specialty cafés", "Working", "$2.02", true],
-  ["Corporate offices", "Paused", "$6.33", false],
-  ["Event venues", "Paused", "$5.80", false],
+  ["Restaurants et maquis", "En hausse", "WhatsApp", true],
+  ["Boutiques de mode", "En hausse", "Instagram", true],
+  ["Écoles privées", "Stable", "Email", true],
+  ["Hôtels et résidences", "En pause", "LinkedIn", false],
+  ["Salons de beauté", "En pause", "Facebook", false],
 ] as const;
 
 export const FOOTER = {
   products: [
-    { label: "Global B2B Company Database", badge: "105M+", href: "/b2b-database/" },
-    { label: "Google Maps Dataset", badge: "218M+", href: "/gm-dataset/" },
-    { label: "Segments Explorer", href: "/tools/explorer/" },
-  ],
+    { label: "Agent de prospection", href: "/" },
+    { label: "Explorateur de cibles", href: "/tools/explorer/" },
+    { label: "Annuaire d'entreprises", badge: "bientôt", href: "/b2b-database/" },
+  ] as ReadonlyArray<{ label: string; href: string; badge?: string }>,
+  // [libellé affiché, identifiant de page] — les pages par pays viendront avec l'annuaire.
   regions: [
-    ["Benin", "benin"],
-    ["North America", "north-america"],
-    ["Europe", "europe"],
-    ["Asia Pacific", "asia-pacific"],
-    ["Southeast Asia", "southeast-asia"],
-    ["Latin America", "latin-america"],
-    ["Middle East", "middle-east"],
-    ["CIS Countries", "cis"],
-    ["Oceania", "oceania"],
-    ["Africa", "africa"],
+    ["au Bénin", "benin"],
+    ["au Sénégal", "senegal"],
+    ["en Côte d'Ivoire", "cote-d-ivoire"],
+    ["au Togo", "togo"],
+    ["au Burkina Faso", "burkina-faso"],
+    ["au Mali", "mali"],
+    ["au Niger", "niger"],
+    ["en Guinée", "guinee"],
+    ["au Ghana", "ghana"],
+    ["au Nigeria", "nigeria"],
   ] as const,
   resources: [
-    { label: "About", href: "/about/" },
-    { label: "Pricing", href: "/pricing/" },
-    { label: "Affiliate program", href: "/affiliate/?src=footer" },
-    { label: "API documentation", href: "/api-docs/" },
-    { label: `New name, same product`, href: "/autogtm/" },
-    { label: "Compliance FAQ", href: "/compliance-faq/" },
+    { label: "À propos", href: "/about/" },
+    { label: "Tarifs", href: "/pricing/" },
+    { label: "Parrainage", href: "/affiliate/?src=footer" },
+    { label: "Questions sur la conformité", href: "/compliance-faq/" },
     { label: "Support", href: "/support/" },
   ],
 };

@@ -22,9 +22,9 @@ function LearnsIllustration() {
   return (
     <div ref={ref} className="w-full divide-y divide-border rounded-lg bg-chip px-4">
       <div className="py-4">
-        <div className="mb-1 text-base font-medium text-foreground">oakandreed.com</div>
+        <div className="mb-1 text-base font-medium text-foreground">studiokoffi.bj</div>
         <p className="!mb-0 text-base leading-relaxed text-muted-foreground">
-          Handmade ceramic tableware for restaurants, cafés &amp; hotels, made in small batches since 1998
+          Logos, affiches et identités visuelles pour les commerces de Cotonou
         </p>
       </div>
       <div className="py-4">
@@ -32,7 +32,7 @@ function LearnsIllustration() {
           <div className="flex h-4 w-4 items-center justify-center">
             <PixelLoader active={shown <= COMPETITORS.length} />
           </div>
-          <span className="text-base font-medium text-muted-foreground">{BRAND} agent is studying competitors…</span>
+          <span className="text-base font-medium text-muted-foreground">L&apos;agent {BRAND} étudie vos concurrents…</span>
         </div>
         <div className="flex flex-col gap-2">
           {COMPETITORS.map((c, i) => {
@@ -66,8 +66,8 @@ function FitIllustration() {
         <table className="company-data-table company-data-table--lg">
           <thead>
             <tr>
-              <th>Clients</th>
-              <th>Fit score</th>
+              <th>Clients à viser</th>
+              <th>Pertinence</th>
             </tr>
           </thead>
           <tbody>
@@ -113,17 +113,17 @@ function EmailIllustration() {
   return (
     <div className="glass-window-inner w-full">
       <div className="grid grid-cols-[auto_1fr] gap-x-3 border-b border-border px-4 py-2.5">
-        <span className="text-base text-muted-foreground">Subject</span>
-        <span className="text-base font-medium text-foreground">Oak &amp; Reed x Fig &amp; Ember</span>
+        <span className="text-base text-muted-foreground">Envoyé par</span>
+        <span className="text-base font-medium text-foreground">WhatsApp, depuis votre numéro</span>
       </div>
       <div className="px-4 pb-4 pt-4 text-base leading-relaxed text-muted-foreground">
-        Hi there,
+        Bonjour Madame Houngbo,
         <br />
         <br />
-        Saw <span className="border-b border-border bg-chip text-foreground">Fig &amp; Ember just opened a second dining room</span>. More covers usually means more chipped plates and mismatched sets. Oak &amp; Reed makes durable stoneware in small batches, so a re-order always matches.
+        Ici Koffi, du Studio Koffi, graphiste à Cotonou. J&apos;ai vu <span className="border-b border-border bg-chip text-foreground">la carte du Maquis Chez Tanti sur Facebook</span> : le logo est difficile à lire sur un téléphone.
         <br />
         <br />
-        Want a sample set to try on your busiest night?
+        Je vous prépare 3 idées de logo, sans engagement ?
       </div>
     </div>
   );
@@ -135,16 +135,16 @@ function ChatIllustration() {
     <div className="w-full">
       <div className="flex w-full flex-col gap-3">
         <div className="max-w-[82%] self-start rounded-2xl rounded-bl-[2px] bg-chip px-3 py-2">
-          <span className="text-base text-foreground">Do they survive a commercial dishwasher?</span>
+          <span className="text-base text-foreground">Vous faites aussi les enseignes ?</span>
         </div>
         <div className="max-w-[82%] self-start rounded-2xl rounded-bl-[2px] bg-chip px-3 py-2">
-          <span className="text-base text-foreground">Good to know, can you do Tuesday 2pm?</span>
+          <span className="text-base text-foreground">D&apos;accord. Jeudi à 15 h, ça vous va ?</span>
         </div>
         <div className="flex max-w-full flex-col gap-2 self-end rounded-2xl rounded-br-[2px] bg-chip px-3 pb-3 pt-2 md:max-w-[82%]">
-          <span className="text-base text-foreground">Tuesday 2pm works, sending the invite now.</span>
+          <span className="text-base text-foreground">Jeudi 15 h, c&apos;est noté. Je vous envoie l&apos;adresse.</span>
           <span className="inline-flex items-center gap-1.5 self-start whitespace-nowrap rounded-md bg-chip px-2.5 py-1 text-sm font-medium text-foreground md:text-base">
             <Check className="h-3.5 w-3.5 flex-shrink-0 text-brand-500" />
-            Demo booked · Tue 14:00
+            Rendez-vous pris · jeu. 15:00
           </span>
         </div>
       </div>
@@ -160,9 +160,9 @@ function CampaignIllustration() {
         <table className="company-data-table company-data-table--lg company-data-table--status-left">
           <thead>
             <tr>
-              <th>Campaign</th>
-              <th>Status</th>
-              <th>Cost/lead</th>
+              <th>Cible</th>
+              <th>État</th>
+              <th>Canal</th>
             </tr>
           </thead>
           <tbody>
@@ -186,12 +186,12 @@ function CampaignIllustration() {
 }
 
 const CARDS: { title: string; bleed: boolean; body: ReactNode }[] = [
-  { title: "Learns what you sell", bleed: true, body: <LearnsIllustration /> },
-  { title: "Figures out who buys it", bleed: true, body: <FitIllustration /> },
-  { title: "Finds those exact people", bleed: true, body: <PeopleIllustration /> },
-  { title: "Writes each a personal email", bleed: true, body: <EmailIllustration /> },
-  { title: "Handles replies and books meetings", bleed: false, body: <ChatIllustration /> },
-  { title: "Learns what works and doubles down", bleed: true, body: <CampaignIllustration /> },
+  { title: "Comprend ce que vous vendez", bleed: true, body: <LearnsIllustration /> },
+  { title: "Trouve qui en a besoin", bleed: true, body: <FitIllustration /> },
+  { title: "Trouve par où les joindre", bleed: true, body: <PeopleIllustration /> },
+  { title: "Écrit à chacun un message personnel", bleed: true, body: <EmailIllustration /> },
+  { title: "Répond et pose les rendez-vous", bleed: false, body: <ChatIllustration /> },
+  { title: "Apprend ce qui marche et insiste", bleed: true, body: <CampaignIllustration /> },
 ];
 const MARGINS = [65, 58, 51, 44, 35, 0];
 
@@ -233,7 +233,7 @@ export function Pipeline() {
         <div className="use-case-stack">
           <div style={{ position: "absolute", inset: "0 0 523px", pointerEvents: "none", zIndex: 7 }}>
             <div className="use-case-header mx-auto max-w-2xl text-center" style={{ position: "sticky", top: 84, pointerEvents: "auto" }}>
-              <h2>We run the entire pipeline</h2>
+              <h2>Leed fait tout le travail</h2>
             </div>
           </div>
           <div aria-hidden="true" className="mb-6 md:mb-12" style={{ height: 80 }} />

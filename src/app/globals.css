@@ -1,27 +1,35 @@
 @import "tailwindcss";
 
-/* ---------- Theme tokens (values measured on the original) ---------- */
+/* ---------- Jetons de thème leed ----------
+   Base noir et blanc (mesurée sur Nike, Adidas, Zara, H&M), une couleur de
+   marque (indigo), une couleur réservée à l'action (safran), une couleur de
+   réussite (baobab). Contrastes calculés : voir docs/DESIGN.md. */
 :root {
   --white: #fff;
   --gray-20: #f8f8f8;
   --gray-400: #808080;
   --gray-750: #222;
   --gray-800: #161616;
-  --gray-850: #0b0b0b;
+  --gray-850: #111111;
   --black-a4: #0000000a;
   --black-a8: #00000014;
-  --brand-50: #ecfdf5;
-  --brand-500: #10b981;
-  --brand-600: #059669;
+  --brand-50: #e8f3ee;
+  --brand-500: #1f7a50;
+  --brand-600: #1f7a50;
+  --indigo: #2a2e8c;
+  --indigo-50: #eeeffa;
+  --safran: #f4a51c;
+  --safran-hover: #e0940f;
+  --ink-on-safran: #111111;
   --red-500: #ff5956;
 
-  --background: #f6f5f3;
+  --background: #ffffff;
   --foreground: var(--gray-850);
   --card: var(--white);
   --chip: var(--black-a4);
   --muted-foreground: var(--gray-400);
   --border: var(--black-a8);
-  --primary: var(--gray-800);
+  --primary: #111111;
   --primary-foreground: var(--gray-20);
   --cta-hover: color-mix(in srgb, black 10%, var(--primary));
   --destructive: var(--red-500);
@@ -36,6 +44,10 @@
 @theme inline {
   --font-sans: var(--font-geist-sans), "GeistSans Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-bricolage), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-indigo: var(--indigo);
+  --color-indigo-50: var(--indigo-50);
+  --color-safran: var(--safran);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -77,11 +89,11 @@ button:disabled {
   overflow-x: clip;
 }
 .landing .cta-primary:not(:disabled) {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+  background-color: var(--safran);
+  color: var(--ink-on-safran);
 }
 .landing .cta-primary:not(:disabled):hover {
-  background-color: var(--cta-hover);
+  background-color: var(--safran-hover);
 }
 .landing .cta-primary.cta-muted-disabled:disabled {
   color: var(--muted-foreground);
@@ -134,20 +146,23 @@ button:disabled {
   margin-top: 0;
 }
 .landing h1 {
+  font-family: var(--font-display);
   font-size: 3.75rem;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1;
 }
 .landing .hero-headline {
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 .landing .headline-accent {
-  color: var(--brand-600);
+  color: var(--indigo);
 }
 .landing h2 {
+  font-family: var(--font-display);
   margin-block-end: 0.5em;
   font-size: 2.25rem;
-  font-weight: 400;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 2.5rem;
 }
 .landing p {
@@ -413,7 +428,7 @@ button:disabled {
   position: absolute;
   left: 0;
   height: 100%;
-  background: var(--brand-600);
+  background: var(--indigo);
 }
 .range-slider .thumb {
   position: absolute;
@@ -603,4 +618,14 @@ button:disabled {
   .landing .about-section-title {
     font-size: clamp(1.875rem, 9.5vw, 2.875rem);
   }
+}
+
+/* Témoignages en attente : rangées immobiles, centrées, cartes vides. */
+.landing .testimonial-row--static {
+  cursor: default;
+  justify-content: center;
+  overflow: hidden;
+}
+.landing .testimonial-row--decale {
+  transform: translateX(-110px);
 }

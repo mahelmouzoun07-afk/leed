@@ -72,15 +72,15 @@ export function Hero() {
         <div className="flex w-full flex-col items-center justify-center">
           <StatBadge />
           <h1 className="hero-headline mx-auto mb-3 max-w-[760px]">
-            Get <span className="headline-accent">1 to 3 hot leads</span>
+            Trouvez <span className="headline-accent">vos clients</span>
             <br />
-            in 24 hours free
+            pendant que vous dormez
           </h1>
           <div className="!mb-10 flex flex-wrap items-center justify-center gap-2">
-            <div className="inline-flex items-center rounded-full bg-chip px-4 py-1.5 text-sm text-foreground">No SDRs or email infra needed</div>
+            <div className="inline-flex items-center rounded-full bg-chip px-4 py-1.5 text-sm text-foreground">Depuis vos propres comptes</div>
             <div className="inline-flex items-center gap-2 rounded-full bg-chip px-4 py-1.5 text-sm text-foreground">
               <Gift />
-              $30 in free credits
+              10 entreprises offertes pour essayer
             </div>
           </div>
           <div className="flex w-full flex-col items-center">
@@ -97,7 +97,7 @@ export function Hero() {
                   id="hero-website-input"
                   type="text"
                   autoComplete="off"
-                  placeholder="Paste your website, e.g., consolto.com"
+                  placeholder="L'adresse de votre site, ex. studiokoffi.bj"
                   aria-invalid={invalid}
                   aria-describedby={invalid ? "hero-website-error" : undefined}
                   value={value}
@@ -110,7 +110,7 @@ export function Hero() {
                 <button
                   type="submit"
                   disabled={!has}
-                  aria-label="Launch"
+                  aria-label="Trouver mes clients"
                   className="cta-primary cta-muted-disabled hidden flex-shrink-0 items-center justify-center rounded-lg px-3.5 py-3 font-medium transition-all duration-300 enabled:hover:scale-105 disabled:bg-chip md:inline-flex"
                 >
                   <ArrowRight className="h-4 w-4" />
@@ -121,13 +121,13 @@ export function Hero() {
                 disabled={!has}
                 className="cta-primary cta-muted-disabled inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 font-medium transition-all duration-300 disabled:bg-chip md:hidden"
               >
-                Find my leads
+                Trouver mes clients
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
             {invalid && (
               <div id="hero-website-error" role="alert" className="mt-2 text-sm text-destructive">
-                Enter a valid website, e.g. yourcompany.com
+                Entrez une adresse de site valide, par exemple votreentreprise.com
               </div>
             )}
             <button
@@ -136,11 +136,11 @@ export function Hero() {
               onClick={openNoWebsite}
               className="mt-4 text-sm font-normal text-muted-foreground transition-colors duration-300 hover:text-foreground"
             >
-              I don&apos;t have a website
+              Je n&apos;ai pas de site web
             </button>
           </div>
           <p className="mx-auto !mt-8 max-w-[560px] text-center text-lg text-muted-foreground md:!mt-10">
-            Our AI agents research the market, sharpen your ICP, find high-intent prospects, write personalized emails, and book demos
+            Leed étudie votre marché, trouve les entreprises qui ont besoin de vous, leur écrit sur WhatsApp, Instagram, Facebook, LinkedIn ou par email, et vous amène des rendez-vous
           </p>
         </div>
       </div>
