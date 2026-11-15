@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Building2, Gauge, Link2, Tag } from "lucide-react";
+import Link from "next/link";
 import { Slider } from "../ui";
+import { bareme, formaterFcfa as fmt, montantDepuisPosition as montant } from "@/lib/forfait";
 
 function TiltCard({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -59,35 +61,6 @@ export function ThreeThings() {
   );
 }
 
-/* Position du curseur (0–100) -> montant du forfait en FCFA.
-   Le curseur démarre sur 25 000 FCFA (position 50). */
-const POINTS: [number, number][] = [
-  [0, 5000],
-  [25, 10000],
-  [50, 25000],
-  [75, 50000],
-  [100, 150000],
-];
-function montant(pos: number) {
-  for (let i = 1; i < POINTS.length; i++) {
-    const [p0, v0] = POINTS[i - 1];
-    const [p1, v1] = POINTS[i];
-    if (pos <= p1) {
-      const v = v0 + ((pos - p0) / (p1 - p0)) * (v1 - v0);
-      return v < 25000 ? Math.round(v / 1000) * 1000 : Math.round(v / 5000) * 5000;
-    }
-  }
-  return 150000;
-}
-
-/* Barème du forfait : source unique docs/OFFRE-ET-PRIX.md. */
-export function bareme(fcfa: number) {
-  const prix = fcfa >= 100000 ? 175 : fcfa >= 50000 ? 200 : fcfa >= 25000 ? 225 : 250;
-  const comptes = fcfa >= 50000 ? "Tous" : fcfa >= 25000 ? "3" : fcfa >= 10000 ? "2" : "1";
-  const parJour = fcfa >= 50000 ? 40 : fcfa >= 25000 ? 20 : fcfa >= 10000 ? 10 : 5;
-  return { prix, comptes, parJour, entreprises: Math.floor(fcfa / prix) };
-}
-const fmt = (n: number) => n.toLocaleString("fr-FR").replace(/\u202f|\u00a0/g, " ");
 
 export function PricingCalc() {
   const [pos, setPos] = useState(50);
@@ -99,10 +72,6 @@ export function PricingCalc() {
     { icon: Link2, value: b.comptes, label: b.comptes === "1" ? "Compte connecté" : "Comptes connectés", tip: "WhatsApp, Instagram, Facebook, LinkedIn ou email, au choix" },
     { icon: Gauge, value: `${b.parJour} par jour`, label: "Rythme de l'agent" },
   ];
-  const essayer = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.getElementById("hero-website-input")?.focus({ preventScroll: true });
-  };
   return (
     <div className="glass-window-inner mx-auto max-w-[680px] p-4 md:px-9 md:py-6">
       <div className="mb-7">
@@ -128,14 +97,10 @@ export function PricingCalc() {
         ))}
       </div>
       <div className="text-center">
-        <button
-          type="button"
-          onClick={essayer}
-          className="cta-primary inline-flex items-center gap-2 rounded-lg px-8 py-3 font-medium transition-all duration-300 hover:scale-105"
-        >
+        <Link href="/demarrer/" className="cta-primary inline-flex items-center gap-2 rounded-lg px-8 py-3 font-medium transition-all duration-300 hover:scale-105">
           Essayer gratuitement
           <ArrowRight className="h-4 w-4" />
-        </button>
+        </Link>
         <p className="!mb-0 !mt-3 text-sm">Forfait valable 30 jours · Tous les réseaux dès 5 000 FCFA</p>
       </div>
     </div>

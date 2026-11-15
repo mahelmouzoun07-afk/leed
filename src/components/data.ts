@@ -64,14 +64,19 @@ export const FOOTER = {
   // Les pages « annuaire par pays » reviendront au chantier 5, avec de vrais chiffres.
   products: [
     { label: "Agent de prospection", href: "/" },
-    { label: "Explorateur de cibles", href: "/tools/explorer/" },
-    { label: "Tarifs", href: "/pricing/" },
+    { label: "Commencer", href: "/demarrer/" },
+    { label: "Tarifs", href: "/tarifs/" },
   ] as ReadonlyArray<{ label: string; href: string; badge?: string }>,
   resources: [
-    { label: "À propos", href: "/about/" },
-    { label: "Tarifs", href: "/pricing/" },
-    { label: "Parrainage", href: "/affiliate/?src=footer" },
-    { label: "Questions sur la conformité", href: "/compliance-faq/" },
+    { label: "À propos", href: "/a-propos/" },
+    { label: "Tarifs", href: "/tarifs/" },
+    { label: "Questions sur la conformité", href: "/conformite/" },
     { label: "Support", href: "/support/" },
   ],
+};
+
+// Adresses de contact provisoires : le nom de domaine n'est pas encore acheté.
+export const CONTACT = {
+  support: "support@leed.example",
+  confidentialite: "confidentialite@leed.example",
 };

@@ -2,20 +2,18 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, LayoutGrid, Menu, Search, Sparkles, Target, X } from "lucide-react";
-import { Logo, useUI } from "./ui";
+import { ChevronDown, LayoutGrid, Menu, Search, Sparkles, X } from "lucide-react";
+import { Logo } from "./ui";
 
 const PRODUCTS = [
   { icon: Sparkles, title: "Agent de prospection", text: "Il trouve vos clients, leur écrit depuis vos comptes et pose vos rendez-vous", href: "/" },
-  { icon: Target, title: "Explorateur de cibles", text: "Décrivez votre client idéal et voyez combien d'entreprises lui ressemblent", href: "/tools/explorer/" },
-  { icon: Search, title: "Simulateur de budget", text: "Choisissez un montant et voyez ce que vous obtenez", href: "/#pricing" },
+  { icon: Search, title: "Simulateur de budget", text: "Choisissez un montant et voyez ce que vous obtenez", href: "/tarifs/" },
 ];
 
 const navItem =
   "hover:text-foreground/80 transition-colors duration-300 cursor-pointer text-base px-4 py-3";
 
 export function Header() {
-  const { openSignIn } = useUI();
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -84,25 +82,15 @@ export function Header() {
               </div>
             )}
           </div>
-          <Link prefetch={false} href="/#pricing" className={navItem}>
+          <Link prefetch={false} href="/tarifs/" className={navItem}>
             Tarifs
           </Link>
-          <Link prefetch={false} href="/affiliate/?src=header" className={navItem}>
-            Parrainage
-          </Link>
-          <Link prefetch={false} href="/about/" className={navItem}>
+          <Link prefetch={false} href="/a-propos/" className={navItem}>
             À propos
           </Link>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              openSignIn();
-            }}
-            className={`${navItem} whitespace-nowrap`}
-          >
+          <Link prefetch={false} href="/connexion/" className={`${navItem} whitespace-nowrap`}>
             Connexion
-          </a>
+          </Link>
         </nav>
         <button
           type="button"
@@ -131,24 +119,17 @@ export function Header() {
             ))}
             <div className="my-3 h-px bg-border" />
             {[
-              ["Tarifs", "/#pricing"],
-              ["Parrainage", "/affiliate/?src=header"],
-              ["À propos", "/about/"],
+              ["Tarifs", "/tarifs/"],
+              ["À propos", "/a-propos/"],
+              ["Support", "/support/"],
             ].map(([l, h]) => (
               <Link key={l} href={h} onClick={() => setMobile(false)} className="py-3 text-lg text-foreground">
                 {l}
               </Link>
             ))}
-            <button
-              type="button"
-              onClick={() => {
-                setMobile(false);
-                openSignIn();
-              }}
-              className="mt-4 rounded-xl bg-primary px-5 py-3 font-medium text-primary-foreground"
-            >
+            <Link href="/connexion/" onClick={() => setMobile(false)} className="mt-4 rounded-xl bg-primary px-5 py-3 text-center font-medium text-primary-foreground">
               Connexion
-            </button>
+            </Link>
           </div>
         </div>
       )}

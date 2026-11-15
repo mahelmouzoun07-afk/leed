@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { STATS } from "../data";
-import { useUI } from "../ui";
+import Link from "next/link";
+import { normaliserSite } from "@/lib/parcours/site";
 
 function Gift() {
   return (
@@ -45,25 +46,19 @@ function StatBadge() {
   );
 }
 
-export function normalizeDomain(v: string) {
-  const s = v.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split(/[/?#\s]/)[0];
-  return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(s) ? s : null;
-}
-
 export function Hero() {
   const router = useRouter();
-  const { openNoWebsite } = useUI();
   const [value, setValue] = useState("");
   const [invalid, setInvalid] = useState(false);
   const has = value.trim().length > 0;
 
   const launch = () => {
-    const d = normalizeDomain(value);
+    const d = normaliserSite(value);
     if (!d) {
       setInvalid(true);
       return;
     }
-    router.push(`/start/?site=${encodeURIComponent(d)}`);
+    router.push(`/demarrer/analyse/?site=${encodeURIComponent(d)}`);
   };
 
   return (
@@ -130,14 +125,9 @@ export function Hero() {
                 Entrez une adresse de site valide, par exemple votreentreprise.com
               </div>
             )}
-            <button
-              type="button"
-              aria-haspopup="dialog"
-              onClick={openNoWebsite}
-              className="mt-4 text-sm font-normal text-muted-foreground transition-colors duration-300 hover:text-foreground"
-            >
+            <Link href="/demarrer/?mode=formulaire" className="mt-4 text-sm font-normal text-muted-foreground transition-colors duration-300 hover:text-foreground">
               Je n&apos;ai pas de site web
-            </button>
+            </Link>
           </div>
           <p className="mx-auto !mt-8 max-w-[560px] text-center text-lg text-muted-foreground md:!mt-10">
             Leed étudie votre marché, trouve les entreprises qui ont besoin de vous, leur écrit sur WhatsApp, Instagram, Facebook, LinkedIn ou par email, et vous amène des rendez-vous

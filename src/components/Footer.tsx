@@ -1,24 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { BRAND_LOWER, FOOTER } from "./data";
 
 const link = "hover:text-muted-foreground transition-colors";
 
 export function Footer() {
-  const pathname = usePathname() || "/";
-  if (pathname.startsWith("/affiliate")) {
-    return (
-      <footer className="border-t border-border">
-        <div className="mx-auto max-w-[1200px] px-4 py-8 text-base text-muted-foreground">
-          <Link prefetch={false} href="/" className="transition-colors hover:text-foreground">
-            {BRAND_LOWER}
-          </Link>
-        </div>
-      </footer>
-    );
-  }
   return (
     <footer className="border-t border-border text-base text-muted-foreground">
       <div className="container mx-auto max-w-[1200px] px-4 pb-4 pt-6 md:pb-6 md:pt-12 lg:pb-10 lg:pt-20">
@@ -55,13 +42,13 @@ export function Footer() {
         </div>
         <div className="pt-6">
           <div className="flex flex-col items-center justify-between md:flex-row">
-            <p className="mb-2 md:mb-0">© 2026 {BRAND_LOWER}, fait à Cotonou, Bénin</p>
+            <p className="mb-2 md:mb-0">© 2026 {BRAND_LOWER}</p>
             <div className="flex flex-wrap items-center justify-center">
-              <Link prefetch={false} href="/terms-of-use/" className="hover:underline">
+              <Link prefetch={false} href="/conditions/" className="hover:underline">
                 Conditions d&apos;utilisation
               </Link>
               <span className="mx-2">|</span>
-              <Link prefetch={false} href="/privacy-policy/" className="hover:underline">
+              <Link prefetch={false} href="/confidentialite/" className="hover:underline">
                 Confidentialité
               </Link>
             </div>
