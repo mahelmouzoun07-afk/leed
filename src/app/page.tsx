@@ -2,6 +2,7 @@ import { Hero } from "@/components/home/Hero";
 import { Testimonials } from "@/components/home/Testimonials";
 import { Pipeline } from "@/components/home/Pipeline";
 import { ThreeThings, Pricing } from "@/components/home/Features";
+import { Faq, AppelFinal } from "@/components/home/Faq";
 
 export default function Home() {
   return (
@@ -11,6 +12,8 @@ export default function Home() {
       <Pipeline />
       <ThreeThings />
       <Pricing />
+      <Faq />
+      <AppelFinal />
     </>
   );
 }

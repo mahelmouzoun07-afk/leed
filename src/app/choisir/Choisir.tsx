@@ -67,7 +67,7 @@ export function Choisir() {
         </div>
       )}
       <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-        <section aria-labelledby="essai" className="glass-window-inner flex flex-col p-6 !m-0">
+        <section aria-labelledby="essai" className="glass-window-inner flex flex-col p-6 text-left !m-0">
           <h2 id="essai" className="!mb-0 !text-xl !font-medium !leading-snug">
             Essai gratuit
           </h2>
@@ -89,7 +89,7 @@ export function Choisir() {
           </button>
         </section>
 
-        <section aria-labelledby="forfait" className="glass-window-inner flex flex-col p-6 outline outline-2 outline-primary !m-0">
+        <section aria-labelledby="forfait" className="glass-window-inner flex flex-col p-6 text-left outline outline-2 outline-primary !m-0">
           <div className="flex items-center justify-between">
             <h2 id="forfait" className="!mb-0 !text-xl !font-medium !leading-snug">
               Forfait

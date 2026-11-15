@@ -17,9 +17,9 @@ export function EtapesParcours() {
   const courant = Math.max(0, ETAPES.findIndex((e) => e.chemins.includes(chemin)));
   return (
     <div className="mb-8">
-      <ol className="flex flex-wrap items-center gap-2" aria-label="Étapes">
+      <ol className="flex items-center gap-1.5 md:gap-2" aria-label="Étapes">
         {ETAPES.map((e, i) => (
-          <li key={e.label} className="flex items-center gap-2">
+          <li key={e.label} className="flex items-center gap-1.5 md:gap-2">
             <span
               aria-current={i === courant ? "step" : undefined}
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ${
@@ -30,7 +30,7 @@ export function EtapesParcours() {
               <span className="max-md:hidden">{e.label}</span>
               <span className="md:hidden">{i === courant ? e.label : i + 1}</span>
             </span>
-            {i < ETAPES.length - 1 && <span className="h-px w-3 bg-border md:w-5" aria-hidden="true" />}
+            {i < ETAPES.length - 1 && <span className="h-px w-5 bg-border max-md:hidden" aria-hidden="true" />}
           </li>
         ))}
       </ol>

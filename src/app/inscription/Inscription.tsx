@@ -28,7 +28,7 @@ export function Inscription() {
     if (v.entreprise.trim().length < 2) err.entreprise = "Entrez le nom de votre entreprise : il apparaît dans vos messages.";
     if (!estEmail(v.email)) err.email = "Entrez une adresse email valide.";
     if (v.motDePasse.length < 8) err.motDePasse = "Le mot de passe doit contenir au moins 8 caractères.";
-    if (!/^\+?[0-9 ]{8,16}$/.test(v.whatsapp.trim())) err.whatsapp = "Entrez un numéro WhatsApp valide, avec l'indicatif, par exemple +229 01 23 45 67 89.";
+    if (!/^\+?\d{8,15}$/.test(v.whatsapp.replace(/[\s.-]/g, ""))) err.whatsapp = "Entrez un numéro WhatsApp valide, avec l'indicatif, par exemple +229 01 23 45 67 89.";
     if (!v.cgu) err.cgu = "Vous devez accepter les conditions pour continuer.";
     setErreurs(err);
     if (Object.keys(err).length) return;

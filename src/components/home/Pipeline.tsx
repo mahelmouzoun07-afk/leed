@@ -91,7 +91,7 @@ function PeopleIllustration() {
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-1 lg:grid-cols-2">
       {PEOPLE.map((p) => (
-        <div key={p.email} className="min-w-0 rounded-lg bg-chip p-4">
+        <div key={p.name} className="min-w-0 rounded-lg bg-chip p-4">
           <div className="mb-2 flex items-center gap-2">
             <div className="hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-chip text-base font-medium text-foreground md:flex">{p.i}</div>
             <div className="min-w-0">
