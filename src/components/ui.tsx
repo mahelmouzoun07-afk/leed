@@ -1,7 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { BRAND_LOWER } from "./data";
 
 /* ---------- Logo leed ----------

@@ -29,6 +29,7 @@ export function DecrireActivite() {
     if (!pret || !etat.entree) return;
     if (etat.entree.mode === "site") {
       const precedent = etat.entree.site;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
       setSite((s) => s || precedent);
     } else {
       setF(etat.entree.formulaire);

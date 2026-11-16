@@ -34,6 +34,7 @@ export function Recherche() {
       return;
     }
     lance.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
     void lancer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pret]);

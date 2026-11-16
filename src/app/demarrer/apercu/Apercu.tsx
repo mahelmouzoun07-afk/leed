@@ -25,7 +25,7 @@ export function Apercu() {
       <h1 className="hero-headline !text-[clamp(1.875rem,7vw,2.875rem)]">
         Leed a trouvé <span className="headline-accent">{formaterFcfa(a.total)} entreprises</span> pour vous
       </h1>
-      <p className="!mt-3 max-w-[600px] text-base">Leur nom et leurs coordonnées restent cachés tant qu'elles n'ont pas été contactées. Voici à quoi elles ressemblent.</p>
+      <p className="!mt-3 max-w-[600px] text-base">Leur nom et leurs coordonnées restent cachés tant qu&apos;elles n&apos;ont pas été contactées. Voici à quoi elles ressemblent.</p>
 
       <div className="glass-window-inner mt-6 p-5">
         <ul className="divide-y divide-border">

@@ -29,6 +29,7 @@ export function Profils() {
       router.replace("/demarrer/");
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
     if (etat.profils) setProfils(etat.profils);
     else void charger();
     // eslint-disable-next-line react-hooks/exhaustive-deps

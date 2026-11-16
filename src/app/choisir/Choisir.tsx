@@ -40,7 +40,7 @@ export function Choisir() {
           </span>
           <h1 className="!mt-4 !text-[1.75rem] !font-medium !leading-tight">{fait === "essai" ? "Votre essai gratuit est choisi" : `Votre forfait de ${formaterFcfa(montant)} FCFA est choisi`}</h1>
           <p className="!mb-0 text-base">
-            {fait === "essai" ? "La prochaine étape sera de connecter votre Gmail." : `Le paiement par ${moyen} et la connexion de vos comptes ouvrent bientôt.`} Aucun paiement n'a été pris.
+            {fait === "essai" ? "La prochaine étape sera de connecter votre Gmail." : `Le paiement par ${moyen} et la connexion de vos comptes ouvrent bientôt.`} Aucun paiement n&apos;a été pris.
           </p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export function Choisir() {
       <h1 className="hero-headline !text-[clamp(1.875rem,7vw,2.875rem)]">
         Comment voulez-vous <span className="headline-accent">commencer</span> ?
       </h1>
-      <p className="!mt-3 max-w-[600px] text-base">Vous pouvez essayer sans payer, ou prendre un forfait tout de suite. Dans les deux cas, pas d'abonnement.</p>
+      <p className="!mt-3 max-w-[600px] text-base">Vous pouvez essayer sans payer, ou prendre un forfait tout de suite. Dans les deux cas, pas d&apos;abonnement.</p>
       {erreur && (
         <div className="mt-4">
           <BlocErreur message={erreur} />

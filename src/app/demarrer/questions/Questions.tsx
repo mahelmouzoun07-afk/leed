@@ -16,6 +16,7 @@ export function Questions() {
     if (!pret) return;
     if (!etat.fiche) router.replace("/demarrer/");
     else if (questions.length === 0) router.replace("/demarrer/profils/");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
     else if (etat.reponses) setReponses(etat.reponses);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pret]);
@@ -33,7 +34,7 @@ export function Questions() {
       <h1 className="hero-headline !text-[clamp(1.875rem,7vw,2.875rem)]">
         {questions.length === 1 ? "Une question" : `${questions.length} questions`} <span className="headline-accent">rapides</span>
       </h1>
-      <p className="!mt-3 max-w-[600px] text-base">Leed pose seulement ce qu'il ne peut pas deviner. Un clic suffit.</p>
+      <p className="!mt-3 max-w-[600px] text-base">Leed pose seulement ce qu&apos;il ne peut pas deviner. Un clic suffit.</p>
       <div className="mt-6 flex flex-col gap-4">
         {questions.map((q) => (
           <div key={q.id} className="glass-window-inner p-5">

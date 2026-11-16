@@ -55,6 +55,7 @@ export function Analyse() {
     }
     if (etat.fiche && !entreeUrl) return;
     lance.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
     void lancer(entree);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pret]);
@@ -110,7 +111,7 @@ export function Analyse() {
       <h1 className="hero-headline !text-[clamp(1.875rem,7vw,2.875rem)]">
         Voici ce que Leed a <span className="headline-accent">compris</span>
       </h1>
-      <p className="!mt-3 max-w-[600px] text-base">Vérifiez cette fiche : c'est elle qui guide tous les messages. Vous pourrez la corriger plus tard.</p>
+      <p className="!mt-3 max-w-[600px] text-base">Vérifiez cette fiche : c&apos;est elle qui guide tous les messages. Vous pourrez la corriger plus tard.</p>
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="glass-window-inner p-5 md:col-span-2">
           <div className="text-sm font-medium text-muted-foreground">Votre activité</div>
@@ -148,7 +149,7 @@ export function Analyse() {
       </div>
       <div className="mt-8 flex flex-wrap gap-3">
         <button type="button" onClick={suite} className={boutonPrincipal}>
-          C'est bien ça, continuer <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          C&apos;est bien ça, continuer <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
         <Link href="/demarrer/" className={boutonSecondaire}>
           Modifier ma description

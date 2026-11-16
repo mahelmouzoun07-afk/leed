@@ -65,3 +65,18 @@ Adresse de redirection à déclarer chez Google : `https://diokrocywkstuyzkwjac.
 Vérifié : 20 tests automatiques (aucun message ne révèle si une adresse existe, règles du mot de passe, adresses de retour sûres) ; test SQL de la création de l'entreprise ; protection des pages (`/app`, `/admin`, `/choisir`… renvoient vers la connexion) ; le formulaire de connexion et celui du mot de passe oublié répondent avec la vraie base et la clé de service.
 
 **Pas vérifié de bout en bout** : l'inscription réelle avec l'email de confirmation, le lien magique, la double authentification et l'espace admin avec un vrai compte. Cela demande les réglages ci-dessus (SMTP, modèles, confirmation) et un vrai compte. L'environnement automatique a refusé la création de comptes de test avec mot de passe directement en base, ce qui est raisonnable.
+
+## 6. Les emails arrivent dans les courriers indésirables
+
+Cause : l'expéditeur de test `onboarding@resend.dev` est une adresse partagée par tous les utilisateurs de Resend. Gmail s'en méfie, surtout pour un tout premier envoi. Le contenu des emails n'est pas en cause.
+
+- **Tout de suite** : dans Gmail, ouvrez l'email, cliquez « Non, ce n'est pas du spam », et ajoutez l'expéditeur à vos contacts. Les envois suivants arrivent normalement dans la boîte de réception.
+- **La vraie solution** : un nom de domaine à nous, vérifié chez Resend (SPF, DKIM et DMARC, trois lignes à ajouter dans les réglages DNS du domaine). Expéditeur type : `connexion@votre-domaine`. C'est indispensable avant d'écrire à de vrais clients. Il faut donc acheter le domaine.
+- Ensuite : changer l'adresse d'expéditeur dans Supabase (Authentication, Emails, SMTP Settings).
+
+## 7. Limites connues du chantier 4
+
+- **Google** : reporté (Google Cloud demande une carte bancaire). Le code est prêt.
+- **Protection contre les mots de passe déjà piratés** (option « Leaked password protection » de Supabase) : réservée à l'offre payante. À activer quand on passera à l'offre Pro.
+- **Vérification du numéro WhatsApp par code** : le numéro est enregistré mais pas encore vérifié (`whatsapp_verifie_le` reste vide). Cela viendra avec la connexion des comptes (chantier 7).
+- **Variable `RESEND_API_KEY`** : pas encore utilisée par le code (les emails de connexion passent par le SMTP Resend de Supabase). Elle servira aux emails de l'application (reçus, rapports).

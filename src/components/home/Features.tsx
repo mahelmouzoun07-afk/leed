@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowRight, Building2, Gauge, Link2, Tag } from "lucide-react";
 import Link from "next/link";
 import { Slider } from "../ui";

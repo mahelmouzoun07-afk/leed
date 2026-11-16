@@ -32,6 +32,7 @@ export function useParcours() {
   const [pret, setPret] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lecture du stockage du navigateur ou lancement d'un travail après l'affichage (évite un écart entre serveur et navigateur)
     setEtat(lire());
     setPret(true);
   }, []);
