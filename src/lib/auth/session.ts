@@ -74,13 +74,7 @@ export async function destinationApresConnexion(user: User, retour?: string | nu
   if (!entrepriseId) return "/completer/";
   const sur = cheminRetourSur(retour);
   if (sur) return sur;
-  const supabase = await creerClientServeur();
-  const { count } = await supabase
-    .from("forfaits")
-    .select("id", { count: "exact", head: true })
-    .eq("entreprise_id", entrepriseId)
-    .in("statut", ["actif", "grace", "gele"]);
-  return count && count > 0 ? "/app/" : "/choisir/";
+  return "/app/";
 }
 
 // ───── Espace admin ──────────────────────────────────────────────────────

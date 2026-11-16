@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, LayoutGrid, Menu, Search, Sparkles, X } from "lucide-react";
 import { Logo } from "./ui";
+import { creerClientNavigateur } from "@/lib/supabase/client";
+import { supabaseEstConfigure } from "@/lib/env-public";
 
 const PRODUCTS = [
   { icon: Sparkles, title: "Agent de prospection", text: "Il trouve vos clients, leur écrit depuis vos comptes et pose vos rendez-vous", href: "/" },
@@ -16,6 +18,20 @@ const navItem =
 export function Header() {
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [connecte, setConnecte] = useState(false);
+
+  useEffect(() => {
+    if (!supabaseEstConfigure()) return;
+    let actif = true;
+    creerClientNavigateur()
+      .auth.getUser()
+      .then(({ data }) => {
+        if (actif) setConnecte(!!data.user);
+      });
+    return () => {
+      actif = false;
+    };
+  }, []);
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,8 +104,8 @@ export function Header() {
           <Link prefetch={false} href="/a-propos/" className={navItem}>
             À propos
           </Link>
-          <Link prefetch={false} href="/connexion/" className={`${navItem} whitespace-nowrap`}>
-            Connexion
+          <Link prefetch={false} href={connecte ? "/app/" : "/connexion/"} className={`${navItem} whitespace-nowrap`}>
+            {connecte ? "Mon espace" : "Connexion"}
           </Link>
         </nav>
         <button
@@ -127,8 +143,8 @@ export function Header() {
                 {l}
               </Link>
             ))}
-            <Link href="/connexion/" onClick={() => setMobile(false)} className="mt-4 rounded-xl bg-primary px-5 py-3 text-center font-medium text-primary-foreground">
-              Connexion
+            <Link href={connecte ? "/app/" : "/connexion/"} onClick={() => setMobile(false)} className="mt-4 rounded-xl bg-primary px-5 py-3 text-center font-medium text-primary-foreground">
+              {connecte ? "Mon espace" : "Connexion"}
             </Link>
           </div>
         </div>

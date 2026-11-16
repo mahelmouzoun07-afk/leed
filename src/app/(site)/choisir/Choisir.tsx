@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, Check, Lock } from "lucide-react";
 import { BlocErreur, boutonPrincipal } from "@/components/form";
@@ -53,6 +54,7 @@ export function Choisir() {
         Comment voulez-vous <span className="headline-accent">commencer</span> ?
       </h1>
       <p className="!mt-3 max-w-[600px] text-base">Vous pouvez essayer sans payer, ou prendre un forfait tout de suite. Dans les deux cas, pas d&apos;abonnement.</p>
+      <p className="!mt-2 text-sm"><Link href="/app/" className="text-foreground underline underline-offset-4">Passer à mon espace</Link> : vous pourrez choisir votre offre plus tard.</p>
       {erreur && (
         <div className="mt-4">
           <BlocErreur message={erreur} />
