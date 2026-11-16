@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Check, Info } from "lucide-react";
+import { useParcours } from "@/lib/parcours/etat";
 
 const ETAPES = [
   { label: "Votre activité", chemins: ["/demarrer"] },
@@ -14,6 +15,7 @@ const ETAPES = [
 /** Fil d'étapes du parcours, avec la mention honnête que les résultats sont des exemples. */
 export function EtapesParcours() {
   const chemin = (usePathname() || "").replace(/\/$/, "");
+  const { etat } = useParcours();
   const courant = Math.max(0, ETAPES.findIndex((e) => e.chemins.includes(chemin)));
   return (
     <div className="mb-8">
@@ -36,7 +38,9 @@ export function EtapesParcours() {
       </ol>
       <p className="!mb-0 !mt-4 flex items-start gap-2 text-sm">
         <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-        Aperçu : les résultats affichés sont des exemples. La vraie recherche ouvre bientôt.
+        {etat.apercu?.reel
+          ? "Le nombre d'entreprises vient de notre annuaire. Leurs noms restent cachés tant que vous n'êtes pas inscrit."
+          : "Aperçu : les résultats affichés sont des exemples. La vraie recherche ouvre bientôt."}
       </p>
     </div>
   );

@@ -29,9 +29,13 @@ export function Apercu() {
 
       <div className="glass-window-inner mt-6 p-5">
         <ul className="divide-y divide-border">
-          {a.exemples.map((e) => (
-            <li key={`${e.secteur}-${e.ville}`} className="py-3 text-base">
-              <span className="font-medium text-foreground">{e.secteur}</span> · {e.ville} · {e.taille} · <span className="text-muted-foreground">« {e.indice} »</span>
+          {a.exemples.map((e, i) => (
+            <li key={`${e.secteur}-${e.ville}-${i}`} className="py-3 text-base">
+              <span className="font-medium text-foreground">{e.secteur}</span>
+              {[e.ville, e.taille].filter(Boolean).map((x) => (
+                <span key={x}> · {x}</span>
+              ))}
+              {e.indice && <span className="text-muted-foreground"> · « {e.indice} »</span>}
             </li>
           ))}
           <li className="flex items-center gap-2 py-3 text-base text-muted-foreground" aria-label="Autres entreprises, cachées">

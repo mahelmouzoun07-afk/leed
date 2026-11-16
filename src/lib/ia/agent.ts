@@ -43,7 +43,7 @@ export async function proposerProfilsIA(client: ClientIA, fiche: FicheIA, repons
   const r = await demanderJson({ client, tache: "profils", version: VERSIONS.profils, modele: client.modeles.fort, systeme: SYSTEME_PROFILS, utilisateur: utilisateurProfils(fiche, reponses), schema: schemaProfils, temperature: 0.4, maxJetons: 900 });
   if (!r.ok) return r;
   const tries = [...r.donnees.valeur.profils].sort((a, b) => b.note - a.note);
-  return succes({ profils: tries.map((p, i) => ({ id: identifiant(p.nom, i), nom: p.nom, raison: p.raison, note: p.note, actif: i < 3 })), usage: r.donnees.usage });
+  return succes({ profils: tries.map((p, i) => ({ id: identifiant(p.nom, i), nom: p.nom, raison: p.raison, note: p.note, actif: i < 3, secteurs: p.secteurs })), usage: r.donnees.usage });
 }
 
 /** 3. Étudier un prospect : une accroche précise, ou null (alors on n'écrit pas). */

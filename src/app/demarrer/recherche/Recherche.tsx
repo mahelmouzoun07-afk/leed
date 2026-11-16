@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Check, LoaderCircle } from "lucide-react";
 import { BlocErreur, boutonPrincipal, boutonSecondaire } from "@/components/form";
 import { useParcours } from "@/lib/parcours/etat";
-import { chercherProspects } from "@/lib/parcours/factice";
+import { chercherProspects } from "@/lib/parcours/actions";
 
 const LIGNES = ["Je trouve les entreprises qui correspondent…", "Je cherche leur numéro WhatsApp et leur email…", "Je repère leurs comptes Instagram, Facebook et LinkedIn…", "Je compte par où les joindre…"];
 
@@ -21,7 +21,7 @@ export function Recherche() {
     if (!etat.profils) return;
     setErreur(null);
     setLigne(0);
-    const r = await chercherProspects(etat.profils);
+    const r = await chercherProspects(etat.profils, etat.entree, etat.fiche);
     if (!r.ok) return setErreur(r.erreur);
     maj({ apercu: r.donnees });
     router.replace("/demarrer/apercu/");

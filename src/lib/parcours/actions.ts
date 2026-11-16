@@ -13,7 +13,9 @@ import { lireSite } from "../ia/lecteur";
 import { schemaFiche } from "../ia/schemas";
 import * as factice from "./factice";
 import { normaliserSite } from "./site";
-import type { Entree, Fiche, Profil, Question } from "./types";
+import { estSecteur } from "../annuaire/secteurs";
+import { fusionnerApercus, paysDuVisiteur, PAYS_ANNUAIRE, type ReponseApercuSql } from "../annuaire/apercu";
+import type { Apercu, Entree, Fiche, Profil, Question } from "./types";
 
 /**
  * Les vraies fonctions du parcours « décrire son activité » (Server Actions, appelées par les écrans).
@@ -127,5 +129,55 @@ export async function proposerProfils(fiche?: Fiche, reponses?: Record<string, s
   } catch (erreur) {
     log.error("parcours.profils_erreur", { erreur: erreur instanceof Error ? erreur.message : String(erreur) });
     return echec(messagePourErreurIA(erreur), "ia_erreur");
+  }
+}
+
+/** Moins d'entreprises que cela dans tout l'annuaire : on considère qu'il n'est pas encore chargé (il ne contient alors que des exemples). */
+const ANNUAIRE_CHARGE_MIN = 200;
+
+/**
+ * Le vrai nombre d'entreprises de l'annuaire pour les profils gardés (fonction SQL apercu_annuaire, réservée au serveur).
+ * Aucun nom ni coordonnée ne sort d'ici : un total, la répartition par canal, trois lignes sans nom.
+ * Tant que l'annuaire n'est pas chargé, on se rabat sur les exemples factices (la bannière du parcours le dit).
+ */
+export async function chercherProspects(profils: Profil[], entree?: Entree, fiche?: Fiche): Promise<Resultat<Apercu>> {
+  const actifs = (Array.isArray(profils) ? profils : []).filter((p) => p && p.actif);
+  if (actifs.length === 0) return echec("Gardez au moins un profil de client pour lancer la recherche.", "aucun_profil");
+  if (!env().SUPABASE_SERVICE_ROLE_KEY) {
+    log.warn("parcours.annuaire_absent", { action: "chercherProspects" });
+    return factice.chercherProspects(profils);
+  }
+
+  // Ce qui vient du navigateur est revérifié : la fiche et l'entrée servent seulement à deviner le pays.
+  const e = schemaEntree.safeParse(entree);
+  const f = schemaFiche.safeParse(fiche);
+  const secteurs = [...new Set(actifs.flatMap((p) => (Array.isArray(p.secteurs) ? p.secteurs : []).filter((s) => typeof s === "string" && estSecteur(s))))];
+  if (secteurs.length === 0) return echec("Vos profils datent d'avant une mise à jour. Revenez à l'étape précédente pour les recalculer.", "profils_sans_secteur");
+  const pays = paysDuVisiteur(e.success ? e.data : undefined, f.success ? f.data : undefined);
+
+  try {
+    const admin = creerClientAdmin();
+    const demander = async (liste: readonly string[], filtre: string[] | undefined) =>
+      Promise.all(
+        liste.map(async (p) => {
+          const { data, error } = await admin.rpc("apercu_annuaire", { p_pays: p, ...(filtre ? { p_secteurs: filtre } : {}) });
+          if (error) throw new Error(error.message);
+          return data as unknown as ReponseApercuSql;
+        }),
+      );
+
+    const apercu = fusionnerApercus(await demander(pays, secteurs));
+    if (apercu.total > 0) return succes(apercu);
+
+    // Aucun résultat : soit l'annuaire n'est pas chargé, soit ces profils sont trop rares dans cette zone.
+    const tout = (await demander(PAYS_ANNUAIRE, undefined)).reduce((s, r) => s + (r.total ?? 0), 0);
+    if (tout < ANNUAIRE_CHARGE_MIN) {
+      log.warn("parcours.annuaire_vide", { total: tout });
+      return factice.chercherProspects(profils);
+    }
+    return echec("Notre annuaire ne contient pas encore d'entreprises pour ces profils dans votre zone. Élargissez vos profils pour continuer.", "aucun_resultat");
+  } catch (erreur) {
+    log.error("parcours.apercu_erreur", { erreur: erreur instanceof Error ? erreur.message : String(erreur) });
+    return echec("La recherche est momentanément indisponible. Réessayez dans un instant.", "annuaire_indisponible");
   }
 }

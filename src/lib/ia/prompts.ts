@@ -1,3 +1,4 @@
+import { SECTEURS } from "../annuaire/secteurs";
 import type { Entree } from "../parcours/types";
 import type { FicheIA } from "./schemas";
 
@@ -13,7 +14,7 @@ import type { FicheIA } from "./schemas";
 
 export const VERSIONS = {
   fiche: "fiche-v1",
-  profils: "profils-v1",
+  profils: "profils-v2",
   prospect: "prospect-v1",
   redaction: "redaction-v1",
   relecture: "relecture-v1",
@@ -68,8 +69,10 @@ ${REGLES_COMMUNES}
 
 Pense à des clients réels et courants dans le pays ou la zone de l'entreprise (commerces, restaurants, écoles, cliniques, hôtels, PME, artisans…), pas à des multinationales.
 Propose de 3 à 5 profils, du plus prometteur au moins prometteur. Pour chacun :
-{ "nom": "le type d'entreprise visée, précis (90 caractères au plus)", "raison": "pourquoi ils ont besoin de cette offre, en une phrase (140 caractères au plus)", "note": un nombre entier de 0 à 100 }
+{ "nom": "le type d'entreprise visée, précis (90 caractères au plus)", "raison": "pourquoi ils ont besoin de cette offre, en une phrase (140 caractères au plus)", "note": un nombre entier de 0 à 100, "secteurs": [1 à 3 secteurs de la liste ci-dessous] }
 Les notes doivent être différentes et décroissantes. Pas de profil qui serait un concurrent direct de l'entreprise.
+Pour "secteurs", recopie les noms EXACTEMENT comme dans cette liste (c'est la liste de notre annuaire d'entreprises, aucun autre nom n'existe) :
+${SECTEURS.join(" ; ")}
 Réponds : { "profils": [ ... ] }`;
 
 export function utilisateurProfils(fiche: FicheIA, reponses?: Record<string, string>): string {

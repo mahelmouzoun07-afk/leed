@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { estSecteur } from "../annuaire/secteurs";
 
 /**
  * Les formes que l'IA a le droit de produire. Tout ce qui sort d'elle est vérifié contre ces schémas :
@@ -19,9 +20,15 @@ export const schemaFiche = z.object({
 });
 export type FicheIA = z.infer<typeof schemaFiche>;
 
+/** Les secteurs d'un profil : seulement des noms de la liste fermée de l'annuaire (les autres sont retirés ; il en faut au moins un). */
+const secteursConnus = z
+  .array(z.string().trim())
+  .transform((liste) => [...new Set(liste.filter(estSecteur))].slice(0, 3))
+  .refine((liste) => liste.length >= 1, "choisis 1 à 3 secteurs EXACTEMENT comme écrits dans la liste");
+
 export const schemaProfils = z.object({
   profils: z
-    .array(z.object({ nom: court(90), raison: court(140), note: z.number().int().min(0).max(100) }))
+    .array(z.object({ nom: court(90), raison: court(140), note: z.number().int().min(0).max(100), secteurs: secteursConnus }))
     .min(3)
     .max(5),
 });

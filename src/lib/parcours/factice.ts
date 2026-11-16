@@ -44,10 +44,10 @@ export async function poserQuestions(entree: Entree): Promise<Resultat<Question[
 export async function proposerProfils(): Promise<Resultat<Profil[]>> {
   await attendre(700);
   return succes([
-    { id: "restos", nom: "Restaurants et maquis sans logo professionnel", raison: "Forte demande de visuels, budgets compatibles", note: 92, actif: true },
-    { id: "mode", nom: "Boutiques de mode", raison: "Besoin de nouveaux visuels chaque semaine", note: 85, actif: true },
-    { id: "ecoles", nom: "Écoles privées", raison: "Affiches et flyers à chaque rentrée", note: 78, actif: true },
-    { id: "hotels", nom: "Hôtels et résidences", raison: "Supports d'accueil et signalétique à refaire", note: 74, actif: false },
+    { id: "restos", nom: "Restaurants et maquis sans logo professionnel", raison: "Forte demande de visuels, budgets compatibles", note: 92, actif: true, secteurs: ["Restauration"] },
+    { id: "mode", nom: "Boutiques de mode", raison: "Besoin de nouveaux visuels chaque semaine", note: 85, actif: true, secteurs: ["Commerce"] },
+    { id: "ecoles", nom: "Écoles privées", raison: "Affiches et flyers à chaque rentrée", note: 78, actif: true, secteurs: ["Éducation et formation"] },
+    { id: "hotels", nom: "Hôtels et résidences", raison: "Supports d'accueil et signalétique à refaire", note: 74, actif: false, secteurs: ["Hôtellerie"] },
   ]);
 }
 

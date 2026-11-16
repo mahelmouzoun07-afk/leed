@@ -24,14 +24,24 @@ export type Fiche = {
 
 export type Question = { id: string; texte: string; choix: string[] };
 
-export type Profil = { id: string; nom: string; raison: string; note: number; actif: boolean };
+export type Profil = {
+  id: string;
+  nom: string;
+  raison: string;
+  note: number;
+  actif: boolean;
+  /** Les secteurs de l'annuaire qui correspondent à ce profil (liste fermée, voir lib/annuaire/secteurs.ts) */
+  secteurs?: string[];
+};
 
 export type Canal = "WhatsApp" | "Email" | "Instagram" | "Facebook" | "LinkedIn";
 
 export type Apercu = {
   total: number;
-  exemples: { secteur: string; ville: string; taille: string; indice: string }[];
+  exemples: { secteur: string; ville?: string | null; taille?: string | null; indice?: string | null }[];
   canaux: { canal: Canal; nombre: number }[];
+  /** Vrai quand le nombre vient de la vraie base d'entreprises, faux pour les exemples de démonstration */
+  reel?: boolean;
 };
 
 export type Etat = {

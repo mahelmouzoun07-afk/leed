@@ -295,10 +295,10 @@ describe("le choix du canal", () => {
 describe("les profils", () => {
   it("trie par note, donne un identifiant et active les trois meilleurs", async () => {
     const { client } = fauxClient([JSON.stringify({ profils: [
-      { nom: "Écoles privées", raison: "Affiches chaque rentrée", note: 70 },
-      { nom: "Restaurants sans logo", raison: "Besoin de visuels", note: 92 },
-      { nom: "Hôtels", raison: "Supports d'accueil", note: 60 },
-      { nom: "Boutiques de mode", raison: "Nouveaux visuels", note: 85 },
+      { nom: "Écoles privées", raison: "Affiches chaque rentrée", note: 70, secteurs: ["Éducation et formation"] },
+      { nom: "Restaurants sans logo", raison: "Besoin de visuels", note: 92, secteurs: ["Restauration", "Secteur inventé par l'IA"] },
+      { nom: "Hôtels", raison: "Supports d'accueil", note: 60, secteurs: ["Hôtellerie"] },
+      { nom: "Boutiques de mode", raison: "Nouveaux visuels", note: 85, secteurs: ["Commerce"] },
     ] })]);
     const r = await proposerProfilsIA(client, FICHE);
     expect(r.ok).toBe(true);
@@ -306,11 +306,29 @@ describe("les profils", () => {
     expect(r.donnees.profils.map((p) => p.nom)).toEqual(["Restaurants sans logo", "Boutiques de mode", "Écoles privées", "Hôtels"]);
     expect(r.donnees.profils.map((p) => p.actif)).toEqual([true, true, true, false]);
     expect(new Set(r.donnees.profils.map((p) => p.id)).size).toBe(4);
+    // les secteurs inventés sont retirés : seuls les noms de l'annuaire passent
+    expect(r.donnees.profils[0].secteurs).toEqual(["Restauration"]);
   });
   it("refuse moins de trois profils", async () => {
-    const un = JSON.stringify({ profils: [{ nom: "A", raison: "B", note: 50 }] });
+    const un = JSON.stringify({ profils: [{ nom: "A", raison: "B", note: 50, secteurs: ["Commerce"] }] });
     const { client } = fauxClient([un, un]);
     expect((await proposerProfilsIA(client, FICHE)).ok).toBe(false);
+  });
+  it("redemande quand un profil n'a aucun secteur de l'annuaire, en le disant au modèle", async () => {
+    const mal = JSON.stringify({ profils: [
+      { nom: "A", raison: "B", note: 90, secteurs: ["Restaurants"] },
+      { nom: "C", raison: "D", note: 80, secteurs: ["Commerce"] },
+      { nom: "E", raison: "F", note: 70, secteurs: ["Santé"] },
+    ] });
+    const bien = JSON.stringify({ profils: [
+      { nom: "A", raison: "B", note: 90, secteurs: ["Restauration"] },
+      { nom: "C", raison: "D", note: 80, secteurs: ["Commerce"] },
+      { nom: "E", raison: "F", note: 70, secteurs: ["Santé"] },
+    ] });
+    const { client, demandes } = fauxClient([mal, bien]);
+    const r = await proposerProfilsIA(client, FICHE);
+    expect(r.ok).toBe(true);
+    expect(demandes[1].messages.at(-1)?.content).toMatch(/secteurs/);
   });
 });
 
