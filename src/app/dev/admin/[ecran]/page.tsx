@@ -4,6 +4,7 @@ import { AdminAccueil, AdminClient, AdminClients } from "@/components/admin/ecra
 import { AdminAnnuaire, AdminComptes, AdminCouts, AdminJournal, AdminMessages, AdminPaiements, AdminPlus } from "@/components/admin/ecrans/exploitation";
 import { AdminSupport, AdminTicket } from "@/components/admin/ecrans/support";
 import { AdminCodesPromo } from "@/components/admin/ecrans/promo";
+import { AdminUnipile } from "@/components/admin/ecrans/unipile";
 import { ADMIN_DEMO as D } from "@/lib/admin/vues";
 
 /** /dev/admin/<écran> : chaque écran de l'espace équipe avec le jeu d'exemple (développement seulement). */
@@ -20,6 +21,9 @@ const ECRANS: Record<string, () => React.ReactNode> = {
   messages: () => <AdminMessages v={D.messages} />,
   paiements: () => <AdminPaiements v={D.paiements} />,
   couts: () => <AdminCouts v={D.couts} />,
+  unipile: () => <AdminUnipile v={D.unipile} />,
+  "unipile-vide": () => <AdminUnipile v={{ variables: { dsn: false, cle: false, secret: false, site: true }, adresseWebhook: null, comptes: null, webhooks: null, locaux: { actifs: 0, a_rebrancher: 0, suspendus: 0 }, evenements: [] }} />,
+  "unipile-erreur": () => <AdminUnipile v={{ ...D.unipile, comptes: { ok: false, erreur: "Unipile a répondu 401." }, webhooks: { ok: false, erreur: "Unipile a répondu 401." } }} erreur="Exemple d'erreur." />,
   "codes-promo": () => <AdminCodesPromo v={D.codes_promo} />,
   "codes-promo-nouveau": () => <AdminCodesPromo v={D.codes_promo} nouveau="BIENVENUE26" ok />,
   "codes-promo-vide": () => <AdminCodesPromo v={{ codes: [], recentes: [] }} />,

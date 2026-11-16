@@ -123,7 +123,7 @@ export type RapportsVue = {
 export type ComptesVue = {
   inclus: number | null; // null = tous
   branches: number;
-  comptes: { canal: CanalNom; identifiant: string; statut: "actif" | "a_rebrancher" | "suspendu" | "debranche"; quota: number; envois: number; note: number; joignables: number }[];
+  comptes: { id?: string; canal: CanalNom; identifiant: string; statut: "actif" | "a_rebrancher" | "suspendu" | "debranche"; quota: number; envois: number; note: number; joignables: number }[];
   autres: { canal: CanalNom; joignables: number }[];
 };
 

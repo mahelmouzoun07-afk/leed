@@ -104,6 +104,15 @@ export type AdminCodesPromoVue = {
   recentes: { code: string; entreprise: string; remise_fcfa: number; a_payer_fcfa: number; statut: string; cree_le: string }[];
 };
 
+export type AdminUnipileVue = {
+  variables: { dsn: boolean; cle: boolean; secret: boolean; site: boolean };
+  adresseWebhook: string | null;
+  comptes: { ok: true; liste: { id: string; type: string; canal: string | null; identifiant: string; statut: string; cree_le: string | null }[] } | { ok: false; erreur: string } | null;
+  webhooks: { ok: true; liste: { id: string; source: string; url: string }[] } | { ok: false; erreur: string } | null;
+  locaux: { actifs: number; a_rebrancher: number; suspendus: number };
+  evenements: { quand: string; type: string; canal: string | null; identifiant: string | null; gravite: number; detail: string }[];
+};
+
 export type AdminCoutsVue = {
   encaisse: number;
   couts: Record<string, number>;
@@ -202,6 +211,26 @@ export const ADMIN_DEMO = {
       { id: "q4", entreprise: "Imprimerie Sogbo", montant: 10000, moyen: "moov_money", statut: "echoue", cree_le: ilYA(60 * 40) },
     ],
   } satisfies AdminPaiementsVue,
+
+  unipile: {
+    variables: { dsn: true, cle: true, secret: true, site: true },
+    adresseWebhook: "https://leed-nine.vercel.app/api/webhooks/unipile",
+    comptes: {
+      ok: true,
+      liste: [
+        { id: "ac1AbCdEfGh", type: "WHATSAPP", canal: "whatsapp", identifiant: "+22997000000", statut: "OK", cree_le: ilYA(60 * 5) },
+        { id: "ac2XyZ12345", type: "GOOGLE_OAUTH", canal: "email", identifiant: "test@gmail.com", statut: "OK", cree_le: ilYA(60 * 3) },
+        { id: "ac3Orphelin1", type: "INSTAGRAM", canal: "instagram", identifiant: "essai_leed", statut: "CREDENTIALS", cree_le: ilYA(60 * 24) },
+      ],
+    },
+    webhooks: { ok: true, liste: [{ id: "wh1", source: "messaging", url: "https://leed-nine.vercel.app/api/webhooks/unipile" }] },
+    locaux: { actifs: 2, a_rebrancher: 0, suspendus: 0 },
+    evenements: [
+      { quand: ilYA(3), type: "message_recu", canal: "whatsapp", identifiant: "+22997000000", gravite: 1, detail: "réponse reçue" },
+      { quand: ilYA(40), type: "statut", canal: "instagram", identifiant: "essai_leed", gravite: 2, detail: "bon -> à rebrancher (CREDENTIALS)" },
+      { quand: ilYA(60 * 5), type: "connecte", canal: "whatsapp", identifiant: "+22997000000", gravite: 1, detail: "compte connecté" },
+    ],
+  } satisfies AdminUnipileVue,
 
   codes_promo: {
     codes: [

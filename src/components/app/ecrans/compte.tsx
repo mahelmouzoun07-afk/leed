@@ -1,13 +1,18 @@
 import { Carte, EtatVide, Etiquette, Jauge, Ligne, Sourdine, Titrine, TitrePage, BoutonLien, classeBouton, dateCourte, nombre } from "@/components/app/kit";
 import { NOM_CANAL, type ComptesVue, type ForfaitVue } from "@/lib/app/vues";
+import { debrancherMonCompte } from "@/lib/canaux/actions";
 
 const NOM_SANTE = { actif: "En bonne santé", a_rebrancher: "À rebrancher", suspendu: "Suspendu", debranche: "Débranché" } as const;
 
-export function EcranComptes({ v }: { v: ComptesVue }) {
+export function EcranComptes({ v, connexion, debranche, erreur }: { v: ComptesVue; connexion?: "ok" | "echec"; debranche?: boolean; erreur?: string }) {
   return (
     <div className="flex flex-col gap-3">
       <TitrePage titre="Vos comptes" />
       <Sourdine>L&apos;agent écrit depuis vos propres comptes, jamais depuis un numéro inconnu.</Sourdine>
+      {connexion === "ok" && <p role="status" className="rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-600">Votre compte est en cours de connexion. Il apparaît ci-dessous dans quelques secondes.</p>}
+      {connexion === "echec" && <p role="alert" className="rounded-lg bg-[#fdeee4] px-3 py-2 text-sm text-[#b4410e]">La connexion n&apos;a pas abouti. Vous pouvez réessayer.</p>}
+      {debranche && <p role="status" className="rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-600">Compte débranché.</p>}
+      {erreur && <p role="alert" className="rounded-lg bg-[#fdeee4] px-3 py-2 text-sm text-[#b4410e]">{erreur}</p>}
       {v.comptes.length === 0 && <EtatVide titre="Aucun compte branché" texte="Branchez votre WhatsApp, votre email ou vos réseaux pour que l'agent puisse écrire en votre nom. Le branchement ouvre avec la connexion des comptes." />}
       {v.comptes.map((c) => (
         <Carte key={`${c.canal}-${c.identifiant}`}>
@@ -25,10 +30,25 @@ export function EcranComptes({ v }: { v: ComptesVue }) {
           <Jauge valeur={c.quota > 0 ? (c.envois / c.quota) * 100 : 0} label={`Envois du jour ${NOM_CANAL[c.canal]}`} />
           <Ligne>
             <span className="text-sm text-muted-foreground tabular-nums">{nombre(c.joignables)} prospects joignables ici</span>
-            <button type="button" disabled title="Bientôt disponible" className={classeBouton("cadre", true)}>
-              Débrancher
-            </button>
           </Ligne>
+          {c.statut !== "actif" && c.statut !== "debranche" && (
+            <div className="flex flex-col gap-2">
+              <p className="!my-0 text-sm !text-foreground">
+                {c.statut === "a_rebrancher" ? "Ce compte doit être rebranché : l'agent ne peut plus écrire depuis lui." : "Les envois depuis ce compte sont suspendus. Rebranchez-le pour les reprendre."}
+              </p>
+              {c.id && <BoutonLien href={`/app/comptes/connecter/${c.canal}?rebrancher=${c.id}`} ton="action" petit>Rebrancher ce compte</BoutonLien>}
+            </div>
+          )}
+          {c.id && (
+            <details className="rounded-lg border border-border">
+              <summary className="cursor-pointer px-3 py-2 text-sm font-medium text-foreground">Débrancher ce compte</summary>
+              <form action={debrancherMonCompte} className="flex flex-col gap-2 border-t border-border p-3">
+                <input type="hidden" name="id" value={c.id} />
+                <Sourdine>Leed ne pourra plus écrire depuis ce compte. Vous pourrez le reconnecter plus tard, tant que votre forfait est en cours.</Sourdine>
+                <button type="submit" className={classeBouton("cadre", true)}>Confirmer le débranchement</button>
+              </form>
+            </details>
+          )}
         </Carte>
       ))}
       {v.autres.map((a) => (
@@ -38,9 +58,7 @@ export function EcranComptes({ v }: { v: ComptesVue }) {
               <div className="text-sm font-medium text-muted-foreground">{NOM_CANAL[a.canal]}</div>
               <Sourdine className="tabular-nums">{nombre(a.joignables)} prospects joignables</Sourdine>
             </div>
-            <button type="button" disabled title="Bientôt disponible" className={classeBouton("sombre", true)}>
-              Connecter
-            </button>
+            <BoutonLien href={`/app/comptes/connecter/${a.canal}`} ton="sombre" petit>Connecter</BoutonLien>
           </Ligne>
         </Carte>
       ))}

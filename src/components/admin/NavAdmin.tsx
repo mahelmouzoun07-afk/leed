@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, CreditCard, Database, History, Home, LifeBuoy, Link2, Menu, ShieldAlert, Ticket, Users } from "lucide-react";
+import { BarChart3, CreditCard, Database, History, Home, LifeBuoy, Link2, Menu, Plug, ShieldAlert, Ticket, Users } from "lucide-react";
 
 type Entree = { href: string; libelle: string; Icone: typeof Home; bas?: boolean };
 
@@ -10,6 +10,7 @@ const ENTREES: Entree[] = [
   { href: "/admin", libelle: "Accueil", Icone: Home, bas: true },
   { href: "/admin/clients", libelle: "Clients", Icone: Users, bas: true },
   { href: "/admin/comptes", libelle: "Comptes", Icone: Link2, bas: true },
+  { href: "/admin/unipile", libelle: "Unipile", Icone: Plug },
   { href: "/admin/annuaire", libelle: "Annuaire", Icone: Database },
   { href: "/admin/messages", libelle: "Messages bloqués", Icone: ShieldAlert },
   { href: "/admin/paiements", libelle: "Paiements", Icone: CreditCard },

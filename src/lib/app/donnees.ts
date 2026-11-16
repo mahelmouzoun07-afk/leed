@@ -344,18 +344,18 @@ export async function chargerComptes(ctx: Ctx): Promise<ComptesVue> {
   if (ctx.demo) return DEMO.comptes;
   const { sb, entrepriseId: id } = ctx;
   const [comptes, forfait, identifiants] = await Promise.all([
-    sb.from("mes_comptes").select("canal, identifiant_affiche, statut, quota_jour, envois_aujourdhui, note_sante").eq("entreprise_id", id),
+    sb.from("mes_comptes").select("id, canal, identifiant_affiche, statut, quota_jour, envois_aujourdhui, note_sante").eq("entreprise_id", id),
     sb.from("mon_forfait").select("comptes_max").eq("entreprise_id", id).in("statut", ["actif", "grace"]).limit(1).maybeSingle(),
     sb.from("prospects_identifiants").select("canal").eq("entreprise_id", id).limit(20000),
   ]);
   const joignables = new Map<string, number>();
   for (const i of identifiants.data ?? []) joignables.set(i.canal, (joignables.get(i.canal) ?? 0) + 1);
   const branches = comptes.data ?? [];
-  const pris = new Set(branches.map((c) => c.canal));
+  const pris = new Set(branches.filter((c) => c.statut !== "debranche").map((c) => c.canal));
   return {
     inclus: forfait.data?.comptes_max ?? null,
     branches: branches.filter((c) => c.statut === "actif").length,
-    comptes: branches.map((c) => ({ canal: c.canal as CanalNom, identifiant: c.identifiant_affiche ?? "", statut: c.statut ?? "actif", quota: c.quota_jour ?? 0, envois: c.envois_aujourdhui ?? 0, note: c.note_sante ?? 0, joignables: joignables.get(c.canal ?? "") ?? 0 })),
+    comptes: branches.filter((c) => c.statut !== "debranche").map((c) => ({ id: c.id ?? undefined, canal: c.canal as CanalNom, identifiant: c.identifiant_affiche ?? "", statut: c.statut ?? "actif", quota: c.quota_jour ?? 0, envois: c.envois_aujourdhui ?? 0, note: c.note_sante ?? 0, joignables: joignables.get(c.canal ?? "") ?? 0 })),
     autres: (["whatsapp", "email", "instagram", "facebook", "linkedin"] as CanalNom[]).filter((c) => !pris.has(c)).map((canal) => ({ canal, joignables: joignables.get(canal) ?? 0 })),
   };
 }

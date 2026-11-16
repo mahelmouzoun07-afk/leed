@@ -1279,6 +1279,71 @@ export type Database = {
         }
         Relationships: []
       }
+      liens_connexion: {
+        Row: {
+          canal: Database["public"]["Enums"]["canal"]
+          compte_id: string | null
+          cree_le: string
+          cree_par: string | null
+          entreprise_id: string
+          expire_le: string
+          id: string
+          type: string
+          utilise_le: string | null
+        }
+        Insert: {
+          canal: Database["public"]["Enums"]["canal"]
+          compte_id?: string | null
+          cree_le?: string
+          cree_par?: string | null
+          entreprise_id: string
+          expire_le?: string
+          id?: string
+          type?: string
+          utilise_le?: string | null
+        }
+        Update: {
+          canal?: Database["public"]["Enums"]["canal"]
+          compte_id?: string | null
+          cree_le?: string
+          cree_par?: string | null
+          entreprise_id?: string
+          expire_le?: string
+          id?: string
+          type?: string
+          utilise_le?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "liens_connexion_compte_id_fkey"
+            columns: ["compte_id"]
+            isOneToOne: false
+            referencedRelation: "comptes_connectes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "liens_connexion_compte_id_fkey"
+            columns: ["compte_id"]
+            isOneToOne: false
+            referencedRelation: "mes_comptes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "liens_connexion_cree_par_fkey"
+            columns: ["cree_par"]
+            isOneToOne: false
+            referencedRelation: "profils"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "liens_connexion_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       membres: {
         Row: {
           cree_le: string
@@ -2535,6 +2600,14 @@ export type Database = {
           passes_en_grace: number
         }[]
       }
+      appliquer_statut_compte: {
+        Args: {
+          p_message: string
+          p_statut: Database["public"]["Enums"]["statut_compte"]
+          p_unipile_account_id: string
+        }
+        Returns: boolean
+      }
       calculer_code_promo: {
         Args: { p_code: string; p_entreprise: string; p_montant: number }
         Returns: Json
@@ -2543,6 +2616,7 @@ export type Database = {
         Args: { p_lignes: Json; p_source: string }
         Returns: Json
       }
+      comptes_en_cours: { Args: { p_entreprise: string }; Returns: number }
       creer_entreprise_inscription: {
         Args: { p_user: string }
         Returns: string
@@ -2561,12 +2635,28 @@ export type Database = {
         Returns: string
       }
       empreinte: { Args: { p_texte: string }; Returns: string }
+      enregistrer_compte_unipile: {
+        Args: { p_account_id: string; p_identifiant: string; p_lien: string }
+        Returns: Json
+      }
+      enregistrer_message_recu: {
+        Args: {
+          p_chat_id: string
+          p_message_id: string
+          p_unipile_account_id: string
+        }
+        Returns: boolean
+      }
       hacher_identifiant: {
         Args: {
           p_canal: Database["public"]["Enums"]["canal"]
           p_identifiant: string
         }
         Returns: string
+      }
+      marquer_compte_debranche: {
+        Args: { p_compte: string; p_motif: string }
+        Returns: boolean
       }
       normaliser_identifiant: {
         Args: {
@@ -2613,6 +2703,13 @@ export type Database = {
         Returns: Json
       }
       retirer_source_annuaire: { Args: { p_source: string }; Returns: number }
+      verifier_branchement: {
+        Args: {
+          p_canal: Database["public"]["Enums"]["canal"]
+          p_entreprise: string
+        }
+        Returns: string
+      }
       verifier_limite: {
         Args: {
           p_action: string

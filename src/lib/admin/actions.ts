@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { confirmerPaiement } from "../paiement/service";
 import { formatCodeValide, genererCode } from "../promo";
+import { creerClientAdmin } from "../supabase/admin";
+import { debrancherComptesSansForfait, declarerWebhooks, envoyerMessageDeTest, listerComptesDistants, synchroniserComptes } from "../canaux/service";
+import { identifiantWhatsApp } from "../canaux/regles";
 import { contexteAdmin } from "./donnees";
 
 /**
@@ -195,4 +198,79 @@ export async function modifierCodePromo(f: FormData): Promise<void> {
     p_actif: actif === "true" ? true : actif === "false" ? false : (null as unknown as boolean),
   });
   retour(chemin, !error, messagePromo(error?.message));
+}
+
+// ───── Unipile (page de l'équipe) ──────────────────────────────────────────
+
+const RIEN = "00000000-0000-0000-0000-000000000000";
+
+function retourInfo(chemin: string, info: string): never {
+  revalidatePath("/admin", "layout");
+  redirect(`${chemin}?ok=1&info=${encodeURIComponent(info.slice(0, 400))}`);
+}
+
+async function exigerAdminSeulement(chemin: string) {
+  const ctx = await contexteAdmin();
+  if (ctx.role !== "admin") retour(chemin, false, "Seul un administrateur peut faire cela.");
+  return ctx;
+}
+
+/** Déclare chez Unipile les deux adresses qui nous préviennent (messages reçus, état des comptes). Sans doublon. */
+export async function declarerLesWebhooks(): Promise<void> {
+  const chemin = "/admin/unipile";
+  const ctx = await exigerAdminSeulement(chemin);
+  const r = await declarerWebhooks();
+  await ctx.sb.rpc("admin_journaliser", { p_action: "declarer_webhooks_unipile", p_cible_type: "unipile", p_cible_id: RIEN, p_charge: { ok: r.ok } });
+  if (!r.ok) retour(chemin, false, r.erreur);
+  const { crees, existants, erreurs } = r.donnees;
+  if (erreurs.length > 0) retour(chemin, false, `Échec : ${erreurs.join(" ; ")}`);
+  retourInfo(chemin, `Webhooks : ${crees.length} créé(s) (${crees.join(", ") || "aucun"}), ${existants.length} déjà présent(s).`);
+}
+
+/** Compare Unipile et notre base : applique les états, repère les comptes facturés qui ne servent à rien. */
+export async function synchroniserLesComptes(): Promise<void> {
+  const chemin = "/admin/unipile";
+  const ctx = await exigerAdminSeulement(chemin);
+  const r = await synchroniserComptes();
+  await ctx.sb.rpc("admin_journaliser", { p_action: "synchroniser_comptes_unipile", p_cible_type: "unipile", p_cible_id: RIEN, p_charge: { ok: r.ok } });
+  if (!r.ok) retour(chemin, false, r.erreur);
+  const { synchronises, orphelins, manquants } = r.donnees;
+  retourInfo(chemin, `${synchronises} compte(s) synchronisé(s), ${manquants} disparu(s) chez Unipile, ${orphelins.length} compte(s) chez Unipile inconnu(s) de leed (facturés : à supprimer depuis le tableau de bord Unipile si ce sont des essais).`);
+}
+
+/** Fin de forfait : débranche chez Unipile les comptes des entreprises sans forfait payant en cours (ils ne coûtent plus rien). */
+export async function debrancherLesComptesExpires(): Promise<void> {
+  const chemin = "/admin/unipile";
+  const ctx = await exigerAdminSeulement(chemin);
+  const r = await debrancherComptesSansForfait();
+  await ctx.sb.rpc("admin_journaliser", { p_action: "debrancher_comptes_expires", p_cible_type: "unipile", p_cible_id: RIEN, p_charge: { debranches: r.debranches, echecs: r.echecs } });
+  retourInfo(chemin, `${r.debranches} compte(s) débranché(s)${r.echecs > 0 ? `, ${r.echecs} échec(s) à rejouer` : ""}.`);
+}
+
+/**
+ * Test d'envoi (docs/UNIPILE.md §7) : un message à SOI-MÊME depuis un compte connecté, pour vérifier l'envoi et la réception.
+ * Réservé aux administrateurs, limité à 10 par heure, inscrit au journal d'audit. WhatsApp et email seulement.
+ */
+export async function envoyerTestUnipile(f: FormData): Promise<void> {
+  const chemin = "/admin/unipile";
+  const ctx = await exigerAdminSeulement(chemin);
+  const compteId = lire(f, "compte").trim();
+  const destinataire = lire(f, "destinataire").trim();
+  const texte = z.string().trim().min(3).max(300).safeParse(lire(f, "texte"));
+  if (!compteId || !destinataire || !texte.success) retour(chemin, false, "Choisissez un compte, un destinataire et un message de 3 à 300 caractères.");
+
+  const { data: autorise } = await creerClientAdmin().rpc("verifier_limite", { p_cle: `test-unipile:${ctx.user.id}`, p_action: "test_envoi_unipile", p_maximum: 10, p_fenetre: "1 hour" });
+  if (autorise === false) retour(chemin, false, "Trop de tests d'envoi cette heure.");
+
+  const comptes = await listerComptesDistants();
+  if (!comptes.ok) retour(chemin, false, comptes.erreur);
+  const compte = comptes.donnees.find((c) => c.id === compteId);
+  if (!compte || (compte.canal !== "whatsapp" && compte.canal !== "email")) retour(chemin, false, "Ce compte ne peut pas servir au test (WhatsApp ou email seulement).");
+  if (compte.canal === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(destinataire)) retour(chemin, false, "Adresse email invalide.");
+  if (compte.canal === "whatsapp" && !identifiantWhatsApp(destinataire)) retour(chemin, false, "Numéro WhatsApp invalide (avec l'indicatif, par exemple +229...).");
+
+  const r = await envoyerMessageDeTest({ compteId, canal: compte.canal, destinataire, texte: texte.data, objet: "Test leed" });
+  await ctx.sb.rpc("admin_journaliser", { p_action: "test_envoi_unipile", p_cible_type: "unipile", p_cible_id: RIEN, p_charge: { canal: compte.canal, ok: r.ok } });
+  if (!r.ok) retour(chemin, false, r.erreur);
+  retourInfo(chemin, `Message envoyé (${compte.canal}). Vérifiez qu'il arrive, puis répondez-y : la réponse doit apparaître dans « Événements » ci-dessous.`);
 }

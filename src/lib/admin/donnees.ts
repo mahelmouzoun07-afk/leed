@@ -1,6 +1,9 @@
 import "server-only";
 import { creerClientServeur } from "../supabase/server";
 import { exigerAdmin } from "../auth/session";
+import { creerClientAdmin } from "../supabase/admin";
+import { env } from "../env";
+import { listerComptesDistants, listerWebhooksDistants } from "../canaux/service";
 import { ADMIN_DEMO } from "./vues";
 import type {
   AdminAccueilVue,
@@ -8,6 +11,7 @@ import type {
   AdminClientLigne,
   AdminClientVue,
   AdminCodesPromoVue,
+  AdminUnipileVue,
   AdminComptesVue,
   AdminCoutsVue,
   AdminJournalVue,
@@ -93,3 +97,34 @@ export async function chargerAdminTicket(ctx: CtxAdmin, id: string): Promise<Adm
 }
 
 export { ADMIN_DEMO };
+
+/** L'état de la connexion à Unipile, pour la page de l'équipe : variables posées, comptes FACTURÉS chez Unipile, webhooks déclarés. */
+export async function chargerAdminUnipile(ctx: CtxAdmin): Promise<AdminUnipileVue> {
+  void ctx;
+  const e = env();
+  const variables = { dsn: !!e.UNIPILE_DSN, cle: !!e.UNIPILE_API_KEY, secret: !!e.UNIPILE_WEBHOOK_SECRET, site: !!e.APP_URL };
+  const prete = variables.dsn && variables.cle;
+  const [comptes, webhooks] = await Promise.all([prete ? listerComptesDistants() : null, prete ? listerWebhooksDistants() : null]);
+  const { data: locaux } = await creerClientAdmin().from("comptes_connectes").select("statut").in("statut", ["actif", "a_rebrancher", "suspendu"]);
+  const compte = (s: string) => (locaux ?? []).filter((l) => l.statut === s).length;
+  const admin = creerClientAdmin();
+  const { data: ev } = await admin.from("evenements_compte").select("compte_id, type, gravite, charge, cree_le").order("cree_le", { ascending: false }).limit(15);
+  const ids = [...new Set((ev ?? []).map((x) => x.compte_id))];
+  const { data: cc } = ids.length > 0 ? await admin.from("comptes_connectes").select("id, canal, identifiant_affiche").in("id", ids) : { data: [] };
+  const parId = new Map((cc ?? []).map((c) => [c.id, c]));
+  const evenements = (ev ?? []).map((x) => {
+    const c = parId.get(x.compte_id);
+    const charge = (x.charge ?? {}) as Record<string, unknown>;
+    const detail =
+      x.type === "statut" ? `${String(charge.ancien ?? "?")} -> ${String(charge.nouveau ?? "?")} (${String(charge.message ?? "")})` : x.type === "message_recu" ? "réponse reçue" : x.type === "connecte" ? "compte connecté" : x.type === "rebranche" ? "compte rebranché" : x.type === "debranche" ? `débranché (${String(charge.motif ?? "")})` : x.type;
+    return { quand: x.cree_le, type: x.type, canal: c?.canal ?? null, identifiant: c?.identifiant_affiche ?? null, gravite: x.gravite, detail };
+  });
+  return {
+    variables,
+    adresseWebhook: e.APP_URL ? `${e.APP_URL.replace(/\/$/, "")}/api/webhooks/unipile` : null,
+    comptes: comptes === null ? null : comptes.ok ? { ok: true, liste: comptes.donnees.map((c) => ({ id: c.id, type: c.type, canal: c.canal, identifiant: c.identifiant, statut: c.statutBrut, cree_le: c.creeLe })) } : { ok: false, erreur: comptes.erreur },
+    webhooks: webhooks === null ? null : webhooks.ok ? { ok: true, liste: webhooks.donnees.map((w) => ({ id: w.id, source: w.source, url: w.url })) } : { ok: false, erreur: webhooks.erreur },
+    locaux: { actifs: compte("actif"), a_rebrancher: compte("a_rebrancher"), suspendus: compte("suspendu") },
+    evenements,
+  };
+}
