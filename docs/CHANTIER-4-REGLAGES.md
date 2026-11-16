@@ -6,8 +6,8 @@ Le code des comptes est en place et testé (inscription, connexion, lien magique
 
 | Variable | Où | État |
 |---|---|---|
-| `SUPABASE_SERVICE_ROLE_KEY` | `.env.local` et Vercel | Faite dans `.env.local`. **À ajouter dans Vercel** (Project leed → Settings → Environment Variables), sans la cocher « exposée au navigateur » |
-| `RESEND_API_KEY` | `.env.local` et Vercel | Faite dans `.env.local`. **À ajouter dans Vercel** |
+| `SUPABASE_SERVICE_ROLE_KEY` | `.env.local` et Vercel | Faite dans `.env.local`. **Déjà présente dans Vercel (production)**, ajoutée par l'intégration Supabase. Rien à faire |
+| `RESEND_API_KEY` | `.env.local` | Faite dans `.env.local`. **Le code ne s'en sert pas encore** : les emails de connexion passent par le SMTP Resend réglé dans Supabase (section 2). Inutile de l'ajouter dans Vercel pour l'instant |
 | `APP_URL` | `.env.local` et Vercel | Faite (`http://localhost:3000` en local, `https://leed-nine.vercel.app` en production) |
 | `NEXT_PUBLIC_GOOGLE_ACTIF` | `.env.local` et Vercel | **Ne pas la définir** tant que Google n'est pas branché : le bouton Google reste grisé (« bientôt »). Mettre `true` pour l'activer |
 
@@ -35,12 +35,22 @@ Le code des comptes est en place et testé (inscription, connexion, lien magique
    - **Limite** : tant qu'aucun domaine n'est vérifié chez Resend, les emails ne partent qu'**à l'adresse de votre propre compte Resend**. C'est suffisant pour tester seul. Pour écrire à de vrais clients, il faudra acheter et vérifier un domaine.
    - Sans SMTP personnalisé, Supabase n'envoie qu'aux membres de votre équipe Supabase et très peu d'emails par heure.
 
-## 3. Créer votre compte administrateur
+## 3. Votre compte administrateur
 
-1. Sur le site, créez un compte normalement (page d'inscription) avec **votre** adresse, et confirmez-la par le lien reçu.
-2. Dites-moi cette adresse : j'ajoute la ligne dans la table `administrateurs`, rôle « admin ». (Ou, dans l'éditeur SQL de Supabase : `insert into administrateurs (profil_id, role) select id, 'admin' from auth.users where email = 'votre@adresse';`)
-3. Allez sur `/admin/connexion`, connectez-vous : la page de vérification affiche un QR code. Scannez-le avec Google Authenticator (ou équivalent), entrez le code à 6 chiffres. Aux connexions suivantes, seul le code est demandé.
-4. Un client qui ouvre une page `/admin` reçoit une page 404 : il ne sait pas que l'espace existe.
+Votre adresse a été **invitée comme administrateur dans la base** (table `invitations_admin`, jamais écrite dans le dépôt public). Il n'y a rien à me demander :
+1. Créez votre compte normalement sur le site avec cette adresse, puis cliquez sur le lien de confirmation reçu par email. Dès la confirmation, le compte reçoit le rôle administrateur.
+2. Allez sur `/admin/connexion`, connectez-vous : la page de vérification affiche un QR code. Scannez-le avec Google Authenticator (ou équivalent) et entrez le code à 6 chiffres. Aux connexions suivantes, seul le code est demandé.
+3. Un client qui ouvre une page `/admin` reçoit une page 404 : il ne sait pas que l'espace existe.
+4. Pour inviter quelqu'un d'autre : `insert into invitations_admin (email, role) values ('nom@exemple.com', 'support');` dans l'éditeur SQL de Supabase (adresse en minuscules).
+
+## 3 bis. Tester chez vous, sur l'ordinateur
+
+```bash
+cd D:leed
+npm run dev
+```
+
+Ouvrez ensuite http://localhost:3000. Les liens reçus par email pointent vers l'adresse du site réglée dans Supabase : pour qu'un lien ouvre bien votre site local, mettez temporairement le Site URL de Supabase sur `http://localhost:3000` (puis remettez `https://leed-nine.vercel.app` ensuite). Sur le site Vercel, la protection par connexion bloque l'ouverture d'un lien depuis un autre appareil tant qu'elle est active.
 
 ## 4. La connexion Google sans carte bancaire
 
