@@ -111,15 +111,22 @@ def valeur(t, *cles):
 
 
 def telephones(t, pays):
+    """Renvoie (numéro au format international, est un mobile) ou (None, False)."""
     brut = valeur(t, "phone", "contact:phone", "mobile", "contact:mobile") or ""
     for morceau in re.split(r"[;,/]", brut):
         try:
             n = phonenumbers.parse(morceau.strip(), pays)
         except phonenumbers.NumberParseException:
             continue
+        if not phonenumbers.is_valid_number(n) and pays == "BJ":
+            # Bénin : 10 chiffres avec « 01 » depuis le 30 novembre 2024 ; les anciens numéros ont 8 chiffres
+            e164 = phonenumbers.format_number(n, phonenumbers.PhoneNumberFormat.E164)
+            if re.fullmatch(r"\+229\d{8}", e164):
+                n = phonenumbers.parse("+22901" + e164[4:], "BJ")
         if phonenumbers.is_valid_number(n):
-            return phonenumbers.format_number(n, phonenumbers.PhoneNumberFormat.E164)
-    return None
+            mobile = phonenumbers.number_type(n) in (phonenumbers.PhoneNumberType.MOBILE, phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE)
+            return phonenumbers.format_number(n, phonenumbers.PhoneNumberFormat.E164), mobile
+    return None, False
 
 
 def site_net(v):
@@ -227,7 +234,7 @@ def main():
             if len(nom_norm) < 2:
                 stats["ecarte_nom_vide"] += 1
                 continue
-            tel = telephones(t, pays)
+            tel, est_mobile = telephones(t, pays)
             site = site_net(valeur(t, "website", "contact:website", "url"))
             mail = valeur(t, "email", "contact:email")
             mail = mail.split(";")[0].strip().lower() if mail else None
@@ -251,7 +258,7 @@ def main():
                 "source_ref": ref, "nom": nom, "nom_normalise": nom_norm, "pays": pays,
                 "ville": valeur(t, "addr:city", "addr:town", "addr:village"),
                 "secteur": secteur(t), "sous_secteur": next((t[k] for k in ("amenity", "shop", "office", "craft", "tourism", "healthcare") if k in t), None),
-                "site": site, "telephone": tel, "email": mail, "liens_sociaux": soc,
+                "site": site, "telephone": tel, "whatsapp_probable": bool(tel and est_mobile), "email": mail, "liens_sociaux": soc,
                 "lon": round(lon, 6), "lat": round(lat, 6),
                 "score_qualite": min(100, 35 + (14 if tel else 0) + (12 if site else 0) + (6 if mail else 0) + (6 if soc else 0) + (6 if t.get("addr:city") else 0)),
                 "actif": True, "avec_contact": avec_contact, "proche_overture": proche,

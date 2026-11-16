@@ -108,6 +108,11 @@ def telephone_valide(brut, pays):
         tel = phonenumbers.parse(brut, pays)
     except phonenumbers.NumberParseException:
         return None
+    if not phonenumbers.is_valid_number(tel) and pays == "BJ":
+        # Le Bénin est passé à 10 chiffres (préfixe « 01 ») le 30 novembre 2024 ; beaucoup de fiches ont encore l'ancien numéro à 8 chiffres.
+        e164 = phonenumbers.format_number(tel, phonenumbers.PhoneNumberFormat.E164)
+        if re.fullmatch(r"\+229\d{8}", e164):
+            tel = phonenumbers.parse("+22901" + e164[4:], "BJ")
     if not phonenumbers.is_valid_number(tel):
         return None
     est_mobile = phonenumbers.number_type(tel) in (phonenumbers.PhoneNumberType.MOBILE, phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE)
@@ -218,7 +223,8 @@ def main():
             "lon": round(lon, 6) if lon is not None else None,
             "lat": round(lat, 6) if lat is not None else None,
             "score_qualite": score(conf, tel, site, mail, soc, ville_nette),
-            "actif": statut == "open",
+            # La plupart des fiches n'ont AUCUN statut (123 405 sur 125 231) : sans information, on les garde actives. Seules les fermetures déclarées les retirent.
+            "actif": statut not in ("closed", "permanently_closed", "temporarily_closed"),
         })
 
     # Doublons probables à l'intérieur d'Overture (même pays, même nom, même ville) : comptés, pas fusionnés (c'est l'étape de rapprochement)

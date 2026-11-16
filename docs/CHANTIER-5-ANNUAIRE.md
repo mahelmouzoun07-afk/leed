@@ -22,21 +22,21 @@ Règles (script `scripts/annuaire/preparer_overture.py`) :
 - un lieu présent dans deux fichiers n'est gardé qu'une fois ;
 - confiance d'au moins 0,4 ;
 - **seulement des entreprises** : sont écartés les rivières, églises, sites historiques, administrations, parcs, stades, gares et aéroports (9 182 lieux), ainsi que les jeux d'argent et le contenu pour adultes (activités refusées, `INTERDITS.md`) ;
-- au moins une voie de contact **valide** ; les numéros sont validés avec libphonenumber (3 669 numéros invalides retirés, par exemple un numéro étranger sur une fiche béninoise).
+- au moins une voie de contact **valide** ; les numéros sont validés avec libphonenumber (des numéros invalides retirés, par exemple un numéro étranger sur une fiche béninoise). **Le Bénin est passé à 10 chiffres (préfixe « 01 ») le 30 novembre 2024** : beaucoup de fiches ont l'ancien numéro à 8 chiffres. Ils sont convertis (`+229 66 66 59 99` devient `+229 01 66 66 59 99`) ; sans cela, 3 273 numéros béninois sur 4 453 étaient rejetés. À confirmer au premier envoi WhatsApp (chantier 7).
 
-Résultat : **25 190 entreprises**.
+Résultat : **25 192 entreprises**.
 
 | Pays | Entreprises |
 |---|---|
 | Côte d'Ivoire | 11 643 |
 | Sénégal | 7 737 |
-| Bénin | 3 180 |
+| Bénin | 3 182 |
 | Togo | 2 630 |
 
 | Contact | Part |
 |---|---|
-| Numéro de téléphone valide | 72 % (18 093) |
-| dont mobile (WhatsApp probable) | 55 % (13 963) |
+| Numéro de téléphone valide | 80 % (20 205) |
+| dont mobile (WhatsApp probable) | 63 % (15 943) |
 | Site web | 52 % (13 018) |
 | Email | 62 % (15 580) |
 | Page de réseau social | 97 % (24 456) |
@@ -48,12 +48,12 @@ Grands secteurs : Commerce 3 781, Restauration 3 588, Éducation et formation 2 
 OpenStreetMap contient beaucoup d'entreprises nommées (84 102, dont 24 290 commerces et 14 208 restaurants) mais **presque aucune n'a un contact : 4 756 seulement (5,7 %)**. Sans moyen de contact, une entreprise ne sert pas à l'agent ; elles ne sont donc pas chargées.
 
 - 2 047 entreprises d'OpenStreetMap sont déjà dans Overture (à moins de 150 m, nom proche). Elles ne sont pas ajoutées deux fois.
-- **4 401 nouvelles entreprises avec contact** : Togo 1 815, Sénégal 1 472, Côte d'Ivoire 903, Bénin 211.
+- **5 926 nouvelles entreprises avec contact** : Togo 1 815, Bénin 1 736, Sénégal 1 472, Côte d'Ivoire 903.
 - 1 391 points de la **Gambie** ont été écartés : la frontière a été retrouvée dans le fichier lui-même (le fichier du Sénégal contient aussi la Gambie).
 
-**Total à charger : 29 591 entreprises** (Côte d'Ivoire 12 546, Sénégal 9 209, Togo 4 445, Bénin 3 391), dont 15 707 à Cotonou, Dakar ou Abidjan.
+**Total à charger : 31 118 entreprises** (Côte d'Ivoire 12 546, Sénégal 9 209, Bénin 4 918, Togo 4 445).
 
-Réponse à la question « Restaurants à Cotonou » : environ 340 entreprises dans Overture, avec la part qui a un contact.
+Réponse à la question « Restaurants à Cotonou » : **344 entreprises** après chargement (0,2 ms).
 
 ## 4. Pourquoi GLEIF n'est pas chargé
 
@@ -95,3 +95,10 @@ L'aperçu du parcours (`/demarrer`) affiche maintenant **le vrai nombre d'entrep
 - **Le temps de réponse** de « Restaurants à Cotonou » (moins d'une demi-seconde) sera mesuré après le chargement.
 - **Cotonou : 3 180 entreprises au Bénin seulement.** Le Bénin est le pays le moins bien couvert (Overture n'y connaît que 6 066 lieux, dont beaucoup sans contact). C'est un point à retenir pour le lancement.
 - Les vagues suivantes (identité légale, listes officielles, empreinte web) attendent vos demandes écrites et ce rapport.
+
+## 9. Deux erreurs trouvées et corrigées après le premier chargement
+
+1. **Entreprises « inactives » à tort.** Le script marquait inactive toute fiche dont le statut n'était pas « open ». Or 123 405 fiches sur 125 231 n'ont aucun statut : 96 % d'Overture était donc invisible (le Bénin affichait 266 entreprises au lieu de 3 180). Règle corrigée : active, sauf fermeture déclarée (5 entreprises). La base a été corrigée directement.
+2. **Numéros béninois rejetés** (voir §2).
+
+Après ces corrections, **relancer les deux chargements** met la base au niveau des fichiers préparés (téléphones béninois, 1 525 entreprises OpenStreetMap béninoises en plus, mobiles marqués) : `charger_annuaire.py --source overture` puis `--source osm`.

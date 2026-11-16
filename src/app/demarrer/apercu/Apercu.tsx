@@ -26,6 +26,7 @@ export function Apercu() {
         Leed a trouvé <span className="headline-accent">{formaterFcfa(a.total)} entreprises</span> pour vous
       </h1>
       <p className="!mt-3 max-w-[600px] text-base">Leur nom et leurs coordonnées restent cachés tant qu&apos;elles n&apos;ont pas été contactées. Voici à quoi elles ressemblent.</p>
+      {!a.reel && <p className="!mt-2 max-w-[600px] text-sm text-muted-foreground">Exemples de démonstration : la vraie recherche s&apos;ouvre dès que l&apos;annuaire est chargé.</p>}
 
       <div className="glass-window-inner mt-6 p-5">
         <ul className="divide-y divide-border">
