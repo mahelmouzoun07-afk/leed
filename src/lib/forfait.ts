@@ -13,14 +13,16 @@ type Palier = {
   comptes: number | "tous";
   parJour: number;
   cibles: number | "illimitees";
+  /** Bonus de fidélité à la recharge, en pourcentage des entreprises achetées. */
+  bonus: number;
 };
 
 export const PALIERS: readonly Palier[] = [
-  { min: 5000, prix: 250, comptes: 1, parJour: 5, cibles: 1 },
-  { min: 10000, prix: 250, comptes: 2, parJour: 10, cibles: 2 },
-  { min: 25000, prix: 225, comptes: 3, parJour: 20, cibles: 3 },
-  { min: 50000, prix: 200, comptes: "tous", parJour: 40, cibles: "illimitees" },
-  { min: 100000, prix: 175, comptes: "tous", parJour: 40, cibles: "illimitees" },
+  { min: 5000, prix: 250, comptes: 1, parJour: 5, cibles: 1, bonus: 5 },
+  { min: 10000, prix: 250, comptes: 2, parJour: 10, cibles: 2, bonus: 10 },
+  { min: 25000, prix: 225, comptes: 3, parJour: 20, cibles: 3, bonus: 15 },
+  { min: 50000, prix: 200, comptes: "tous", parJour: 40, cibles: "illimitees", bonus: 20 },
+  { min: 100000, prix: 175, comptes: "tous", parJour: 40, cibles: "illimitees", bonus: 20 },
 ];
 
 export function formaterFcfa(n: number): string {

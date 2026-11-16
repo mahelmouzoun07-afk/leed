@@ -1081,6 +1081,27 @@ export type Database = {
           },
         ]
       }
+      invitations_admin: {
+        Row: {
+          cree_le: string
+          email: string
+          role: Database["public"]["Enums"]["role_admin"]
+          utilisee_le: string | null
+        }
+        Insert: {
+          cree_le?: string
+          email: string
+          role?: Database["public"]["Enums"]["role_admin"]
+          utilisee_le?: string | null
+        }
+        Update: {
+          cree_le?: string
+          email?: string
+          role?: Database["public"]["Enums"]["role_admin"]
+          utilisee_le?: string | null
+        }
+        Relationships: []
+      }
       journal_audit: {
         Row: {
           action: string
@@ -1664,6 +1685,7 @@ export type Database = {
           langue: string
           modifie_le: string
           nom: string
+          note_client: string | null
           origine: string
           repondu_le: string | null
           score: number | null
@@ -1687,6 +1709,7 @@ export type Database = {
           langue?: string
           modifie_le?: string
           nom: string
+          note_client?: string | null
           origine?: string
           repondu_le?: string | null
           score?: number | null
@@ -1710,6 +1733,7 @@ export type Database = {
           langue?: string
           modifie_le?: string
           nom?: string
+          note_client?: string | null
           origine?: string
           repondu_le?: string | null
           score?: number | null
@@ -2264,6 +2288,27 @@ export type Database = {
         Args: { p_entreprise: string; p_montant: number; p_paiement: string }
         Returns: string
       }
+      admin_accueil: { Args: never; Returns: Json }
+      admin_annuaire: { Args: never; Returns: Json }
+      admin_client: { Args: { p_id: string }; Returns: Json }
+      admin_clients: { Args: never; Returns: Json }
+      admin_comptes: { Args: never; Returns: Json }
+      admin_couts: { Args: never; Returns: Json }
+      admin_journaliser: {
+        Args: {
+          p_action: string
+          p_charge?: Json
+          p_cible_id: string
+          p_cible_type: string
+        }
+        Returns: undefined
+      }
+      admin_messages_bloques: { Args: never; Returns: Json }
+      admin_offrir_entreprises: {
+        Args: { p_entreprise: string; p_motif: string; p_nombre: number }
+        Returns: undefined
+      }
+      admin_paiements: { Args: never; Returns: Json }
       admin_resume_clients: {
         Args: never
         Returns: {
@@ -2275,6 +2320,10 @@ export type Database = {
           nom: string
           pays: string
         }[]
+      }
+      admin_suspendre_envoi: {
+        Args: { p_entreprise: string; p_motif: string; p_suspendre: boolean }
+        Returns: undefined
       }
       apercu_annuaire: {
         Args: {

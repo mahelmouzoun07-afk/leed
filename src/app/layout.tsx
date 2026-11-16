@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import { Shell } from "@/components/Shell";
-import { Footer } from "@/components/Footer";
 import { BRAND } from "@/components/data";
 
 // Texte : Geist, la police du format d'origine (les espacements sont réglés pour elle).
@@ -38,9 +36,7 @@ export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${GeistSans.variable} ${GeistMono.variable} ${Bricolage.variable} h-full`}>
-      <body className="h-full">
-        <Shell footer={<Footer />}>{children}</Shell>
-      </body>
+      <body className="h-full">{children}</body>
     </html>
   );
 }

@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Mail } from "lucide-react";
 import { BlocErreur, Champ, boutonPrincipal, inputClass } from "@/components/form";
-import { BoutonGoogle } from "@/app/connexion/Connexion";
+import { BoutonGoogle } from "@/app/(site)/connexion/Connexion";
 import { inscrire } from "@/lib/auth/actions";
 import { PAYS } from "@/lib/auth/pays";
 import { REGLES_MOT_DE_PASSE } from "@/lib/auth/mot-de-passe";
