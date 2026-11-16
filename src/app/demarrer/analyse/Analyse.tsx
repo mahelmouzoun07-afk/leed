@@ -7,7 +7,7 @@ import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 import { BlocErreur, boutonPrincipal, boutonSecondaire } from "@/components/form";
 import { useParcours } from "@/lib/parcours/etat";
 import { normaliserSite } from "@/lib/parcours/site";
-import { analyserActivite, poserQuestions } from "@/lib/parcours/factice";
+import { analyserActivite, poserQuestions } from "@/lib/parcours/actions";
 import type { Entree } from "@/lib/parcours/types";
 
 const LIGNES = ["Je lis votre site…", "J'identifie ce que vous vendez…", "J'étudie vos concurrents…", "Je cherche qui achète ce que vous vendez…"];
@@ -126,26 +126,31 @@ export function Analyse() {
             ))}
           </ul>
         </div>
-        <div className="glass-window-inner p-5">
-          <div className="text-sm font-medium text-muted-foreground">Vos points forts</div>
-          <ul className="mt-2 flex flex-col gap-1.5 text-base text-foreground">
-            {f.forces.map((o) => (
-              <li key={o}>{o}</li>
-            ))}
-          </ul>
-        </div>
+        {f.forces.length > 0 && (
+          <div className="glass-window-inner p-5">
+            <div className="text-sm font-medium text-muted-foreground">Vos points forts</div>
+            <ul className="mt-2 flex flex-col gap-1.5 text-base text-foreground">
+              {f.forces.map((o) => (
+                <li key={o}>{o}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="glass-window-inner p-5">
           <div className="text-sm font-medium text-muted-foreground">Votre zone</div>
           <p className="!mb-0 !mt-2 text-base text-foreground">{f.zone}</p>
         </div>
-        <div className="glass-window-inner p-5">
-          <div className="text-sm font-medium text-muted-foreground">Vos concurrents repérés</div>
-          <ul className="mt-2 flex flex-col gap-1.5 text-base text-foreground">
-            {f.concurrents.map((o) => (
-              <li key={o}>{o}</li>
-            ))}
-          </ul>
-        </div>
+        {/* Les concurrents ne sont montrés que s'ils sont cités sur le site : l'IA n'en devine jamais. */}
+        {f.concurrents.length > 0 && (
+          <div className="glass-window-inner p-5">
+            <div className="text-sm font-medium text-muted-foreground">Concurrents cités</div>
+            <ul className="mt-2 flex flex-col gap-1.5 text-base text-foreground">
+              {f.concurrents.map((o) => (
+                <li key={o}>{o}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="mt-8 flex flex-wrap gap-3">
         <button type="button" onClick={suite} className={boutonPrincipal}>

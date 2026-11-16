@@ -22,7 +22,11 @@ const schemaServeur = z.object({
   // Emails d'authentification et reçus (chantier 4)
   RESEND_API_KEY: z.string().min(1).optional(),
 
-  // IA (chantier 6)
+  // IA (chantier 6) : une coquille interchangeable (src/lib/ia/client.ts). Par défaut Groq, gratuit, avec GROQ_API_KEY.
+  IA_URL_BASE: z.string().url().optional(),
+  IA_CLE_API: z.string().min(1).optional(),
+  IA_MODELE_FORT: z.string().min(1).optional(),
+  IA_MODELE_RAPIDE: z.string().min(1).optional(),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
 
   // Tâches de fond (chantiers 6 et 8)

@@ -13,7 +13,8 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts",
-    "paiement:verifier": "node scripts/verifier-saspay.cjs"
+    "paiement:verifier": "node scripts/verifier-saspay.cjs",
+    "ia:verifier": "node scripts/verifier-ia.cjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Check, Plus } from "lucide-react";
 import { BlocErreur, Chargement, boutonPrincipal, boutonSecondaire, inputClass } from "@/components/form";
 import { useParcours } from "@/lib/parcours/etat";
-import { proposerProfils } from "@/lib/parcours/factice";
+import { proposerProfils } from "@/lib/parcours/actions";
 import type { Profil } from "@/lib/parcours/types";
 
 export function Profils() {
@@ -18,7 +18,7 @@ export function Profils() {
 
   const charger = async () => {
     setErreur(null);
-    const r = await proposerProfils();
+    const r = await proposerProfils(etat.fiche, etat.reponses);
     if (r.ok) setProfils(r.donnees);
     else setErreur(r.erreur);
   };
