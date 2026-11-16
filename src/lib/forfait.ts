@@ -86,3 +86,4 @@ export function montantDepuisPosition(pos: number): number {
   }
   return MONTANT_MAX;
 }
+

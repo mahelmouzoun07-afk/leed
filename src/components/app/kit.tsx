@@ -178,3 +178,9 @@ export function ilYA(iso: string | null | undefined, maintenant = Date.now()) {
   if (s < 86400) return `il y a ${Math.round(s / 3600)} h`;
   return `il y a ${Math.round(s / 86400)} j`;
 }
+
+/** Nombre de jours entiers avant une date (0 si elle est passée). */
+export function joursAvant(iso: string | null | undefined, maintenant = Date.now()) {
+  if (!iso) return 0;
+  return Math.max(0, Math.ceil((new Date(iso).getTime() - maintenant) / 86_400_000));
+}

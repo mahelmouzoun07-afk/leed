@@ -21,12 +21,12 @@ const PLUS: Entree = { href: "/app/plus", libelle: "Plus", Icone: Menu, bas: tru
 
 function actif(chemin: string, href: string) {
   const c = chemin.replace(/\/$/, "") || "/";
-  if (href === "/app") return c === "/app" || c === "/dev/app";
-  return c === href || c.startsWith(href + "/") || c.startsWith(href.replace("/app", "/dev/app") + "/") || c === href.replace("/app", "/dev/app");
+  if (href === "/app") return c === "/app";
+  return c === href || c.startsWith(href + "/");
 }
 
 export function NavApp({ decisionsNb, base = "/app" }: { decisionsNb: number; base?: string }) {
-  const chemin = usePathname() || "";
+  const chemin = (usePathname() || "").replace(/^\/dev/, "");
   const lien = (href: string) => (base === "/app" ? href : href.replace("/app", base));
   const bas = [...ENTREES.filter((e) => e.bas), PLUS];
   const badge = decisionsNb > 0 && (
@@ -38,7 +38,7 @@ export function NavApp({ decisionsNb, base = "/app" }: { decisionsNb: number; ba
     <>
       <nav aria-label="Navigation principale" className="hidden items-center gap-1 md:flex">
         {ENTREES.map(({ href, libelle, Icone }) => (
-          <Link key={href} href={lien(href)} aria-current={actif(chemin, lien(href)) ? "page" : undefined} className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors ${actif(chemin, lien(href)) ? "bg-chip font-medium text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+          <Link key={href} href={lien(href)} aria-current={actif(chemin, href) ? "page" : undefined} className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors ${actif(chemin, href) ? "bg-chip font-medium text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             <Icone className="h-4 w-4" aria-hidden="true" />
             {libelle}
             {href === "/app/decisions" && badge}
@@ -47,7 +47,7 @@ export function NavApp({ decisionsNb, base = "/app" }: { decisionsNb: number; ba
       </nav>
       <nav aria-label="Navigation principale" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-border bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
         {bas.map(({ href, libelle, Icone }) => {
-          const est = href === "/app/plus" ? ["/app/plus", "/app/prospects", "/app/campagnes", "/app/comptes", "/app/forfait", "/app/reglages"].some((h) => actif(chemin, lien(h))) : actif(chemin, lien(href));
+          const est = href === "/app/plus" ? ["/app/plus", "/app/prospects", "/app/campagnes", "/app/comptes", "/app/forfait", "/app/reglages"].some((h) => actif(chemin, h)) : actif(chemin, href);
           return (
             <Link key={href} href={lien(href)} aria-current={est ? "page" : undefined} className={`flex flex-col items-center gap-0.5 py-2.5 text-xs ${est ? "font-medium text-foreground" : "text-muted-foreground"}`}>
               <span className="relative">

@@ -2294,6 +2294,7 @@ export type Database = {
       admin_clients: { Args: never; Returns: Json }
       admin_comptes: { Args: never; Returns: Json }
       admin_couts: { Args: never; Returns: Json }
+      admin_journal: { Args: { p_limite?: number }; Returns: Json }
       admin_journaliser: {
         Args: {
           p_action: string
