@@ -61,7 +61,7 @@ GLEIF ne compte que **116 entités** dans nos 4 pays (Côte d'Ivoire 52, Sénég
 
 ## 5. Wikidata
 
-Le service était en panne le jour de la collecte. Il répond de nouveau : la récupération a été relancée (voir le journal de collecte). Wikidata est secondaire : il aide à recouper les sites et les réseaux sociaux des entreprises connues.
+Le service était en panne le jour de la collecte. Le 17 novembre il répondait par moments : **seul le Sénégal a pu être récupéré (345 lignes)** ; le Bénin, la Côte d'Ivoire et le Togo ont échoué (limitation 429, puis erreurs 504 et 502). Le résultat partiel est documenté (`LISEZ-MOI.txt`, manifeste, suivi). À refaire un autre jour. Wikidata est secondaire : il aide à recouper les sites et les réseaux sociaux des entreprises connues, et n'est pas chargé dans l'annuaire.
 
 ## 6. Comment charger (à lancer par vous)
 
