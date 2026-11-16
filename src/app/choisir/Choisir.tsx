@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { ArrowRight, Check, Lock } from "lucide-react";
 import { BlocErreur, boutonPrincipal } from "@/components/form";
 import { Slider } from "@/components/ui";
-import { useParcours } from "@/lib/parcours/etat";
 import { choisirOffre } from "@/lib/parcours/factice";
 import { MONTANT_PAR_DEFAUT, bareme, economie, formaterFcfa, marcheSuivante, montantDepuisPosition } from "@/lib/forfait";
 
@@ -13,17 +11,11 @@ const MOYENS = ["MTN MoMo", "Moov Money", "Wave", "Orange Money"];
 const RESEAUX_VERROUILLES = ["WhatsApp", "Instagram", "Facebook", "LinkedIn"];
 
 export function Choisir() {
-  const router = useRouter();
-  const { etat, pret } = useParcours();
   const [pos, setPos] = useState(50);
   const [moyen, setMoyen] = useState(MOYENS[0]);
   const [envoi, setEnvoi] = useState<"essai" | "forfait" | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   const [fait, setFait] = useState<"essai" | "forfait" | null>(null);
-
-  useEffect(() => {
-    if (pret && !etat.compte) router.replace("/inscription/");
-  }, [pret, etat.compte, router]);
 
   const montant = montantDepuisPosition(pos);
   const b = bareme(montant);

@@ -73,20 +73,6 @@ export async function chercherProspects(profils: Profil[]): Promise<Resultat<Ape
   });
 }
 
-export type DonneesCompte = { prenom: string; entreprise: string; email: string; pays: string; motDePasse?: string };
-
-export async function creerCompte(d: DonneesCompte): Promise<Resultat<{ email: string }>> {
-  await attendre(600);
-  if (d.email.endsWith("@erreur.test")) return echec("Cette adresse est déjà utilisée. Connectez-vous plutôt.", "email_pris");
-  return succes({ email: d.email });
-}
-
-export async function seConnecter(email: string): Promise<Resultat<{ email: string }>> {
-  await attendre(500);
-  if (email.endsWith("@erreur.test")) return echec("Nous n'arrivons pas à envoyer le lien pour le moment. Réessayez dans quelques minutes.", "envoi_impossible");
-  return succes({ email });
-}
-
 export async function choisirOffre(choix: { type: "essai" } | { type: "forfait"; montant: number; moyen: string }): Promise<Resultat<{ suite: string }>> {
   await attendre(600);
   return succes({ suite: choix.type });

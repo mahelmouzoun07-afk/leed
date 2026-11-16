@@ -2294,6 +2294,10 @@ export type Database = {
           passes_en_grace: number
         }[]
       }
+      creer_entreprise_inscription: {
+        Args: { p_user: string }
+        Returns: string
+      }
       decompter_entreprise: {
         Args: { p_cle: string; p_entreprise: string; p_prospect: string }
         Returns: boolean
