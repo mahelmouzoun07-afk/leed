@@ -1,0 +1,20 @@
+const fs = require("node:fs"), path = require("node:path");
+const { chromium } = require("playwright");
+const base = path.join(process.env.LOCALAPPDATA, "ms-playwright");
+const v = fs.readdirSync(base).filter(d => /^chromium-\d+$/.test(d) && fs.existsSync(path.join(base, d, "INSTALLATION_COMPLETE"))).sort((a,b)=>b.split("-")[1]-a.split("-")[1])[0];
+(async () => {
+  const nav = await chromium.launch({ executablePath: path.join(base, v, "chrome-win64", "chrome.exe") });
+  const page = await nav.newPage();
+  await page.goto("http://localhost:3100/connexion");
+  await page.fill("#email", "personne@exemple.com");
+  await page.fill("#motDePasse", "Faux1,motdepasse");
+  await page.getByRole("button", { name: /Me connecter/ }).click();
+  await page.getByText(/incorrect|Trop de tentatives|erreur/i).first().waitFor({ timeout: 20000 });
+  console.log("Message connexion :", (await page.getByText(/incorrect|Trop de tentatives|erreur/i).first().innerText()).replace(/\n/g, " "));
+  await page.goto("http://localhost:3100/mot-de-passe-oublie");
+  await page.fill("#email", "personne@exemple.com");
+  await page.getByRole("button", { name: /M'envoyer le lien/ }).click();
+  await page.waitForSelector("[role=status]", { timeout: 20000 });
+  console.log("Message oubli :", (await page.locator("[role=status]").innerText()).replace(/\n/g, " "));
+  await nav.close();
+})().catch(e => { console.error("ECHEC", String(e.message).split("\n")[0]); process.exit(1); });
