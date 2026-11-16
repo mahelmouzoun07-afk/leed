@@ -47,13 +47,13 @@ export class ErreurIA extends Error {
 }
 
 export const URL_BASE_PAR_DEFAUT = "https://api.groq.com/openai/v1";
-// Modèles ouverts et gratuits chez Groq. Le gros (70 milliards de paramètres) écrit et synthétise bien en français ; le petit lit vite.
-export const MODELE_FORT_PAR_DEFAUT = "llama-3.3-70b-versatile";
-export const MODELE_RAPIDE_PAR_DEFAUT = "llama-3.1-8b-instant";
+// Modèles ouverts et gratuits chez Groq, choisis parmi ceux du compte (npm run ia:verifier). Le gros écrit et synthétise ; le petit lit vite.
+export const MODELE_FORT_PAR_DEFAUT = "openai/gpt-oss-120b";
+export const MODELE_RAPIDE_PAR_DEFAUT = "openai/gpt-oss-20b";
 
 // Si le modèle choisi n'existe pas sur le compte (la liste des modèles gratuits change), on prend le premier disponible dans cet ordre.
-const PREFERES_FORT = ["llama-3.3-70b-versatile", "openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"];
-const PREFERES_RAPIDE = ["llama-3.1-8b-instant", "openai/gpt-oss-20b", "qwen/qwen3.8-27b", "openai/gpt-oss-120b", "llama-3.3-70b-versatile"];
+const PREFERES_FORT = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "llama-3.3-70b-versatile", "openai/gpt-oss-20b", "llama-3.1-8b-instant"];
+const PREFERES_RAPIDE = ["openai/gpt-oss-20b", "llama-3.1-8b-instant", "qwen/qwen3.8-27b", "openai/gpt-oss-120b", "llama-3.3-70b-versatile"];
 /** Modèle demandé -> modèle réellement utilisé (gardé en mémoire tant que le serveur tourne). */
 const remplacements = new Map<string, string>();
 export function viderRemplacementsModeles(): void {

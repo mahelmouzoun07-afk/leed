@@ -10,8 +10,8 @@ Tout leed parle à un petit contrat, `ClientIA` (`src/lib/ia/client.ts`), jamais
 |---|---|---|
 | `GROQ_API_KEY` (ou `IA_CLE_API`) | La clé du service | aucune : sans clé, le site garde ses exemples factices |
 | `IA_URL_BASE` | L'adresse d'un service compatible « OpenAI » | `https://api.groq.com/openai/v1` |
-| `IA_MODELE_FORT` | Le modèle qui rédige et synthétise | `llama-3.3-70b-versatile` |
-| `IA_MODELE_RAPIDE` | Le modèle qui lit vite | `llama-3.1-8b-instant` |
+| `IA_MODELE_FORT` | Le modèle qui rédige et synthétise | `openai/gpt-oss-120b` |
+| `IA_MODELE_RAPIDE` | Le modèle qui lit vite | `openai/gpt-oss-20b` |
 
 Passer plus tard à Claude, à OpenRouter, à Gemini ou à Mistral revient à changer ces valeurs (pour Claude, via son adresse compatible), sans toucher au code.
 

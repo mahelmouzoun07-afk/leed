@@ -11,8 +11,8 @@ if (fs.existsSync(fichier)) process.loadEnvFile(fichier);
 
 const cle = process.env.IA_CLE_API || process.env.GROQ_API_KEY || "";
 const base = (process.env.IA_URL_BASE || "https://api.groq.com/openai/v1").replace(/\/$/, "");
-const fort = process.env.IA_MODELE_FORT || "llama-3.3-70b-versatile";
-const rapide = process.env.IA_MODELE_RAPIDE || "llama-3.1-8b-instant";
+const fort = process.env.IA_MODELE_FORT || "openai/gpt-oss-120b";
+const rapide = process.env.IA_MODELE_RAPIDE || "openai/gpt-oss-20b";
 
 const ligne = (ok, texte) => console.log(`${ok ? "OK     " : "A FAIRE"}  ${texte}`);
 

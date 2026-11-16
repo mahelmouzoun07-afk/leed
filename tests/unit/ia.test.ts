@@ -50,7 +50,7 @@ describe("la coquille de l'IA", () => {
     envFaux.valeurs = { GROQ_API_KEY: "gsk_test" };
     const c = configurationIA();
     expect(c?.urlBase).toBe("https://api.groq.com/openai/v1");
-    expect(c?.modeles.fort).toBe("llama-3.3-70b-versatile");
+    expect(c?.modeles.fort).toBe("openai/gpt-oss-120b");
   });
 
   it("change de moteur avec trois variables, sans toucher au code", () => {
