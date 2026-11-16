@@ -1507,6 +1507,7 @@ export type Database = {
         Row: {
           confirme_le: string | null
           cree_le: string
+          details: Json
           entreprise_id: string
           id: string
           modifie_le: string
@@ -1519,6 +1520,7 @@ export type Database = {
         Insert: {
           confirme_le?: string | null
           cree_le?: string
+          details?: Json
           entreprise_id: string
           id?: string
           modifie_le?: string
@@ -1531,6 +1533,7 @@ export type Database = {
         Update: {
           confirme_le?: string | null
           cree_le?: string
+          details?: Json
           entreprise_id?: string
           id?: string
           modifie_le?: string
@@ -2324,6 +2327,10 @@ export type Database = {
       }
       admin_suspendre_envoi: {
         Args: { p_entreprise: string; p_motif: string; p_suspendre: boolean }
+        Returns: undefined
+      }
+      ajouter_cout_client: {
+        Args: { p_entreprise: string; p_montant: number; p_poste: string }
         Returns: undefined
       }
       apercu_annuaire: {

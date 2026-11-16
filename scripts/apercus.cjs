@@ -7,7 +7,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 
-const APP = ["accueil", "accueil-vide", "decisions", "decisions-repondues", "decisions-vide", "prospects", "prospects-vide", "prospect", "prospect-masque", "conversations", "conversations-vide", "conversation", "campagnes", "campagnes-vide", "campagne", "simulateur", "simulateur-sans-donnees", "rapports", "rapports-vide", "comptes", "forfait", "forfait-vide", "recharge", "reglages", "activite", "messages", "autonomie", "alertes", "horaires", "exclusions", "compte", "plus", "whatsapp"];
+const APP = ["accueil", "accueil-vide", "decisions", "decisions-repondues", "decisions-vide", "prospects", "prospects-vide", "prospect", "prospect-masque", "conversations", "conversations-vide", "conversation", "campagnes", "campagnes-vide", "campagne", "simulateur", "simulateur-sans-donnees", "rapports", "rapports-vide", "comptes", "forfait", "forfait-vide", "recharge", "recharge-pays-non-pris", "paiement-reussi", "paiement-echoue", "reglages", "activite", "messages", "autonomie", "alertes", "horaires", "exclusions", "compte", "plus", "whatsapp"];
 const ADMIN = ["accueil", "accueil-vide", "clients", "clients-vide", "client", "comptes", "comptes-vide", "annuaire", "annuaire-vide", "messages", "paiements", "couts", "support", "ticket", "journal", "plus"];
 
 function trouverChromium() {

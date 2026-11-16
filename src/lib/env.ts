@@ -37,7 +37,10 @@ const schemaServeur = z.object({
   GROQ_API_KEY: z.string().min(1).optional(),
 
   // Paiement Mobile Money (chantier 10)
-  PAIEMENT_PRESTATAIRE: z.enum(["fedapay", "saaspay"]).optional(),
+  PAIEMENT_PRESTATAIRE: z.enum(["saspay", "saaspay", "fedapay"]).optional(),
+  // SasPay : clé API (sk_test_... pour le bac à sable, sk_live_... pour le réel) et secret de signature des webhooks
+  SASPAY_API_KEY: z.string().min(1).optional(),
+  SASPAY_WEBHOOK_SECRET: z.string().min(1).optional(),
   FEDAPAY_SECRET_KEY: z.string().min(1).optional(),
   FEDAPAY_WEBHOOK_SECRET: z.string().min(1).optional(),
   FEDAPAY_ENV: z.enum(["sandbox", "live"]).optional(),

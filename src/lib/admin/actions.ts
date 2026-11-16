@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { confirmerPaiement } from "../paiement/service";
 import { contexteAdmin } from "./donnees";
 
 /**
@@ -74,4 +75,19 @@ export async function resoudreTicket(f: FormData): Promise<void> {
   if (error) retour(chemin, false);
   await ctx.sb.rpc("admin_journaliser", { p_action: "resoudre_ticket", p_cible_type: "ticket", p_cible_id: id.data, p_charge: {} });
   retour(chemin, true);
+}
+
+/** « Revérifier » un paiement en attente : interroge SasPay ; s'il est payé, le forfait s'ouvre (rejouable sans danger). */
+export async function reverifierPaiement(f: FormData): Promise<void> {
+  const ctx = await contexteAdmin();
+  const id = uuid.safeParse(lire(f, "id"));
+  if (!id.success) return;
+  let etat = "erreur";
+  try {
+    etat = (await confirmerPaiement(id.data)).etat;
+  } catch {
+    /* SasPay ne répond pas : l'état reste inchangé */
+  }
+  await ctx.sb.rpc("admin_journaliser", { p_action: "reverifier_paiement", p_cible_type: "paiement", p_cible_id: id.data, p_charge: { etat } });
+  retour("/admin/paiements", etat !== "erreur", "SasPay ne répond pas pour le moment. Réessayez dans quelques minutes.");
 }

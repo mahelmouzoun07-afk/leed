@@ -2,18 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Check, Lock } from "lucide-react";
 import { BlocErreur, boutonPrincipal } from "@/components/form";
 import { Slider } from "@/components/ui";
 import { choisirOffre } from "@/lib/parcours/factice";
 import { MONTANT_PAR_DEFAUT, bareme, economie, formaterFcfa, marcheSuivante, montantDepuisPosition } from "@/lib/forfait";
 
-const MOYENS = ["MTN MoMo", "Moov Money", "Wave", "Orange Money"];
 const RESEAUX_VERROUILLES = ["WhatsApp", "Instagram", "Facebook", "LinkedIn"];
 
 export function Choisir() {
+  const router = useRouter();
   const [pos, setPos] = useState(50);
-  const [moyen, setMoyen] = useState(MOYENS[0]);
   const [envoi, setEnvoi] = useState<"essai" | "forfait" | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   const [fait, setFait] = useState<"essai" | "forfait" | null>(null);
@@ -25,8 +25,13 @@ export function Choisir() {
 
   const valider = async (type: "essai" | "forfait") => {
     setErreur(null);
+    if (type === "forfait") {
+      // Le paiement Mobile Money se fait dans votre espace : on y emmène le montant choisi.
+      router.push(`/app/forfait/recharger/?montant=${montant}`);
+      return;
+    }
     setEnvoi(type);
-    const r = await choisirOffre(type === "essai" ? { type } : { type, montant, moyen });
+    const r = await choisirOffre({ type });
     setEnvoi(null);
     if (!r.ok) return setErreur(r.erreur);
     setFait(type);
@@ -39,9 +44,9 @@ export function Choisir() {
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-600">
             <Check className="h-6 w-6" aria-hidden="true" />
           </span>
-          <h1 className="!mt-4 !text-[1.75rem] !font-medium !leading-tight">{fait === "essai" ? "Votre essai gratuit est choisi" : `Votre forfait de ${formaterFcfa(montant)} FCFA est choisi`}</h1>
+          <h1 className="!mt-4 !text-[1.75rem] !font-medium !leading-tight">Votre essai gratuit est choisi</h1>
           <p className="!mb-0 text-base">
-            {fait === "essai" ? "La prochaine étape sera de connecter votre Gmail." : `Le paiement par ${moyen} et la connexion de vos comptes ouvrent bientôt.`} Aucun paiement n&apos;a été pris.
+            La prochaine étape sera de connecter votre Gmail. Aucun paiement n&apos;a été pris.
           </p>
         </div>
       </div>
@@ -108,18 +113,9 @@ export function Choisir() {
           </ul>
           {gain > 0 && <p className="!mb-0 !mt-2 text-sm">À {formaterFcfa(montant)} FCFA, vous économisez {formaterFcfa(gain)} FCFA par rapport au prix de base.</p>}
           {suivante && <p className="!mb-0 !mt-2 text-sm text-foreground">{suivante}</p>}
-          <fieldset className="mt-4">
-            <legend className="mb-2 text-sm font-medium text-foreground">Payer avec</legend>
-            <div role="radiogroup" className="flex flex-wrap gap-2">
-              {MOYENS.map((m) => (
-                <button key={m} type="button" role="radio" aria-checked={moyen === m} onClick={() => setMoyen(m)} className={`rounded-full border px-3.5 py-2 text-sm transition-colors ${moyen === m ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:bg-chip"}`}>
-                  {m}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+          <p className="!mb-0 !mt-4 text-sm">Vous choisirez votre opérateur Mobile Money (MTN, Moov, Wave, Orange…) à l&apos;étape suivante. Vous payez exactement ce montant : les frais sont à notre charge.</p>
           <button type="button" disabled={envoi !== null} onClick={() => valider("forfait")} className={`${boutonPrincipal} mt-6 w-full`}>
-            {envoi === "forfait" ? "Un instant…" : "Payer et commencer"} {envoi === null && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+            {envoi === "forfait" ? "Un instant…" : "Continuer vers le paiement"} {envoi === null && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
           </button>
         </section>
       </div>

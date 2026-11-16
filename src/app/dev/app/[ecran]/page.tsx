@@ -9,6 +9,7 @@ import { EcranPlus, EcranWhatsapp } from "@/components/app/ecrans/plus";
 import { EcranProspect, EcranProspects } from "@/components/app/ecrans/prospects";
 import { EcranRapports } from "@/components/app/ecrans/rapports";
 import { Recharge } from "@/components/app/ecrans/Recharge";
+import { SuiviPaiement } from "@/components/app/ecrans/SuiviPaiement";
 import { EcranActivite, EcranAlertes, EcranAutonomie, EcranCompte, EcranExclusions, EcranHoraires, EcranMessages, EcranReglages } from "@/components/app/ecrans/reglages";
 import { Simulateur } from "@/components/app/ecrans/Simulateur";
 import { DEMO } from "@/lib/app/vues";
@@ -37,7 +38,10 @@ const ECRANS: Record<string, () => React.ReactNode> = {
   comptes: () => <EcranComptes v={DEMO.comptes} />,
   forfait: () => <EcranForfait v={DEMO.forfait} />,
   "forfait-vide": () => <EcranForfait v={{ forfait: null, plafondJour: 0, historique: [] }} />,
-  recharge: () => <Recharge restantes={34} avantLaFin />,
+  recharge: () => <Recharge restantes={34} avantLaFin pays="BJ" demo reseaux={[{ code: "mtn_bj", nom: "MTN MoMo" }, { code: "moov_bj", nom: "Moov Money" }, { code: "celtiis_bj", nom: "Celtiis Cash" }]} />,
+  "recharge-pays-non-pris": () => <Recharge restantes={0} avantLaFin={false} pays="GH" reseaux={[]} />,
+  "paiement-reussi": () => <SuiviPaiement id="demo" montant={25000} initial="reussi" />,
+  "paiement-echoue": () => <SuiviPaiement id="demo" montant={25000} initial="echoue" />,
   reglages: () => <EcranReglages v={DEMO.reglages} />,
   activite: () => <EcranActivite v={DEMO.reglages} />,
   messages: () => <EcranMessages v={DEMO.reglages} />,
