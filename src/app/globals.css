@@ -629,3 +629,70 @@ button:disabled {
 .landing .testimonial-row--decale {
   transform: translateX(-110px);
 }
+
+/* ---------- Bande défilante des canaux (accueil) ---------- */
+.bande-canaux {
+  padding: 2.25rem 0 0.5rem;
+}
+.bande-canaux__fenetre {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.bande-canaux__piste {
+  display: flex;
+  width: max-content;
+  animation: bande-canaux-defile 32s linear infinite;
+}
+.bande-canaux__liste {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--foreground) 42%, transparent);
+}
+.bande-canaux__liste li {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+/* le point safran après chaque nom, y compris le dernier : la jonction entre les deux copies reste régulière */
+.bande-canaux__liste li::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin: 0 1.25rem 0 1.25rem;
+  border-radius: 50%;
+  background: var(--safran);
+}
+@keyframes bande-canaux-defile {
+  to {
+    transform: translateX(-50%);
+  }
+}
+/* mouvement réduit : la bande ne bouge plus, les noms passent à la ligne et restent tous lisibles */
+@media (prefers-reduced-motion: reduce) {
+  .bande-canaux__fenetre {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .bande-canaux__piste {
+    animation: none;
+    width: auto;
+    justify-content: center;
+  }
+  .bande-canaux__liste {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.75rem;
+  }
+  .bande-canaux__liste + .bande-canaux__liste {
+    display: none;
+  }
+}
