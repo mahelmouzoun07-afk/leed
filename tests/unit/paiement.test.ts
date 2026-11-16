@@ -262,7 +262,7 @@ describe("démarrer un paiement", () => {
     sas.reseaux.mockResolvedValue([{ code: "mtn_bj", name: "MTN MoMo", is_active: true }]);
     sas.softpay.mockResolvedValue({ id: "sp-1", status: "PENDING", checkout_url: "" });
     const r = await demarrerPaiement({ ...entree, reseau: "mtn_bj" });
-    expect(r).toEqual({ ok: true, donnees: { paiementId: "pay-1", redirection: null } });
+    expect(r).toEqual({ ok: true, donnees: { paiementId: "pay-1", redirection: null, gratuit: false } });
     expect(admin.insertions[0][1]).toMatchObject({ entreprise_id: "ent-1", montant_fcfa: 25000, moyen: "mtn_bj", prestataire: "saspay", statut: "en_attente" });
     expect(sas.softpay.mock.calls[0][0]).toMatchObject({ idempotence: "pay-1", montant: 25000, devise: "XOF", pays: "BJ", reseau: "mtn_bj" });
     expect(sas.softpay.mock.calls[0][0].client.phone).toBe("+22997505050");

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { confirmerPaiement } from "../paiement/service";
+import { formatCodeValide, genererCode } from "../promo";
 import { contexteAdmin } from "./donnees";
 
 /**
@@ -90,4 +91,108 @@ export async function reverifierPaiement(f: FormData): Promise<void> {
   }
   await ctx.sb.rpc("admin_journaliser", { p_action: "reverifier_paiement", p_cible_type: "paiement", p_cible_id: id.data, p_charge: { etat } });
   retour("/admin/paiements", etat !== "erreur", "SasPay ne répond pas pour le moment. Réessayez dans quelques minutes.");
+}
+
+// ───── Codes promo ─────────────────────────────────────────────────────────
+
+const MESSAGES_PROMO: Record<string, string> = {
+  role_insuffisant: "Seul un administrateur peut gérer les codes promo.",
+  code_invalide: "Le code doit faire de 8 à 12 caractères, avec des lettres et des chiffres seulement.",
+  code_existe: "Ce code existe déjà. Choisissez-en un autre.",
+  pourcentage_invalide: "La réduction doit être comprise entre 1 et 100 %.",
+  plafond_obligatoire: "Un code à 100 % exige un plafond de remise d'au moins 5 000 FCFA : c'est la valeur maximale du forfait offert.",
+  plafond_invalide: "Le plafond de remise doit être d'au moins 100 FCFA.",
+  dates_invalides: "La date de fin doit être après la date de début.",
+  maximum_invalide: "Les nombres d'utilisations doivent être d'au moins 1.",
+  code_inconnu: "Code introuvable.",
+};
+
+function messagePromo(message: string | undefined): string {
+  const cle = Object.keys(MESSAGES_PROMO).find((k) => message?.includes(k));
+  return cle ? MESSAGES_PROMO[cle] : "Une erreur est survenue.";
+}
+
+/** Un champ numérique facultatif : vide = null, sinon un entier (ou NaN, refusé plus bas). */
+function entierOuNul(f: FormData, nom: string): number | null {
+  const v = lire(f, nom).trim();
+  return v === "" ? null : Number(v);
+}
+
+const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+
+/** Une date de formulaire (« 2026-12-31 ») devient le début ou la fin de cette journée, heure de Cotonou, Dakar ou Abidjan (UTC+0/+1 : on prend UTC). */
+function debutDeJournee(d: string) {
+  return `${d}T00:00:00.000Z`;
+}
+function finDeJournee(d: string) {
+  return `${d}T23:59:59.000Z`;
+}
+
+const PAYS_CODES = ["BJ", "SN", "CI", "TG"];
+
+export async function creerCodePromo(f: FormData): Promise<void> {
+  const ctx = await contexteAdmin();
+  const chemin = "/admin/codes-promo";
+  const echecForm = (message: string): never => retour(chemin, false, message);
+
+  const pourcentage = entierOuNul(f, "pourcentage");
+  if (pourcentage === null || !Number.isInteger(pourcentage)) return echecForm(MESSAGES_PROMO.pourcentage_invalide);
+  const plafond = entierOuNul(f, "plafond");
+  if (plafond !== null && !Number.isInteger(plafond)) return echecForm(MESSAGES_PROMO.plafond_invalide);
+  const montantMin = entierOuNul(f, "montant_min") ?? 5000;
+  const maxTotal = entierOuNul(f, "max_utilisations");
+  const maxEntreprise = entierOuNul(f, "max_par_entreprise") ?? 1;
+  if (!Number.isInteger(montantMin) || montantMin < 0 || (maxTotal !== null && !Number.isInteger(maxTotal)) || !Number.isInteger(maxEntreprise)) return echecForm(MESSAGES_PROMO.maximum_invalide);
+
+  const debut = lire(f, "debut").trim();
+  const fin = lire(f, "fin").trim();
+  if ((debut && !date.safeParse(debut).success) || (fin && !date.safeParse(fin).success)) return echecForm(MESSAGES_PROMO.dates_invalides);
+  const pays = f.getAll("pays").map(String).filter((p) => PAYS_CODES.includes(p));
+
+  // Un code vide est généré ; un code saisi est nettoyé (espaces retirés). Si le code généré existe déjà, on en tire un autre.
+  const saisi = lire(f, "code").replace(/\s+/g, "").toUpperCase();
+  for (let essai = 0; essai < 5; essai++) {
+    const code = saisi || genererCode(10);
+    if (!formatCodeValide(code)) return echecForm(MESSAGES_PROMO.code_invalide);
+    const { error } = await ctx.sb.rpc("admin_creer_code_promo", {
+      p_code: code,
+      p_libelle: lire(f, "libelle").trim().slice(0, 120),
+      p_pourcentage: pourcentage,
+      p_plafond: plafond as number,
+      p_montant_min: montantMin,
+      p_debut: debut ? debutDeJournee(debut) : new Date().toISOString(),
+      p_fin: (fin ? finDeJournee(fin) : null) as string,
+      p_max_utilisations: maxTotal as number,
+      p_max_par_entreprise: maxEntreprise,
+      p_nouveaux_seulement: lire(f, "nouveaux") === "on",
+      p_pays: pays,
+    });
+    if (!error) {
+      revalidatePath("/admin", "layout");
+      redirect(`${chemin}?ok=1&nouveau=${encodeURIComponent(code)}`);
+    }
+    if (saisi || !error.message.includes("code_existe")) return echecForm(messagePromo(error.message));
+  }
+  return echecForm("Impossible de générer un code libre. Réessayez.");
+}
+
+/** Désactiver, réactiver ou ajuster un code (libellé, date de fin, maximum). Le pourcentage et le plafond ne changent jamais : on désactive et on en crée un autre. */
+export async function modifierCodePromo(f: FormData): Promise<void> {
+  const ctx = await contexteAdmin();
+  const chemin = "/admin/codes-promo";
+  const id = uuid.safeParse(lire(f, "id"));
+  if (!id.success) return;
+  const fin = lire(f, "fin").trim();
+  if (fin && !date.safeParse(fin).success) retour(chemin, false, MESSAGES_PROMO.dates_invalides);
+  const max = entierOuNul(f, "max_utilisations");
+  if (max !== null && !Number.isInteger(max)) retour(chemin, false, MESSAGES_PROMO.maximum_invalide);
+  const actif = lire(f, "actif");
+  const { error } = await ctx.sb.rpc("admin_modifier_code_promo", {
+    p_id: id.data,
+    p_libelle: lire(f, "libelle").trim().slice(0, 120),
+    p_fin: (fin ? (fin.includes("T") ? fin : finDeJournee(fin)) : null) as string,
+    p_max_utilisations: max as number,
+    p_actif: actif === "true" ? true : actif === "false" ? false : (null as unknown as boolean),
+  });
+  retour(chemin, !error, messagePromo(error?.message));
 }

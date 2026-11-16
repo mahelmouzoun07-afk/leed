@@ -3,6 +3,7 @@ import { CadreAdmin } from "@/components/admin/CadreAdmin";
 import { AdminAccueil, AdminClient, AdminClients } from "@/components/admin/ecrans/clients";
 import { AdminAnnuaire, AdminComptes, AdminCouts, AdminJournal, AdminMessages, AdminPaiements, AdminPlus } from "@/components/admin/ecrans/exploitation";
 import { AdminSupport, AdminTicket } from "@/components/admin/ecrans/support";
+import { AdminCodesPromo } from "@/components/admin/ecrans/promo";
 import { ADMIN_DEMO as D } from "@/lib/admin/vues";
 
 /** /dev/admin/<écran> : chaque écran de l'espace équipe avec le jeu d'exemple (développement seulement). */
@@ -19,6 +20,9 @@ const ECRANS: Record<string, () => React.ReactNode> = {
   messages: () => <AdminMessages v={D.messages} />,
   paiements: () => <AdminPaiements v={D.paiements} />,
   couts: () => <AdminCouts v={D.couts} />,
+  "codes-promo": () => <AdminCodesPromo v={D.codes_promo} />,
+  "codes-promo-nouveau": () => <AdminCodesPromo v={D.codes_promo} nouveau="BIENVENUE26" ok />,
+  "codes-promo-vide": () => <AdminCodesPromo v={{ codes: [], recentes: [] }} />,
   support: () => <AdminSupport tickets={D.tickets} resolus={false} />,
   ticket: () => <AdminTicket v={D.ticket} />,
   journal: () => <AdminJournal v={D.journal} />,

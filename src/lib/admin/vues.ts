@@ -75,7 +75,33 @@ export type AdminPaiementsVue = {
   nombre_mois: number;
   en_attente: number;
   echoues: number;
-  liste: { id: string; entreprise: string; montant: number; moyen: string; statut: string; cree_le: string }[];
+  liste: { id: string; entreprise: string; montant: number; moyen: string; statut: string; cree_le: string; remise?: number; code?: string | null }[];
+};
+
+export type EtatCodePromo = "actif" | "desactive" | "expire" | "epuise" | "a_venir";
+export type AdminCodePromo = {
+  id: string;
+  code: string;
+  libelle: string | null;
+  pourcentage: number;
+  plafond_remise_fcfa: number | null;
+  montant_min_fcfa: number;
+  debut: string;
+  fin: string | null;
+  max_utilisations: number | null;
+  max_par_entreprise: number;
+  nouveaux_clients_seulement: boolean;
+  pays: string[];
+  actif: boolean;
+  cree_le: string;
+  utilisations: number;
+  en_cours: number;
+  remise_totale_fcfa: number;
+  etat: EtatCodePromo;
+};
+export type AdminCodesPromoVue = {
+  codes: AdminCodePromo[];
+  recentes: { code: string; entreprise: string; remise_fcfa: number; a_payer_fcfa: number; statut: string; cree_le: string }[];
 };
 
 export type AdminCoutsVue = {
@@ -176,6 +202,19 @@ export const ADMIN_DEMO = {
       { id: "q4", entreprise: "Imprimerie Sogbo", montant: 10000, moyen: "moov_money", statut: "echoue", cree_le: ilYA(60 * 40) },
     ],
   } satisfies AdminPaiementsVue,
+
+  codes_promo: {
+    codes: [
+      { id: "c1", code: "BIENVENUE26", libelle: "Cadeau de lancement", pourcentage: 20, plafond_remise_fcfa: null, montant_min_fcfa: 5000, debut: ilYA(60 * 24 * 10), fin: null, max_utilisations: 100, max_par_entreprise: 1, nouveaux_clients_seulement: true, pays: [], actif: true, cree_le: ilYA(60 * 24 * 10), utilisations: 14, en_cours: 1, remise_totale_fcfa: 61_500, etat: "actif" },
+      { id: "c2", code: "RADIOCOTONOU", libelle: "Partenariat radio", pourcentage: 100, plafond_remise_fcfa: 25000, montant_min_fcfa: 5000, debut: ilYA(60 * 24 * 3), fin: ilYA(-60 * 24 * 27), max_utilisations: 5, max_par_entreprise: 1, nouveaux_clients_seulement: false, pays: ["BJ"], actif: true, cree_le: ilYA(60 * 24 * 3), utilisations: 2, en_cours: 0, remise_totale_fcfa: 50_000, etat: "actif" },
+      { id: "c3", code: "NOEL2025A", libelle: "Fêtes de fin d'année", pourcentage: 15, plafond_remise_fcfa: 10000, montant_min_fcfa: 10000, debut: ilYA(60 * 24 * 320), fin: ilYA(60 * 24 * 290), max_utilisations: null, max_par_entreprise: 1, nouveaux_clients_seulement: false, pays: [], actif: true, cree_le: ilYA(60 * 24 * 320), utilisations: 31, en_cours: 0, remise_totale_fcfa: 189_000, etat: "expire" },
+    ],
+    recentes: [
+      { code: "BIENVENUE26", entreprise: "Studio Koffi", remise_fcfa: 5000, a_payer_fcfa: 20000, statut: "confirme", cree_le: ilYA(60 * 5) },
+      { code: "RADIOCOTONOU", entreprise: "École Les Lauréats", remise_fcfa: 25000, a_payer_fcfa: 0, statut: "confirme", cree_le: ilYA(60 * 30) },
+      { code: "BIENVENUE26", entreprise: "Traiteur Saveurs", remise_fcfa: 2000, a_payer_fcfa: 8000, statut: "reserve", cree_le: ilYA(12) },
+    ],
+  } satisfies AdminCodesPromoVue,
 
   couts: {
     encaisse: 1_240_000,

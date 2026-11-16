@@ -16,7 +16,7 @@ const DUREE_MAX_MS = 10 * 60_000;
  * régulièrement notre serveur (qui interroge SasPay). Le forfait ne s'ouvre que sur la confirmation de SasPay,
  * jamais sur le simple retour du client ici.
  */
-export function SuiviPaiement({ id, montant, initial }: { id: string; montant: number; initial: Etat }) {
+export function SuiviPaiement({ id, montant, initial, offert = false }: { id: string; montant: number; initial: Etat; offert?: boolean }) {
   const [etat, setEtat] = useState<Etat>(initial);
   const [abandon, setAbandon] = useState(false);
   const debut = useRef(0);
@@ -48,7 +48,7 @@ export function SuiviPaiement({ id, montant, initial }: { id: string; montant: n
         {etat === "reussi" ? (
           <>
             <div className="flex items-center gap-2 text-base font-medium text-foreground">
-              <Check className="h-5 w-5 text-brand-600" aria-hidden="true" /> Paiement reçu
+              <Check className="h-5 w-5 text-brand-600" aria-hidden="true" /> {offert ? "Forfait activé" : "Paiement reçu"}
             </div>
             <p className="!my-0 text-sm">Votre forfait de {fcfa(montant)} est ouvert. L&apos;agent peut commencer à travailler dès que vos comptes sont connectés.</p>
             <div>

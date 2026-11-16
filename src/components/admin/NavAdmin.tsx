@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, CreditCard, Database, History, Home, LifeBuoy, Link2, Menu, ShieldAlert, Users } from "lucide-react";
+import { BarChart3, CreditCard, Database, History, Home, LifeBuoy, Link2, Menu, ShieldAlert, Ticket, Users } from "lucide-react";
 
 type Entree = { href: string; libelle: string; Icone: typeof Home; bas?: boolean };
 
@@ -13,6 +13,7 @@ const ENTREES: Entree[] = [
   { href: "/admin/annuaire", libelle: "Annuaire", Icone: Database },
   { href: "/admin/messages", libelle: "Messages bloqués", Icone: ShieldAlert },
   { href: "/admin/paiements", libelle: "Paiements", Icone: CreditCard },
+  { href: "/admin/codes-promo", libelle: "Codes promo", Icone: Ticket },
   { href: "/admin/support", libelle: "Support", Icone: LifeBuoy, bas: true },
   { href: "/admin/couts", libelle: "Coûts", Icone: BarChart3 },
   { href: "/admin/journal", libelle: "Journal", Icone: History },

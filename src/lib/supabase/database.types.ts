@@ -403,6 +403,74 @@ export type Database = {
           },
         ]
       }
+      codes_promo: {
+        Row: {
+          actif: boolean
+          code: string
+          code_normalise: string
+          cree_le: string
+          cree_par: string | null
+          debut: string
+          fin: string | null
+          id: string
+          libelle: string | null
+          max_par_entreprise: number
+          max_utilisations: number | null
+          modifie_le: string
+          montant_min_fcfa: number
+          nouveaux_clients_seulement: boolean
+          pays: string[]
+          plafond_remise_fcfa: number | null
+          pourcentage: number
+        }
+        Insert: {
+          actif?: boolean
+          code: string
+          code_normalise: string
+          cree_le?: string
+          cree_par?: string | null
+          debut?: string
+          fin?: string | null
+          id?: string
+          libelle?: string | null
+          max_par_entreprise?: number
+          max_utilisations?: number | null
+          modifie_le?: string
+          montant_min_fcfa?: number
+          nouveaux_clients_seulement?: boolean
+          pays?: string[]
+          plafond_remise_fcfa?: number | null
+          pourcentage: number
+        }
+        Update: {
+          actif?: boolean
+          code?: string
+          code_normalise?: string
+          cree_le?: string
+          cree_par?: string | null
+          debut?: string
+          fin?: string | null
+          id?: string
+          libelle?: string | null
+          max_par_entreprise?: number
+          max_utilisations?: number | null
+          modifie_le?: string
+          montant_min_fcfa?: number
+          nouveaux_clients_seulement?: boolean
+          pays?: string[]
+          plafond_remise_fcfa?: number | null
+          pourcentage?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "codes_promo_cree_par_fkey"
+            columns: ["cree_par"]
+            isOneToOne: false
+            referencedRelation: "profils"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comptes_connectes: {
         Row: {
           canal: Database["public"]["Enums"]["canal"]
@@ -1005,6 +1073,8 @@ export type Database = {
       }
       forfaits: {
         Row: {
+          acces_complet: boolean
+          cibles_max: number | null
           comptes_max: number | null
           cree_le: string
           debut: string
@@ -1025,6 +1095,8 @@ export type Database = {
           type: Database["public"]["Enums"]["type_forfait"]
         }
         Insert: {
+          acces_complet?: boolean
+          cibles_max?: number | null
           comptes_max?: number | null
           cree_le?: string
           debut?: string
@@ -1045,6 +1117,8 @@ export type Database = {
           type: Database["public"]["Enums"]["type_forfait"]
         }
         Update: {
+          acces_complet?: boolean
+          cibles_max?: number | null
           comptes_max?: number | null
           cree_le?: string
           debut?: string
@@ -1505,6 +1579,7 @@ export type Database = {
       }
       paiements: {
         Row: {
+          code_promo_id: string | null
           confirme_le: string | null
           cree_le: string
           details: Json
@@ -1512,12 +1587,15 @@ export type Database = {
           id: string
           modifie_le: string
           montant_fcfa: number
+          montant_forfait_fcfa: number | null
           moyen: string
           prestataire: string
           reference_prestataire: string | null
+          remise_fcfa: number
           statut: Database["public"]["Enums"]["statut_paiement"]
         }
         Insert: {
+          code_promo_id?: string | null
           confirme_le?: string | null
           cree_le?: string
           details?: Json
@@ -1525,12 +1603,15 @@ export type Database = {
           id?: string
           modifie_le?: string
           montant_fcfa: number
+          montant_forfait_fcfa?: number | null
           moyen: string
           prestataire: string
           reference_prestataire?: string | null
+          remise_fcfa?: number
           statut?: Database["public"]["Enums"]["statut_paiement"]
         }
         Update: {
+          code_promo_id?: string | null
           confirme_le?: string | null
           cree_le?: string
           details?: Json
@@ -1538,12 +1619,21 @@ export type Database = {
           id?: string
           modifie_le?: string
           montant_fcfa?: number
+          montant_forfait_fcfa?: number | null
           moyen?: string
           prestataire?: string
           reference_prestataire?: string | null
+          remise_fcfa?: number
           statut?: Database["public"]["Enums"]["statut_paiement"]
         }
         Relationships: [
+          {
+            foreignKeyName: "paiements_code_promo_id_fkey"
+            columns: ["code_promo_id"]
+            isOneToOne: false
+            referencedRelation: "codes_promo"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "paiements_entreprise_id_fkey"
             columns: ["entreprise_id"]
@@ -2159,6 +2249,67 @@ export type Database = {
           },
         ]
       }
+      utilisations_code_promo: {
+        Row: {
+          a_payer_fcfa: number
+          code_promo_id: string
+          confirme_le: string | null
+          cree_le: string
+          entreprise_id: string
+          id: string
+          montant_forfait_fcfa: number
+          paiement_id: string
+          remise_fcfa: number
+          statut: string
+        }
+        Insert: {
+          a_payer_fcfa: number
+          code_promo_id: string
+          confirme_le?: string | null
+          cree_le?: string
+          entreprise_id: string
+          id?: string
+          montant_forfait_fcfa: number
+          paiement_id: string
+          remise_fcfa: number
+          statut?: string
+        }
+        Update: {
+          a_payer_fcfa?: number
+          code_promo_id?: string
+          confirme_le?: string | null
+          cree_le?: string
+          entreprise_id?: string
+          id?: string
+          montant_forfait_fcfa?: number
+          paiement_id?: string
+          remise_fcfa?: number
+          statut?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utilisations_code_promo_code_promo_id_fkey"
+            columns: ["code_promo_id"]
+            isOneToOne: false
+            referencedRelation: "codes_promo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utilisations_code_promo_entreprise_id_fkey"
+            columns: ["entreprise_id"]
+            isOneToOne: false
+            referencedRelation: "entreprises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utilisations_code_promo_paiement_id_fkey"
+            columns: ["paiement_id"]
+            isOneToOne: true
+            referencedRelation: "paiements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       verrou_contact: {
         Row: {
           canal: Database["public"]["Enums"]["canal"]
@@ -2228,6 +2379,8 @@ export type Database = {
       }
       mon_forfait: {
         Row: {
+          acces_complet: boolean | null
+          cibles_max: number | null
           comptes_max: number | null
           debut: string | null
           entreprise_id: string | null
@@ -2244,6 +2397,8 @@ export type Database = {
           type: Database["public"]["Enums"]["type_forfait"] | null
         }
         Insert: {
+          acces_complet?: boolean | null
+          cibles_max?: number | null
           comptes_max?: number | null
           debut?: string | null
           entreprise_id?: string | null
@@ -2260,6 +2415,8 @@ export type Database = {
           type?: Database["public"]["Enums"]["type_forfait"] | null
         }
         Update: {
+          acces_complet?: boolean | null
+          cibles_max?: number | null
           comptes_max?: number | null
           debut?: string | null
           entreprise_id?: string | null
@@ -2295,8 +2452,25 @@ export type Database = {
       admin_annuaire: { Args: never; Returns: Json }
       admin_client: { Args: { p_id: string }; Returns: Json }
       admin_clients: { Args: never; Returns: Json }
+      admin_codes_promo: { Args: never; Returns: Json }
       admin_comptes: { Args: never; Returns: Json }
       admin_couts: { Args: never; Returns: Json }
+      admin_creer_code_promo: {
+        Args: {
+          p_code: string
+          p_debut: string
+          p_fin: string
+          p_libelle: string
+          p_max_par_entreprise: number
+          p_max_utilisations: number
+          p_montant_min: number
+          p_nouveaux_seulement: boolean
+          p_pays: string[]
+          p_plafond: number
+          p_pourcentage: number
+        }
+        Returns: string
+      }
       admin_journal: { Args: { p_limite?: number }; Returns: Json }
       admin_journaliser: {
         Args: {
@@ -2308,6 +2482,16 @@ export type Database = {
         Returns: undefined
       }
       admin_messages_bloques: { Args: never; Returns: Json }
+      admin_modifier_code_promo: {
+        Args: {
+          p_actif: boolean
+          p_fin: string
+          p_id: string
+          p_libelle: string
+          p_max_utilisations: number
+        }
+        Returns: undefined
+      }
       admin_offrir_entreprises: {
         Args: { p_entreprise: string; p_motif: string; p_nombre: number }
         Returns: undefined
@@ -2350,6 +2534,14 @@ export type Database = {
           geles: number
           passes_en_grace: number
         }[]
+      }
+      calculer_code_promo: {
+        Args: { p_code: string; p_entreprise: string; p_montant: number }
+        Returns: Json
+      }
+      charger_annuaire: {
+        Args: { p_lignes: Json; p_source: string }
+        Returns: Json
       }
       creer_entreprise_inscription: {
         Args: { p_user: string }
@@ -2411,6 +2603,16 @@ export type Database = {
         Args: { p_cle_decompte: string; p_cle_retour: string }
         Returns: boolean
       }
+      reserver_code_promo: {
+        Args: {
+          p_code: string
+          p_entreprise: string
+          p_montant: number
+          p_paiement: string
+        }
+        Returns: Json
+      }
+      retirer_source_annuaire: { Args: { p_source: string }; Returns: number }
       verifier_limite: {
         Args: {
           p_action: string

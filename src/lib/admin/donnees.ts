@@ -7,6 +7,7 @@ import type {
   AdminAnnuaireVue,
   AdminClientLigne,
   AdminClientVue,
+  AdminCodesPromoVue,
   AdminComptesVue,
   AdminCoutsVue,
   AdminJournalVue,
@@ -42,6 +43,12 @@ export const chargerAdminAnnuaire = (ctx: CtxAdmin) => rpc<AdminAnnuaireVue>(ctx
 export const chargerAdminMessages = (ctx: CtxAdmin) => rpc<AdminMessagesVue>(ctx, "admin_messages_bloques");
 export const chargerAdminPaiements = (ctx: CtxAdmin) => rpc<AdminPaiementsVue>(ctx, "admin_paiements");
 export const chargerAdminCouts = (ctx: CtxAdmin) => rpc<AdminCoutsVue>(ctx, "admin_couts");
+
+export async function chargerAdminCodesPromo(ctx: CtxAdmin): Promise<AdminCodesPromoVue> {
+  const { data, error } = await ctx.sb.rpc("admin_codes_promo");
+  if (error) throw new Error(`admin_codes_promo : ${error.message}`);
+  return data as unknown as AdminCodesPromoVue;
+}
 
 export async function chargerAdminClient(ctx: CtxAdmin, id: string): Promise<AdminClientVue | null> {
   const { data, error } = await ctx.sb.rpc("admin_client", { p_id: id });
