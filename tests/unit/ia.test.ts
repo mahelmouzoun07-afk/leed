@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const envFaux = vi.hoisted(() => ({ valeurs: {} as Record<string, string | undefined> }));
 vi.mock("@/lib/env", () => ({ env: () => envFaux.valeurs, exigerEnv: () => "x" }));
 
-import { ErreurIA, configurationIA, creerClientIA, type ClientIA, type DemandeIA, type ReponseIA } from "@/lib/ia/client";
+import { ErreurIA, configurationIA, creerClientIA, viderRemplacementsModeles, type ClientIA, type DemandeIA, type ReponseIA } from "@/lib/ia/client";
 import { demanderJson, extraireJson } from "@/lib/ia/json";
 import { adresseInterdite, htmlEnTexte, liensUtiles, refuserUrl, robotsAutorise } from "@/lib/ia/lecteur";
 import { controlerMessage, nombresDuTexte } from "@/lib/ia/controles";
@@ -85,6 +85,26 @@ describe("la coquille de l'IA", () => {
       const c = creerClientIA({ urlBase: "https://x.test/v1", cle: "k", modeles: { rapide: "p", fort: "g" } });
       await expect(c.completer({ modele: "g", messages: [] })).resolves.toMatchObject({ jetonsEntree: 12 });
       expect(f).toHaveBeenCalledTimes(2);
+    });
+
+    it("prend un autre modèle disponible quand celui demandé n'existe pas sur le compte (erreur 404)", async () => {
+      viderRemplacementsModeles();
+      const f = vi
+        .fn()
+        .mockResolvedValueOnce(new Response("{\"error\":{\"message\":\"The model `llama-3.3-70b-versatile` does not exist\",\"code\":\"model_not_found\"}}", { status: 404 }))
+        .mockResolvedValueOnce(new Response(JSON.stringify({ data: [{ id: "whisper-large-v3" }, { id: "openai/gpt-oss-120b" }, { id: "llama-3.1-8b-instant" }] }), { status: 200 }))
+        .mockImplementation(async () => reponseOk()); // une réponse neuve à chaque appel (le contenu ne se lit qu'une fois)
+      globalThis.fetch = f as unknown as typeof fetch;
+      const c = creerClientIA({ urlBase: "https://x.test/v1", cle: "k", modeles: { rapide: "llama-3.1-8b-instant", fort: "llama-3.3-70b-versatile" } });
+      await expect(c.completer({ modele: "llama-3.3-70b-versatile", messages: [], json: true })).resolves.toMatchObject({ jetonsEntree: 12 });
+      const dernier = JSON.parse(f.mock.calls.at(-1)?.[1].body);
+      expect(dernier.model).toBe("openai/gpt-oss-120b");
+      expect(dernier.reasoning_effort).toBe("low");
+      // les appels suivants utilisent directement le modèle trouvé, sans redemander la liste
+      await c.completer({ modele: "llama-3.3-70b-versatile", messages: [] });
+      expect(JSON.parse(f.mock.calls.at(-1)?.[1].body).model).toBe("openai/gpt-oss-120b");
+      expect(f.mock.calls.filter((a) => String(a[0]).endsWith("/models"))).toHaveLength(1);
+      viderRemplacementsModeles();
     });
 
     it("signale une clé refusée sans jamais la répéter", async () => {

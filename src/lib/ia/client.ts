@@ -32,7 +32,7 @@ export type ReponseIA = {
 
 export interface ClientIA {
   readonly modeles: { rapide: string; fort: string };
-  completer(demande: DemandeIA): Promise<ReponseIA>;
+  completer(demande: DemandeIA, dejaRemplace?: boolean): Promise<ReponseIA>;
 }
 
 export class ErreurIA extends Error {
@@ -50,6 +50,15 @@ export const URL_BASE_PAR_DEFAUT = "https://api.groq.com/openai/v1";
 // Modèles ouverts et gratuits chez Groq. Le gros (70 milliards de paramètres) écrit et synthétise bien en français ; le petit lit vite.
 export const MODELE_FORT_PAR_DEFAUT = "llama-3.3-70b-versatile";
 export const MODELE_RAPIDE_PAR_DEFAUT = "llama-3.1-8b-instant";
+
+// Si le modèle choisi n'existe pas sur le compte (la liste des modèles gratuits change), on prend le premier disponible dans cet ordre.
+const PREFERES_FORT = ["llama-3.3-70b-versatile", "openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"];
+const PREFERES_RAPIDE = ["llama-3.1-8b-instant", "openai/gpt-oss-20b", "qwen/qwen3.8-27b", "openai/gpt-oss-120b", "llama-3.3-70b-versatile"];
+/** Modèle demandé -> modèle réellement utilisé (gardé en mémoire tant que le serveur tourne). */
+const remplacements = new Map<string, string>();
+export function viderRemplacementsModeles(): void {
+  remplacements.clear();
+}
 
 const DELAI_MS = 30_000;
 const ATTENTE_MAX_MS = 6_000;
@@ -80,6 +89,7 @@ export function creerClientIA(config: Config | null = configurationIA()): Client
   const { urlBase, cle, modeles } = config;
 
   async function appeler(demande: DemandeIA): Promise<Response> {
+    const raisonneur = /gpt-oss|qwen3/i.test(demande.modele); // ces modèles « réfléchissent » avant de répondre : on limite, et on laisse de la place
     return fetch(`${urlBase}/chat/completions`, {
       method: "POST",
       headers: { Authorization: `Bearer ${cle}`, "Content-Type": "application/json", Accept: "application/json" },
@@ -87,16 +97,33 @@ export function creerClientIA(config: Config | null = configurationIA()): Client
         model: demande.modele,
         messages: demande.messages,
         temperature: demande.temperature ?? 0.2,
-        max_tokens: demande.maxJetons ?? 1200,
+        max_tokens: (demande.maxJetons ?? 1200) * (raisonneur ? 3 : 1),
+        ...(raisonneur && /gpt-oss/i.test(demande.modele) ? { reasoning_effort: "low" } : {}),
         ...(demande.json ? { response_format: { type: "json_object" } } : {}),
       }),
       signal: AbortSignal.timeout(DELAI_MS),
     });
   }
 
+  /** Le compte n'a pas le modèle demandé : on lit la liste de ceux qu'il a, et on prend le meilleur disponible. */
+  async function modeleDisponible(demande: string): Promise<string | null> {
+    try {
+      const r = await fetch(`${urlBase}/models`, { headers: { Authorization: `Bearer ${cle}`, Accept: "application/json" }, signal: AbortSignal.timeout(8_000) });
+      if (!r.ok) return null;
+      const j = (await r.json()) as { data?: { id?: string }[] };
+      const ids = (j.data ?? []).map((m) => m.id ?? "").filter((i) => i && !/whisper|guard|tts|orpheus|embed|moderation/i.test(i));
+      const prefs = demande === modeles.rapide ? PREFERES_RAPIDE : PREFERES_FORT;
+      return prefs.find((p) => ids.includes(p) && p !== demande) ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   return {
     modeles,
-    async completer(demande) {
+    async completer(demande, dejaRemplace = false): Promise<ReponseIA> {
+      const voulu = demande.modele;
+      demande = { ...demande, modele: remplacements.get(voulu) ?? voulu };
       let reponse: Response;
       try {
         reponse = await appeler(demande);
@@ -113,6 +140,14 @@ export function creerClientIA(config: Config | null = configurationIA()): Client
       if (!reponse.ok) {
         const corps = await reponse.text().catch(() => "");
         log.warn("ia.refus", { statut: reponse.status, modele: demande.modele, debut: corps.slice(0, 160) });
+        if (reponse.status === 404 && /model/i.test(corps) && !dejaRemplace) {
+          const autre = await modeleDisponible(voulu);
+          if (autre) {
+            remplacements.set(voulu, autre);
+            log.warn("ia.modele_remplace", { demande: voulu, utilise: autre });
+            return this.completer({ ...demande, modele: voulu }, true);
+          }
+        }
         const code = reponse.status === 429 ? "ia_occupee" : reponse.status === 401 || reponse.status === 403 ? "ia_cle_refusee" : "ia_erreur";
         throw new ErreurIA(`Le service d'IA a répondu ${reponse.status}.`, reponse.status, code);
       }
