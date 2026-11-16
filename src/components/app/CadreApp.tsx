@@ -10,7 +10,7 @@ import { NavApp } from "./NavApp";
 export function CadreApp({ nom, demo, decisionsNb, base = "/app", children }: { nom: string; demo: boolean; decisionsNb: number; base?: string; children: React.ReactNode }) {
   return (
     <div className="landing min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-border bg-background">
         <div className="mx-auto flex h-14 max-w-[1100px] items-center justify-between gap-4 px-4">
           <div className="flex min-w-0 items-center gap-3">
             <Link href={base} aria-label="Accueil de votre espace">
